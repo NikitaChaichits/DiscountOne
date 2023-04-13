@@ -1,0 +1,143 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+    id 'com.google.firebase.crashlytics'
+    id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.gms.google-services'
+}
+
+android {
+    flavorDimensions "mode"
+    compileSdkVersion globalConfig.compileSdkVersion
+    buildToolsVersion globalConfig.buildToolsVersion
+
+    namespace appConfig.applicationId
+
+    defaultConfig {
+        applicationId appConfig.applicationId
+        minSdkVersion globalConfig.minSdkVersion
+        targetSdkVersion globalConfig.targetSdkVersion
+        versionCode appConfig.versionCode
+        versionName appConfig.versionName
+    }
+
+    signingConfigs {
+        release {
+            keyAlias appConfig.keyAlias
+            keyPassword appConfig.keyPassword
+            storeFile appConfig.storeFile
+            storePassword appConfig.storePassword
+        }
+    }
+
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging true
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.release
+        }
+        debug {
+            debuggable true
+            minifyEnabled false
+            shrinkResources false
+        }
+    }
+
+    viewBinding {
+        enabled = true
+    }
+
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+    // libs
+    implementation files('libs/mysql-connector-java-5.1.38.jar')
+
+    // Common
+    api globalDependencies.coreKtx
+    api appDependencies.constraintLayout
+    api appDependencies.recyclerView
+    api appDependencies.lifecycleViewmodelKtx
+    api appDependencies.lifecycleLivedataKtx
+    api appDependencies.lifecycleRuntime
+    api appDependencies.cardView
+    api appDependencies.navigationFragmentKtx
+    api appDependencies.navigationUiKtx
+    api appDependencies.activityKtx
+    api appDependencies.fragmentKtx
+    api appDependencies.glideBase
+    api appDependencies.material
+
+    // Material dialogs
+    api appDependencies.materialDialogsCore
+    api appDependencies.materialDialogsLifecycle
+
+    // DI
+    api appDependencies.hiltAndroid
+    kapt appDependencies.hiltAndroidCompiler
+
+    // Gson
+    api appDependencies.gson
+
+    // Retrofit2
+    api appDependencies.retrofit
+    api appDependencies.retrofitConverterGson
+    api appDependencies.retrofitConverterString
+
+    // OkHttp3
+    api appDependencies.okHttp
+    api appDependencies.okHttpLoggingInterceptor
+
+    // Kotlin Coroutines
+    api appDependencies.coroutinesCore
+    api appDependencies.coroutinesAndroid
+
+    // WorkManager with coroutines
+    api appDependencies.coroutineWorkManager
+
+    // View Binding property buster
+    implementation appDependencies.viewBindingPropertyDelegate
+
+    // Animation
+    implementation appDependencies.lottie
+
+    // Firebase
+    implementation platform(firebaseDependencies.bom)
+    implementation firebaseDependencies.analyticsKtx
+    implementation firebaseDependencies.crashlyticsKtx
+    implementation firebaseDependencies.authKtx
+    implementation firebaseDependencies.firestoreKtx
+
+    //Tests
+    testImplementation appDependencies.junit
+    testImplementation appDependencies.jupiter
+    androidTestImplementation appDependencies.junitExt
+    androidTestImplementation appDependencies.espresso
+
+    implementation 'com.github.dhaval2404:imagepicker:2.1'
+}
+
+android.applicationVariants.all { variant ->
+    variant.resValue "string", "app_version", "${appConfig.versionName} (${appConfig.build})"
+    variant.outputs.all { outputFileName = "${variant.name}-v${variant.versionCode}.apk" }
+}
+
+kapt {
+    correctErrorTypes = true
+}

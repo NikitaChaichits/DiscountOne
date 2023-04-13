@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.digeltech.appdiscountone.ui.home.HomeFragment"
+        android:label="@string/nav_home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/toProfileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/toDealFragment"
+            app:destination="@id/dealFragment">
+            <argument
+                android:name="dealId"
+                app:argType="integer" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/categoriesFragment"
+        android:name="com.digeltech.appdiscountone.ui.categories.CategoriesFragment"
+        android:label="@string/nav_categories"
+        tools:layout="@layout/fragment_categories">
+        <action
+            android:id="@+id/toProfileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/toCategoryFragment"
+            app:destination="@id/categoryFragment">
+            <argument
+                android:name="categoryId"
+                app:argType="integer" />
+            <argument
+                android:name="categoryName"
+                app:argType="string" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="com.digeltech.appdiscountone.ui.categories.category.CategoryFragment"
+        android:label="@string/nav_categories"
+        tools:layout="@layout/fragment_category">
+        <argument
+            android:name="categoryId"
+            app:argType="integer" />
+        <argument
+            android:name="categoryName"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/toDealFragment"
+            app:destination="@id/dealFragment">
+            <argument
+                android:name="dealId"
+                app:argType="integer" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/dealsFragment"
+        android:name="com.digeltech.appdiscountone.ui.alldeals.DealsFragment"
+        android:label="@string/nav_deals"
+        tools:layout="@layout/fragment_deals">
+        <action
+            android:id="@+id/toProfileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/toDealFragment"
+            app:destination="@id/dealFragment">
+            <argument
+                android:name="dealId"
+                app:argType="integer" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/dealFragment"
+        android:name="com.digeltech.appdiscountone.ui.deal.DealFragment"
+        android:label="Deals"
+        tools:layout="@layout/fragment_deal">
+        <argument
+            android:name="dealId"
+            app:argType="integer" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/shopsFragment"
+        android:name="com.digeltech.appdiscountone.ui.shops.ShopsFragment"
+        android:label="@string/nav_shops"
+        tools:layout="@layout/fragment_shops">
+        <action
+            android:id="@+id/toProfileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/couponsFragment"
+        android:name="com.digeltech.appdiscountone.ui.coupons.CouponsFragment"
+        android:label="@string/nav_coupons"
+        tools:layout="@layout/fragment_coupons">
+        <action
+            android:id="@+id/toProfileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/toDealFragment"
+            app:destination="@id/dealFragment">
+            <argument
+                android:name="dealId"
+                app:argType="integer" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.digeltech.appdiscountone.ui.auth.login.LoginFragment"
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/toForgotPasswordFragment"
+            app:destination="@id/forgotPasswordFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.digeltech.appdiscountone.ui.auth.newaccount.NewAccountFragment"
+        android:label="SignInFragment"
+        tools:layout="@layout/fragment_new_account">
+        <action
+            android:id="@+id/toOnboardingFragment"
+            app:destination="@id/onboardingFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/startFragment"
+        android:name="com.digeltech.appdiscountone.ui.auth.start.StartFragment"
+        android:label="StartFragment"
+        tools:layout="@layout/fragment_start">
+        <action
+            android:id="@+id/toLoginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/toSignInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/forgotPasswordFragment"
+        android:name="com.digeltech.appdiscountone.ui.auth.forgot.ForgotPasswordFragment"
+        android:label="ForgotPasswordFragment"
+        tools:layout="@layout/fragment_forgot_password">
+        <action
+            android:id="@+id/toRecoveryPasswordFragment"
+            app:destination="@id/recoveryPasswordFragment">
+            <argument
+                android:name="email"
+                app:argType="string" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/recoveryPasswordFragment"
+        android:name="com.digeltech.appdiscountone.ui.auth.recovery.RecoveryPasswordFragment"
+        android:label="RecoveryPasswordFragment"
+        tools:layout="@layout/fragment_recovery_password">
+        <action
+            android:id="@+id/toLoginFragment"
+            app:destination="@id/loginFragment" />
+        <argument
+            android:name="email"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.digeltech.appdiscountone.ui.profile.profile.ProfileFragment"
+        android:label="ProfileFragment"
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/toStartFragment"
+            app:destination="@id/startFragment" />
+        <action
+            android:id="@+id/toProfileDataFragment"
+            app:destination="@id/profileDataFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/onboardingFragment"
+        android:name="com.digeltech.appdiscountone.ui.auth.onboarding.OnboardingFragment"
+        android:label="OnboardingFragment"
+        tools:layout="@layout/fragment_onboarding">
+        <action
+            android:id="@+id/toHomeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileDataFragment"
+        android:name="com.digeltech.appdiscountone.ui.profile.profiledata.ProfileDataFragment"
+        android:label="ProfileDataFragment"
+        tools:layout="@layout/fragment_profile_data" />
+
+
+</navigation>

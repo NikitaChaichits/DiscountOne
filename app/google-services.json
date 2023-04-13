@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1068740463242",
+    "project_id": "discount-one",
+    "storage_bucket": "discount-one.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1068740463242:android:ff78ab874bd3f6478a3b73",
+        "android_client_info": {
+          "package_name": "com.digeltech.appdiscountone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1068740463242-etqt80do3630td2jo84s9m6s4i2l2gcr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGnoZcp2F76RjOtYcbI7zBQc4eIkSRC4o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1068740463242-etqt80do3630td2jo84s9m6s4i2l2gcr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

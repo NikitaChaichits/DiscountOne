@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@id/homeFragment"
+        android:icon="@drawable/ic_home"
+        android:title="@string/nav_home" />
+
+    <item
+        android:id="@id/categoriesFragment"
+        android:icon="@drawable/ic_categories"
+        android:title="@string/nav_categories" />
+
+    <item
+        android:id="@id/dealsFragment"
+        android:icon="@drawable/ic_deals"
+        android:title="@string/nav_deals" />
+
+    <item
+        android:id="@id/shopsFragment"
+        android:icon="@drawable/ic_shops"
+        android:title="@string/nav_shops" />
+
+    <item
+        android:id="@id/couponsFragment"
+        android:icon="@drawable/ic_coupons"
+        android:title="@string/nav_coupons" />
+
+</menu>

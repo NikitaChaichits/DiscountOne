@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/TextRegular.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_offset_32dp"
+        android:layout_marginTop="@dimen/common_offset_24dp"
+        android:text="@string/additional_information_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvDescription"
+        style="@style/TextRegular.Description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/common_offset_32dp"
+        android:layout_marginTop="@dimen/common_offset_12dp"
+        android:text="@string/additional_information_description"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivProfileImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_offset_28dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvDescription"
+        app:srcCompat="@drawable/ic_camera" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvDateOfBirth"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_offset_40dp"
+        android:layout_marginHorizontal="@dimen/common_offset_32dp"
+        android:layout_marginTop="@dimen/common_offset_40dp"
+        android:background="@drawable/shape_border"
+        android:drawableEnd="@drawable/ic_calendar"
+        android:hint="@string/date_of_birth"
+        android:paddingHorizontal="@dimen/common_offset_12dp"
+        android:paddingVertical="@dimen/common_offset_8dp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/common_textSize_16sp"
+        app:layout_constraintTop_toBottomOf="@+id/ivProfileImage"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/etCity"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_offset_40dp"
+        android:layout_marginHorizontal="@dimen/common_offset_32dp"
+        android:layout_marginTop="@dimen/common_offset_24dp"
+        android:background="@drawable/shape_border"
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        android:hint="@string/city"
+        android:inputType="textCapSentences"
+        android:paddingHorizontal="@dimen/common_offset_12dp"
+        android:paddingVertical="@dimen/common_offset_8dp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/common_textSize_16sp"
+        app:layout_constraintTop_toBottomOf="@+id/tvDateOfBirth" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnContinue"
+        style="@style/ButtonColored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_offset_24dp"
+        android:enabled="false"
+        android:text="@string/btn_continue"
+        app:cornerRadius="@dimen/radius_12"
+        app:layout_constraintTop_toBottomOf="@+id/etCity" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSkip"
+        style="@style/Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_offset_8dp"
+        android:text="@string/skip"
+        app:cornerRadius="@dimen/radius_12"
+        app:layout_constraintTop_toBottomOf="@+id/btnContinue" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

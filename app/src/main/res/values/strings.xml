@@ -1,0 +1,109 @@
+<resources>
+    <string name="app_name">Discount One</string>
+    <string name="privacy_policy_link">https://discount.one/privacy-policy</string>
+    <string name="terms_of_use_link">https://discount.one/terms-of-use</string>
+    <string name="affiliate_disclosure_link">https://discount.one/affiliate-disclosure</string>
+
+    <string name="nav_home">Home</string>
+    <string name="nav_categories">Categories</string>
+    <string name="nav_deals">All Deals</string>
+    <string name="nav_shops">Shops</string>
+    <string name="nav_coupons">Coupons</string>
+
+    <string name="error_restore">Cann\'t restore your purchase</string>
+    <string name="restore_successfully">Restore successfully</string>
+    <string name="cancel">Cancel</string>
+    <string name="back">Back</string>
+    <string name="skip">Skip</string>
+    <string name="save">Save</string>
+    <string name="copied">Copied to clipboard</string>
+    <string name="added_to_bookmarks">Added to bookmarks</string>
+    <string name="removed_from_bookmarks">Removed from bookmarks</string>
+
+    <!-- Permission -->
+
+    <string name="save_file_permission_error">To download a file, you must obtain permission to write to the phone storage.</string>
+    <string name="image_picker_permission_error">To set image profile, you must obtain permission to read to the phone storage.</string>
+
+    <!-- Notifications -->
+    <string name="notifications_time_now">now</string>
+    <string name="notifications_time_yesterday">yesterday</string>
+    <string name="notifications_time_minute">minute</string>
+    <string name="notifications_time_hour">hour</string>
+
+    <!-- Start -->
+    <string name="fr_start_title">From fashion to food, we\'ve got discounts for every mood!</string>
+    <string name="sign_in">Sign in</string>
+
+    <!-- New account -->
+    <string name="new_account">New Account</string>
+    <string name="send_email">We will send you an email to confirm your registration.</string>
+    <string name="your_name">Your name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="password_info">The password must be longer than 8 characters</string>
+    <string name="password_error">The password must contain at least one uppercase and one lowercase letter, as well as a number</string>
+    <string name="create_new_account">Create new account</string>
+    <string name="agree_text">By clicking on the "Register" button, you agree with the personal data processing policy and the rules for using the service.</string>
+
+    <!-- Log In -->
+    <string name="log_in_title">My account</string>
+    <string name="log_in_error">Incorrect number or password. Please verify your information and try again</string>
+    <string name="forgot_password">Forgot password?</string>
+
+    <!-- Forgot password -->
+    <string name="forgot_pass_title">Forgot Password?</string>
+    <string name="forgot_pass_description">Enter the email that you used when register to recover your password. You will receive a password reset link.</string>
+    <string name="send_reset_instruction">Send Reset instructions</string>
+
+    <!-- Recovery password -->
+    <string name="recovery_pass_title">We\'ve sent you an email with a link to reset your password</string>
+    <string name="recovery_pass_description">Check your spam and promotions folder if it doesn\'t appear in your main mailbox</string>
+    <string name="btn_go_to_sign_in">Back to sign in</string>
+    <string name="btn_resend_email">Didn’t receive the email?</string>
+
+    <!-- Additional info -->
+    <string name="additional_information_title">Additional Information</string>
+    <string name="additional_information_description">The insights from this data will enable us to create more personalized and targeted offers for you.</string>
+    <string name="date_of_birth">Date of Birth</string>
+    <string name="city">City</string>
+    <string name="btn_continue">Continue</string>
+
+    <!-- Profile -->
+    <string name="profile">Profile</string>
+    <string name="personal_data">Personal data</string>
+    <string name="saved_publications">Saved Publications</string>
+    <string name="notifications">Notifications</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="conditions_of_use">Conditions of use</string>
+    <string name="affiliate_disclosure">Affiliate Disclosure</string>
+    <string name="theme">Theme</string>
+    <string name="log_out">Log out</string>
+
+    <!-- Profile Data-->
+    <string name="name">Name</string>
+    <string name="date_of_registration">Date of registration: %s</string>
+
+    <!-- Fragment Home-->
+    <string name="fr_home_title">Best Deals</string>
+
+    <!-- Fragment Categories-->
+    <string name="fr_cat_title">All Categories</string>
+    <string name="fr_cat_publications">%d publications</string>
+
+    <!-- Fragment All deals-->
+    <string name="fr_deals_title">All Deals</string>
+
+    <!-- Fragment Shops-->
+    <string name="fr_shops_title">Shops</string>
+
+    <!-- Fragment Coupons-->
+    <string name="fr_coupons_title">Coupons</string>
+
+    <!-- Fragment Deal-->
+    <string name="fr_deal_more_about_discount">More about the discount</string>
+    <string name="fr_deal_disclosure">Disclosure: If you follow a link or buy an item from a post, Discount One may receive a commission from the store, but this does not affect what discounts are posted on the site. \n<u>Affiliate Disclosure</u></string>
+    <string name="fr_deal_similar_products">Similar Products</string>
+    <string name="fr_deal_similar_more_deals">More deals</string>
+
+</resources>

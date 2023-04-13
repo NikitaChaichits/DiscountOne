@@ -1,0 +1,123 @@
+/**
+ * This file defines all project dependencies
+ */
+
+def libraryVersions = [
+
+        androidGradlePluginVersion : '7.3.0',
+        kotlinGradlePluginVersion  : '1.8.0',
+        googleServices             : '4.3.10',
+
+        coreKtxVersion             : '1.9.0',
+        constraintLayoutVersion    : '2.2.0-alpha07',
+        recyclerViewVersion        : '1.2.1',
+        lifecycleVersion           : '2.6.0-rc01',
+        materialVersion            : '1.8.0',
+        cardViewVersion            : '1.0.0',
+        materialDialogs            : '3.3.0',
+
+        navigationVersion          : '2.5.3',
+        hilt                       : '2.45',
+        lifecycleHilt              : '1.0.0-alpha01',
+        ktxActivityVersion         : '1.6.1',
+        ktxFragmentVersion         : '1.5.5',
+        glide                      : '4.15.0',
+        coroutineWorkManager       : '2.8.0',
+
+        retrofitVersion            : '2.9.0',
+        okHttpVersion              : '5.0.0-alpha.7',
+        gsonVersion                : '2.10.1',
+
+        coroutineVersion           : '1.6.4',
+        viewBindingPropertyDelegate: '1.5.8',
+        progressViewVersion        : '5843c69b44',
+        lottieVersion              : '6.0.0',
+        billingVersion             : '5.0.0',
+
+        // Firebase
+        bom                        : '31.2.2',
+        analytics                  : '21.0.0',
+        crashlytics                : '18.2.10',
+        buildtools                 : '2.9.2',
+        crashlyticsGradle          : '2.9.4',
+
+        junit                      : '4.13.2',
+        junitExt                   : '1.1.5',
+        espresso                   : '3.5.1',
+        jupiter                    : '5.8.1',
+
+        room                       : '2.4.0'
+]
+
+ext {
+
+    /**
+     * Common dependencies for all project
+     */
+    globalDependencies = [
+            androidGradlePlugin: "com.android.tools.build:gradle:${libraryVersions.androidGradlePluginVersion}",
+            kotlinGradlePlugin : "org.jetbrains.kotlin:kotlin-gradle-plugin:${libraryVersions.kotlinGradlePluginVersion}",
+            coreKtx            : "androidx.core:core-ktx:${libraryVersions.coreKtxVersion}",
+            hiltAndroidPlugin  : "com.google.dagger:hilt-android-gradle-plugin:${libraryVersions.hilt}",
+            navigation         : "androidx.navigation:navigation-safe-args-gradle-plugin:${libraryVersions.navigationVersion}",
+            googleServices     : "com.google.gms:google-services:${libraryVersions.googleServices}",
+            crashlyticsGradle  : "com.google.firebase:firebase-crashlytics-gradle:${libraryVersions.crashlyticsGradle}"
+    ]
+
+    /**
+     * Dependencies for app module
+     */
+    appDependencies = [
+
+            constraintLayout           : "androidx.constraintlayout:constraintlayout:${libraryVersions.constraintLayoutVersion}",
+            recyclerView               : "androidx.recyclerview:recyclerview:${libraryVersions.recyclerViewVersion}",
+            lifecycleViewmodelKtx      : "androidx.lifecycle:lifecycle-viewmodel-ktx:${libraryVersions.lifecycleVersion}",
+            lifecycleLivedataKtx       : "androidx.lifecycle:lifecycle-livedata-ktx:${libraryVersions.lifecycleVersion}",
+            lifecycleRuntime           : "androidx.lifecycle:lifecycle-runtime-ktx:${libraryVersions.lifecycleVersion}",
+            lifecycleHilt              : "androidx.hilt:hilt-lifecycle-viewmodel:${libraryVersions.lifecycleHilt}",
+            cardView                   : "androidx.cardview:cardview:${libraryVersions.cardViewVersion}",
+            navigationFragmentKtx      : "androidx.navigation:navigation-fragment-ktx:${libraryVersions.navigationVersion}",
+            navigationUiKtx            : "androidx.navigation:navigation-ui-ktx:${libraryVersions.navigationVersion}",
+            activityKtx                : "androidx.activity:activity-ktx:${libraryVersions.ktxActivityVersion}",
+            fragmentKtx                : "androidx.fragment:fragment-ktx:${libraryVersions.ktxFragmentVersion}",
+            material                   : "com.google.android.material:material:${libraryVersions.materialVersion}",
+            glideBase                  : "com.github.bumptech.glide:glide:${libraryVersions.glide}",
+
+            materialDialogsCore        : "com.afollestad.material-dialogs:core:${libraryVersions.materialDialogs}",
+            materialDialogsLifecycle   : "com.afollestad.material-dialogs:lifecycle:${libraryVersions.materialDialogs}",
+
+            gson                       : "com.google.code.gson:gson:${libraryVersions.gsonVersion}",
+            retrofit                   : "com.squareup.retrofit2:retrofit:${libraryVersions.retrofitVersion}",
+            retrofitConverterGson      : "com.squareup.retrofit2:converter-gson:${libraryVersions.retrofitVersion}",
+            retrofitConverterString    : "com.squareup.retrofit2:converter-scalars:${libraryVersions.retrofitVersion}",
+            okHttp                     : "com.squareup.okhttp3:okhttp:${libraryVersions.okHttpVersion}",
+            okHttpLoggingInterceptor   : "com.squareup.okhttp3:logging-interceptor:${libraryVersions.okHttpVersion}",
+
+            coroutinesCore             : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${libraryVersions.coroutineVersion}",
+            coroutinesAndroid          : "org.jetbrains.kotlinx:kotlinx-coroutines-android:${libraryVersions.coroutineVersion}",
+            coroutineWorkManager       : "androidx.work:work-runtime-ktx:${libraryVersions.coroutineWorkManager}",
+
+            hiltAndroid                : "com.google.dagger:hilt-android:${libraryVersions.hilt}",
+            hiltAndroidCompiler        : "com.google.dagger:hilt-compiler:${libraryVersions.hilt}",
+
+            viewBindingPropertyDelegate: "com.github.kirich1409:viewbindingpropertydelegate-noreflection:${libraryVersions.viewBindingPropertyDelegate}",
+            lottie                     : "com.airbnb.android:lottie:${libraryVersions.lottieVersion}",
+
+            junit                      : "junit:junit:${libraryVersions.junit}",
+            junitExt                   : "androidx.test.ext:junit:${libraryVersions.junitExt}",
+            espresso                   : "androidx.test.espresso:espresso-core:${libraryVersions.espresso}",
+            jupiter                    : "org.junit.jupiter:junit-jupiter:${libraryVersions.jupiter}",
+    ]
+
+    /**
+     * Firebase dependencies
+     */
+    firebaseDependencies = [
+            bom                  : "com.google.firebase:firebase-bom:${libraryVersions.bom}",
+            analyticsKtx         : "com.google.firebase:firebase-analytics-ktx",
+            crashlyticsKtx       : "com.google.firebase:firebase-crashlytics-ktx",
+            authKtx              : "com.google.firebase:firebase-auth-ktx",
+            firestoreKtx         : "com.google.firebase:firebase-firestore-ktx",
+            crashlyticsBuildTools: "com.google.firebase:firebase-crashlytics-buildtools:${libraryVersions.buildtools}",
+    ]
+}

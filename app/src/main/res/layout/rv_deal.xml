@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="156dp"
+    android:layout_height="324dp"
+    android:background="@drawable/shape_coupon"
+    android:layout_marginEnd="@dimen/common_offset_8dp"
+    android:padding="@dimen/common_offset_8dp"
+    tools:ignore="ContentDescription">
+
+    <ImageView
+        android:id="@+id/ivDealImage"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:src="@drawable/coupon_nike"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/ivBookmark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_ic_bookmark"
+        android:padding="@dimen/common_offset_8dp"
+        android:src="@drawable/ic_bookmark"
+        app:layout_constraintEnd_toEndOf="@id/ivDealImage"
+        app:layout_constraintTop_toTopOf="@id/ivDealImage" />
+
+    <TextView
+        android:id="@+id/tvPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_offset_16dp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/common_textSize_16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivDealImage"
+        tools:text="€130.00" />
+
+    <TextView
+        android:id="@+id/tvPriceWithDiscount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_offset_12dp"
+        android:textSize="@dimen/common_textSize_12sp"
+        android:textStyle="bold"
+        android:textColor="@color/green"
+        app:layout_constraintBottom_toBottomOf="@id/tvPrice"
+        app:layout_constraintStart_toEndOf="@id/tvPrice"
+        app:layout_constraintTop_toTopOf="@id/tvPrice"
+        tools:text="€65.00" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_offset_8dp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/common_textSize_12sp"
+        android:maxLines="2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvPrice"
+        tools:text="Nike Air Max 90 SE" />
+
+    <ImageView
+        android:id="@+id/ivCouponCompanyLogo"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginBottom="@dimen/common_offset_8dp"
+        android:src="@drawable/logo_nike"
+        app:layout_constraintBottom_toTopOf="@id/btnGetCoupon"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvCouponCompany"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_offset_8dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textColor="@color/black"
+        android:textSize="@dimen/common_textSize_14sp"
+        app:layout_constraintBottom_toBottomOf="@id/ivCouponCompanyLogo"
+        app:layout_constraintEnd_toEndOf="@id/btnGetCoupon"
+        app:layout_constraintStart_toEndOf="@id/ivCouponCompanyLogo"
+        app:layout_constraintTop_toTopOf="@id/ivCouponCompanyLogo"
+        tools:text="Nike" />
+
+    <ImageView
+        android:id="@+id/ivRateArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/common_offset_8dp"
+        app:layout_constraintBottom_toBottomOf="@id/ivCouponCompanyLogo"
+        app:layout_constraintEnd_toStartOf="@id/tvRate"
+        app:layout_constraintTop_toTopOf="@id/ivCouponCompanyLogo"
+        tools:src="@drawable/ic_arrow_up" />
+
+    <TextView
+        android:id="@+id/tvRate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_offset_8dp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/common_textSize_14sp"
+        app:layout_constraintBottom_toBottomOf="@id/ivCouponCompanyLogo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ivCouponCompanyLogo"
+        tools:text="273" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnGetCoupon"
+        style="@style/ButtonColored.Coupon"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="@dimen/common_offset_8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btnCopy"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Get 50%" />
+
+    <ImageView
+        android:id="@+id/btnCopy"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_copy_coupon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

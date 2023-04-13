@@ -1,0 +1,70 @@
+package com.digeltech.appdiscountone.ui.shops.adapter
+
+import android.annotation.SuppressLint
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.digeltech.appdiscountone.databinding.RvCategoryAndShopBinding
+import com.digeltech.appdiscountone.domain.model.Shop
+import com.digeltech.appdiscountone.util.view.loadImage
+
+class ShopAdapter(
+    private val onClickListener: (id: Int) -> Unit,
+) : ListAdapter<Shop, ShopAdapter.ItemViewholder>(DiffCallback()) {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewholder {
+        return RvCategoryAndShopBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        ).let(::ItemViewholder)
+    }
+
+    override fun onBindViewHolder(holder: ItemViewholder, position: Int) =
+        holder.bind(getItem(position))
+
+    override fun onViewRecycled(holder: ItemViewholder) {
+        super.onViewRecycled(holder)
+        holder.unbind()
+    }
+
+    inner class ItemViewholder(val binding: RvCategoryAndShopBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(item: Shop) {
+            with(binding) {
+                tvTitle.text = item.name
+                tvSubtitle.text = "${item.countOfItems} publications"
+
+                if (item.icon.isNotEmpty()) {
+                    ivIcon.loadImage(item.icon)
+                }
+
+                root.setOnClickListener {
+                    onClickListener(item.id)
+                }
+            }
+        }
+
+        fun unbind() {
+            binding.ivIcon.setImageDrawable(null)
+        }
+    }
+
+    class DiffCallback : DiffUtil.ItemCallback<Shop>() {
+
+        override fun areItemsTheSame(
+            oldItem: Shop,
+            newItem: Shop
+        ): Boolean = oldItem.id == newItem.id
+
+        @SuppressLint("DiffUtilEquals")
+        override fun areContentsTheSame(
+            oldItem: Shop,
+            newItem: Shop
+        ): Boolean = oldItem == newItem
+
+    }
+}

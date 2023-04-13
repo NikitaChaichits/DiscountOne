@@ -1,0 +1,31 @@
+<resources>
+    <dimen name="common_offset_4dp">4dp</dimen>
+    <dimen name="common_offset_8dp">8dp</dimen>
+    <dimen name="common_offset_12dp">12dp</dimen>
+    <dimen name="common_offset_16dp">16dp</dimen>
+    <dimen name="common_offset_20dp">20dp</dimen>
+    <dimen name="common_offset_24dp">24dp</dimen>
+    <dimen name="common_offset_28dp">28dp</dimen>
+    <dimen name="common_offset_32dp">32dp</dimen>
+    <dimen name="common_offset_40dp">40dp</dimen>
+    <dimen name="common_offset_48dp">48dp</dimen>
+    <dimen name="common_offset_56dp">56dp</dimen>
+
+    <dimen name="common_textSize_4sp">4sp</dimen>
+    <dimen name="common_textSize_8sp">8sp</dimen>
+    <dimen name="common_textSize_12sp">12sp</dimen>
+    <dimen name="common_textSize_14sp">14sp</dimen>
+    <dimen name="common_textSize_16sp">16sp</dimen>
+    <dimen name="common_textSize_20sp">20sp</dimen>
+    <dimen name="common_textSize_24sp">24sp</dimen>
+    <dimen name="common_textSize_28sp">28sp</dimen>
+    <dimen name="common_textSize_32sp">32sp</dimen>
+    <dimen name="common_textSize_40sp">40sp</dimen>
+
+    <dimen name="radius_8">8dp</dimen>
+    <dimen name="radius_12">12dp</dimen>
+    <dimen name="radius_16">16dp</dimen>
+    <dimen name="radius_20">20dp</dimen>
+    <dimen name="radius_32">32dp</dimen>
+    <dimen name="radius_36">36dp</dimen>
+</resources>
