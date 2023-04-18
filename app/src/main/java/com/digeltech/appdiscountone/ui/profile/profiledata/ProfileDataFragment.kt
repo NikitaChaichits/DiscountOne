@@ -16,7 +16,6 @@ import com.digeltech.appdiscountone.databinding.FragmentProfileDataBinding
 import com.digeltech.appdiscountone.util.view.setCircleImage
 import com.digeltech.appdiscountone.util.view.showDatePickerDialog
 import com.github.dhaval2404.imagepicker.ImagePicker
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.ktx.Firebase
@@ -26,13 +25,12 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
     private val binding by viewBinding(FragmentProfileDataBinding::bind)
     override val viewModel: ProfileDataViewModel by viewModels()
 
-    private lateinit var auth: FirebaseAuth
     private lateinit var prefs: SharedPreferencesDataSource
+    private var userPhotoUri: Uri? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        auth = Firebase.auth
         prefs = SharedPreferencesDataSource(view.context)
 
         initUser()
@@ -50,7 +48,7 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
                 //Image Uri will not be null for RESULT_OK
                 val uri: Uri = data?.data!!
                 binding.ivProfileImage.setCircleImage(uri)
-                updateFirebaseProfile(uri)
+                userPhotoUri = uri
             }
             ImagePicker.RESULT_ERROR -> {
                 toast(ImagePicker.getError(data))
@@ -60,13 +58,12 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
 
     private fun initUser() {
         Firebase.auth.currentUser?.let {
-            binding.tvProfileEmail.text = it.email
             it.photoUrl?.let { uri ->
                 binding.ivProfileImage.setCircleImage(uri)
             }
+            binding.tvProfileEmail.text = it.email
+            binding.etProfileName.setText(it.displayName)
         }
-
-        binding.etProfileName.setText(prefs.getName())
 
         val dateOfBirth = prefs.getDateOfBirth()
         if (dateOfBirth.isNotEmpty())
@@ -98,15 +95,16 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
     }
 
     private fun updateProfile() {
-        prefs.setName(binding.etProfileName.text.toString())
         prefs.setDateOfBirth(binding.tvDateOfBirth.text.toString())
         prefs.setCity(binding.etCity.text.toString().trim())
+        updateFirebaseProfile()
         navigateBack()
     }
 
-    private fun updateFirebaseProfile(uri: Uri) {
+    private fun updateFirebaseProfile() {
         val profileUpdates = userProfileChangeRequest {
-            photoUri = uri
+            displayName = binding.etProfileName.text.toString()
+            photoUri = userPhotoUri
         }
         Firebase.auth.currentUser?.updateProfile(profileUpdates)
     }

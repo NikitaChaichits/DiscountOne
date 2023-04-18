@@ -9,6 +9,7 @@ import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.common.base.BaseFragment
 import com.digeltech.appdiscountone.databinding.FragmentCategoriesBinding
 import com.digeltech.appdiscountone.ui.categories.adapter.CategoryAdapter
+import com.digeltech.appdiscountone.util.view.recycler.GridOffsetDecoration
 import com.digeltech.appdiscountone.util.view.setCircleImage
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -41,6 +42,13 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories) {
             navigate(CategoriesFragmentDirections.toCategoryFragment(categoryId = it.first, categoryName = it.second))
         }
         binding.rvCategories.adapter = categoryAdapter
+        binding.rvCategories.addItemDecoration(
+            GridOffsetDecoration(
+                edgesOffset = 16,
+                horizontalOffset = 16,
+                verticalOffset = 16
+            )
+        )
     }
 
     private fun initListeners() {

@@ -20,6 +20,7 @@ import com.digeltech.appdiscountone.util.view.invisible
 import com.digeltech.appdiscountone.util.view.visible
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.ktx.Firebase
 
 
@@ -83,8 +84,12 @@ class NewAccountFragment : BaseFragment(R.layout.fragment_new_account) {
     }
 
     private fun updateProfile() {
-        prefs.setName(binding.etName.text.toString().trim())
         prefs.setDateOfRegistration(getCurrentDateTime(requireContext()))
+
+        val profileUpdates = userProfileChangeRequest {
+            displayName = binding.etName.text.toString().trim()
+        }
+        Firebase.auth.currentUser?.updateProfile(profileUpdates)
     }
 
     private fun checkIsCreateButtonEnable() {

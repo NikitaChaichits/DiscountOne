@@ -5,14 +5,18 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.core.view.*
+import com.digeltech.appdiscountone.R
 
 val Int.dp: Float get() = this / Resources.getSystem().displayMetrics.density
 
@@ -90,4 +94,16 @@ fun View.assetsToBitmap(name: String): Bitmap? {
         e.printStackTrace()
         null
     }
+}
+
+fun View.openLink(
+    link: String?,
+    @StringRes errorRes: Int = R.string.incorrect_link_message
+) = try {
+    CustomTabsIntent.Builder()
+        .build()
+        .launchUrl(context, Uri.parse(link))
+} catch (e: Exception) {
+    Toast.makeText(context, errorRes, Toast.LENGTH_SHORT)
+        .show()
 }

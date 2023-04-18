@@ -8,11 +8,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+
 class CategoriesRepositoryImpl @Inject constructor(
-    private val databaseConnection: DatabaseConnection
+    private val databaseConnection: DatabaseConnection,
 ) : CategoriesRepository {
 
-    override suspend fun getCategoriesList(): List<Category> = withContext(Dispatchers.IO) {
+    override suspend fun getAllCategories(): List<Category> = withContext(Dispatchers.IO) {
         databaseConnection.getAllCategories()
     }
 

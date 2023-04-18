@@ -16,9 +16,6 @@
         <action
             android:id="@+id/toDealFragment"
             app:destination="@id/dealFragment">
-            <argument
-                android:name="dealId"
-                app:argType="integer" />
         </action>
     </fragment>
 
@@ -58,8 +55,8 @@
             android:id="@+id/toDealFragment"
             app:destination="@id/dealFragment">
             <argument
-                android:name="dealId"
-                app:argType="integer" />
+                android:name="deal"
+                app:argType="com.digeltech.appdiscountone.ui.common.model.DealParcelable" />
         </action>
     </fragment>
 
@@ -75,8 +72,8 @@
             android:id="@+id/toDealFragment"
             app:destination="@id/dealFragment">
             <argument
-                android:name="dealId"
-                app:argType="integer" />
+                android:name="deal"
+                app:argType="com.digeltech.appdiscountone.ui.common.model.DealParcelable" />
         </action>
     </fragment>
 
@@ -86,8 +83,8 @@
         android:label="Deals"
         tools:layout="@layout/fragment_deal">
         <argument
-            android:name="dealId"
-            app:argType="integer" />
+            android:name="deal"
+            app:argType="com.digeltech.appdiscountone.ui.common.model.DealParcelable" />
     </fragment>
 
     <fragment
@@ -112,8 +109,8 @@
             android:id="@+id/toDealFragment"
             app:destination="@id/dealFragment">
             <argument
-                android:name="dealId"
-                app:argType="integer" />
+                android:name="deal"
+                app:argType="com.digeltech.appdiscountone.ui.common.model.DealParcelable" />
         </action>
     </fragment>
 
@@ -188,6 +185,9 @@
         <action
             android:id="@+id/toProfileDataFragment"
             app:destination="@id/profileDataFragment" />
+        <action
+            android:id="@+id/toSavedPublicationsFragment"
+            app:destination="@id/savedPublicationsFragment" />
     </fragment>
 
     <fragment
@@ -205,6 +205,20 @@
         android:name="com.digeltech.appdiscountone.ui.profile.profiledata.ProfileDataFragment"
         android:label="ProfileDataFragment"
         tools:layout="@layout/fragment_profile_data" />
+
+    <fragment
+        android:id="@+id/savedPublicationsFragment"
+        android:name="com.digeltech.appdiscountone.ui.profile.savedpublications.SavedPublicationsFragment"
+        android:label="SavedPublicationsFragment"
+        tools:layout="@layout/fragment_saved_publications">
+        <action
+            android:id="@+id/toDealFragment"
+            app:destination="@id/dealFragment">
+            <argument
+                android:name="deal"
+                app:argType="com.digeltech.appdiscountone.ui.common.model.DealParcelable" />
+        </action>
+    </fragment>
 
 
 </navigation>

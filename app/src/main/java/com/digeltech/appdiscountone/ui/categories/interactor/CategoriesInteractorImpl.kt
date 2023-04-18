@@ -9,7 +9,7 @@ internal class CategoriesInteractorImpl @Inject constructor(
     private val categoriesRepository: CategoriesRepository
 ) : CategoriesInteractor {
 
-    override suspend fun getCategoriesList(): List<Category> = categoriesRepository.getCategoriesList()
+    override suspend fun getCategoriesList(): List<Category> = categoriesRepository.getAllCategories()
 
     override suspend fun getCategoryDealsList(id: Int): List<Deal> = categoriesRepository.getCategoryDealsById(id)
 }

@@ -1,7 +1,6 @@
 package com.digeltech.appdiscountone.data.source.remote
 
 import android.database.SQLException
-import com.digeltech.appdiscountone.data.constants.RemoteConstants.DATABASE_URL
 import com.digeltech.appdiscountone.data.util.tryCatch
 import com.digeltech.appdiscountone.domain.model.Category
 import com.digeltech.appdiscountone.domain.model.Deal
@@ -11,6 +10,11 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
 import javax.inject.Inject
+
+private const val DATABASE_URL = "jdbc:mysql://p3plzcpnl497327.prod.phx3.secureserver.net:3306/main"
+private const val DATABASE_URL_SSH = "jdbc:mysql://localhost:3307/main"
+private const val SSH_PASS = "K7C#)2?wT+8z"
+private const val SSH_KEY_PATH = ".ssh/android_key"
 
 class DatabaseConnection @Inject constructor() {
     private var connection: Connection? = null
@@ -27,6 +31,11 @@ class DatabaseConnection @Inject constructor() {
         } catch (e: ClassNotFoundException) {
             log("MySQL JDBC Driver not found! Error: ${e.message}")
         }
+    }
+
+    private fun checkConnection() {
+        if (connection?.isClosed == true || connection == null)
+            connect()
     }
 
     // Функция для выполнения запросов к базе данных
@@ -51,7 +60,7 @@ class DatabaseConnection @Inject constructor() {
     }
 
     fun getAllCategories(): List<Category> {
-        connect()
+        checkConnection()
 
         val listOfCategories = mutableListOf<Category>()
 
@@ -88,7 +97,7 @@ class DatabaseConnection @Inject constructor() {
     }
 
     fun getAllShops(): List<Shop> {
-        connect()
+        checkConnection()
 
         val listOfShops = mutableListOf<Shop>()
 
@@ -125,35 +134,33 @@ class DatabaseConnection @Inject constructor() {
     }
 
     fun getCategoryDeals(categoryId: Int): List<Deal> {
+        checkConnection()
+
         val listOfDeals = mutableListOf<Deal>()
 
         getCategoryDealsId(categoryId).forEach { dealId ->
             var title = ""
             var description = ""
             var imageUrl = ""
-            var postDate = ""
-            var oldPrice = 0
-            var price = 0
+            var oldPrice = ""
+            var price = ""
+            var sale = ""
             var company = ""
-            var rating = 0
-            var imageId = 0
-//                    var promocode = resultSet.getString("promocode")
-//                    val expirationDate = resultSet.getDate("expiration_date")
+            var rating = ""
+            var imageId = ""
+            var promocode = ""
+            var link = ""
+            var postDate = ""
+            var validDate = ""
 
             tryCatch {
-//                val query = "SELECT wp_posts.post_title, wp_posts.post_content, wp_posts.post_date,\n" +
-//                        "wp_postmeta.meta_key, wp_postmeta.meta_value\n" +
-//                        "FROM wp_posts\n" +
-//                        "JOIN wp_postmeta ON wp_posts.ID = wp_postmeta.post_id\n" +
-//                        "WHERE wp_posts.ID = $dealId\n" +
-//                        "ORDER BY wp_postmeta.post_id ASC"
                 val query = "SELECT * FROM wp_posts WHERE ID=$dealId"
                 val resultSet = executeQuery(query)
 
                 while (resultSet?.next() == true) {
                     title = resultSet.getString("post_title")
                     description = resultSet.getString("post_content")
-                    postDate = resultSet.getDate("post_date").toString()
+                    postDate = resultSet.getString("post_date")
                 }
             }
 
@@ -163,12 +170,15 @@ class DatabaseConnection @Inject constructor() {
 
                 while (resultSet?.next() == true) {
                     when (resultSet.getString("meta_key")) {
-                        "old_price" -> oldPrice = resultSet.getString("meta_value").toInt()
-                        "price" -> price = resultSet.getString("meta_value").toInt()
+                        "old_price" -> oldPrice = resultSet.getString("meta_value")
+                        "price" -> price = resultSet.getString("meta_value")
                         "source" -> company = resultSet.getString("meta_value")
-                        "rating" -> rating = resultSet.getString("meta_value").toInt()
-//                        "promocode" -> promocode = resultSet.getString("meta_value")
-                        "_thumbnail_id" -> imageId = resultSet.getString("meta_value").toInt()
+                        "rating" -> rating = resultSet.getString("meta_value")
+                        "link" -> link = resultSet.getString("meta_value")
+                        "promocode" -> promocode = resultSet.getString("meta_value")
+                        "expiration_date" -> validDate = resultSet.getString("meta_value")
+                        "_thumbnail_id" -> imageId = resultSet.getString("meta_value")
+                        "sale" -> sale = resultSet.getString("meta_value")
                     }
                 }
             }
@@ -185,9 +195,12 @@ class DatabaseConnection @Inject constructor() {
                     categoryId = categoryId,
                     oldPrice = oldPrice,
                     discountPrice = price,
+                    sale = sale,
                     rating = rating,
-                    promocode = "promocode",
+                    promocode = promocode,
+                    link = link,
                     publishedDate = postDate,
+                    validDate = validDate,
                 )
             )
 
@@ -195,13 +208,18 @@ class DatabaseConnection @Inject constructor() {
                 Deal(
                     id = dealId,
                     title = title,
-                    description = description,
+                    description = "",
+                    imageUrl = imageUrl,
                     companyName = company,
                     categoryId = categoryId,
                     oldPrice = oldPrice,
                     discountPrice = price,
+                    sale = sale,
                     rating = rating,
-                    promocode = "promocode",
+                    promocode = promocode,
+                    link = link,
+                    publishedDate = postDate,
+                    validDate = validDate,
                 )
             )
         }
@@ -214,7 +232,9 @@ class DatabaseConnection @Inject constructor() {
 
         tryCatch {
             val query =
-                "SELECT * FROM wp_term_relationships WHERE term_taxonomy_id=$categoryId ORDER BY term_taxonomy_id ASC"
+                "SELECT * FROM wp_term_relationships WHERE term_taxonomy_id=$categoryId " +
+                        "ORDER BY term_taxonomy_id ASC " +
+                        "LIMIT 6"
             val resultSet = executeQuery(query)
             while (resultSet?.next() == true) {
                 listOfDealsId.add(resultSet.getInt("object_id"))
@@ -236,7 +256,7 @@ class DatabaseConnection @Inject constructor() {
         return ""
     }
 
-    private fun getDealImageUrl(photoId: Int): String {
+    private fun getDealImageUrl(photoId: String): String {
         tryCatch {
             val query = "SELECT * FROM wp_posts WHERE ID=$photoId"
             val resultSet = executeQuery(query)

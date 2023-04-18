@@ -11,3 +11,7 @@ const val DATE_OF_REGISTRATION = "DATE_OF_REGISTRATION"
 const val CITY = "CITY"
 
 const val NAME = "NAME"
+
+const val CATEGORIES_KEY = "ALL_CATEGORIES"
+
+const val SHOPS_KEY = "ALL_SHOPS"

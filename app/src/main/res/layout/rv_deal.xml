@@ -13,7 +13,6 @@
         android:id="@+id/ivDealImage"
         android:layout_width="match_parent"
         android:layout_height="140dp"
-        android:src="@drawable/coupon_nike"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
@@ -31,24 +30,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_offset_16dp"
+        android:layout_marginEnd="@dimen/common_offset_12dp"
         android:textColor="@color/black"
         android:textSize="@dimen/common_textSize_16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tvPriceWithDiscount"
         app:layout_constraintTop_toBottomOf="@id/ivDealImage"
         tools:text="€130.00" />
 
     <TextView
         android:id="@+id/tvPriceWithDiscount"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/common_offset_12dp"
-        android:textSize="@dimen/common_textSize_12sp"
         android:textStyle="bold"
         android:textColor="@color/green"
-        app:layout_constraintBottom_toBottomOf="@id/tvPrice"
+        android:textSize="@dimen/common_textSize_16sp"
+        android:layout_marginTop="@dimen/common_offset_16dp"
         app:layout_constraintStart_toEndOf="@id/tvPrice"
-        app:layout_constraintTop_toTopOf="@id/tvPrice"
+        app:layout_constraintTop_toBottomOf="@id/ivDealImage"
+        app:layout_constraintEnd_toEndOf="parent"
         tools:text="€65.00" />
 
     <TextView
@@ -59,8 +60,9 @@
         android:textColor="@color/black"
         android:textSize="@dimen/common_textSize_12sp"
         android:maxLines="2"
+        android:ellipsize="end"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvPrice"
+        app:layout_constraintTop_toBottomOf="@id/tvPriceWithDiscount"
         tools:text="Nike Air Max 90 SE" />
 
     <ImageView
@@ -69,7 +71,7 @@
         android:layout_height="20dp"
         android:layout_marginBottom="@dimen/common_offset_8dp"
         android:src="@drawable/logo_nike"
-        app:layout_constraintBottom_toTopOf="@id/btnGetCoupon"
+        app:layout_constraintBottom_toTopOf="@id/btnGetDeal"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -82,7 +84,7 @@
         android:textColor="@color/black"
         android:textSize="@dimen/common_textSize_14sp"
         app:layout_constraintBottom_toBottomOf="@id/ivCouponCompanyLogo"
-        app:layout_constraintEnd_toEndOf="@id/btnGetCoupon"
+        app:layout_constraintEnd_toEndOf="@id/btnGetDeal"
         app:layout_constraintStart_toEndOf="@id/ivCouponCompanyLogo"
         app:layout_constraintTop_toTopOf="@id/ivCouponCompanyLogo"
         tools:text="Nike" />
@@ -110,11 +112,10 @@
         tools:text="273" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnGetCoupon"
+        android:id="@+id/btnGetDeal"
         style="@style/ButtonColored.Coupon"
         android:layout_width="0dp"
         android:layout_height="40dp"
-        android:layout_marginEnd="@dimen/common_offset_8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/btnCopy"
         app:layout_constraintHorizontal_bias="1.0"
@@ -126,6 +127,8 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:src="@drawable/ic_copy_coupon"
+        android:layout_marginStart="@dimen/common_offset_8dp"
+        app:layout_constraintStart_toEndOf="@id/btnGetDeal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

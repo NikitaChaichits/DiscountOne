@@ -7,8 +7,8 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.common.base.BaseFragment
 import com.digeltech.appdiscountone.databinding.FragmentDealsBinding
+import com.digeltech.appdiscountone.ui.common.adapter.DealAdapter
 import com.digeltech.appdiscountone.ui.coupons.CouponsFragmentDirections
-import com.digeltech.appdiscountone.ui.coupons.adapter.DealAdapter
 import com.digeltech.appdiscountone.util.view.px
 import com.digeltech.appdiscountone.util.view.recycler.GridOffsetDecoration
 import com.digeltech.appdiscountone.util.view.setCircleImage

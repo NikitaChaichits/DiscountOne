@@ -1,5 +1,7 @@
 package com.digeltech.appdiscountone.domain.model
 
+import com.digeltech.appdiscountone.ui.common.model.DealParcelable
+
 data class Category(
     val id: Int,
     val name: String,
@@ -10,5 +12,5 @@ data class Category(
 data class CategoryWithItems(
     val id: Int,
     val name: String,
-    val items: List<Deal>
+    val items: List<DealParcelable>
 )

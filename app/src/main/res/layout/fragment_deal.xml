@@ -44,7 +44,6 @@
             android:layout_width="0dp"
             android:layout_height="360dp"
             android:layout_marginTop="@dimen/common_offset_8dp"
-            android:src="@drawable/coupon_nike"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ivBack" />
@@ -126,6 +125,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/common_offset_16dp"
             android:layout_marginTop="@dimen/common_offset_24dp"
+            android:visibility="invisible"
             android:src="@drawable/ic_time_valid"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ivCouponCompanyLogo" />
@@ -137,6 +137,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/common_offset_16dp"
             android:textSize="@dimen/common_textSize_12sp"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@id/ivTimeValid"
             app:layout_constraintStart_toEndOf="@id/ivTimeValid"
             app:layout_constraintTop_toTopOf="@id/ivTimeValid"
@@ -176,12 +177,11 @@
             app:layout_constraintTop_toTopOf="@id/ivTimeValid" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnGetCoupon"
+            android:id="@+id/btnGetDeal"
             style="@style/ButtonColored.Coupon"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_marginTop="@dimen/common_offset_16dp"
-            android:layout_marginEnd="@dimen/common_offset_8dp"
             app:layout_constraintEnd_toStartOf="@id/btnCopy"
             app:layout_constraintStart_toStartOf="@id/ivTimeValid"
             app:layout_constraintTop_toBottomOf="@id/ivTimeValid"
@@ -191,13 +191,13 @@
             android:id="@+id/btnCopy"
             android:layout_width="0dp"
             android:layout_height="40dp"
-            android:layout_marginStart="@dimen/common_offset_8dp"
+            android:layout_marginStart="@dimen/common_offset_16dp"
             android:background="@drawable/shape_grey_border"
             android:gravity="center_vertical|center_horizontal"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="@id/ivRateArrowDown"
-            app:layout_constraintStart_toEndOf="@id/btnGetCoupon"
-            app:layout_constraintTop_toTopOf="@id/btnGetCoupon">
+            app:layout_constraintStart_toEndOf="@id/btnGetDeal"
+            app:layout_constraintTop_toTopOf="@id/btnGetDeal">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -225,7 +225,7 @@
             android:textSize="@dimen/common_textSize_16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btnGetCoupon" />
+            app:layout_constraintTop_toBottomOf="@id/btnGetDeal" />
 
         <TextView
             android:id="@+id/tvMoreAboutDiscountText"

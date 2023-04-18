@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'kotlin-parcelize'
     id 'dagger.hilt.android.plugin'
     id 'com.google.firebase.crashlytics'
     id 'androidx.navigation.safeargs.kotlin'
@@ -130,7 +131,14 @@ dependencies {
     androidTestImplementation appDependencies.junitExt
     androidTestImplementation appDependencies.espresso
 
+    //ImagePicker for Camera
     implementation 'com.github.dhaval2404:imagepicker:2.1'
+
+    //SSH
+    implementation 'com.jcraft:jsch:0.1.55'
+
+    //Cache
+    implementation 'com.orhanobut:hawk:2.0.1'
 }
 
 android.applicationVariants.all { variant ->

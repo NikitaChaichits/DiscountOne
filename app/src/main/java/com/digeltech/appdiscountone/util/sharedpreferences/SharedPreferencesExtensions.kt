@@ -70,7 +70,6 @@ fun SharedPreferences.clear(synchronously: Boolean = false) {
 }
 
 /* Async versions of extensions */
-
 suspend inline fun <reified T> SharedPreferences.getAsync(key: String, defaultValue: T): T =
     withContext(Dispatchers.IO) {
         get(key, defaultValue)

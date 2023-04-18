@@ -40,7 +40,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
     private fun initAdapters() {
         bannerAdapter = BannerAdapter {
-            navigate(HomeFragmentDirections.toDealFragment(it))
+//            navigate(HomeFragmentDirections.toDealFragment())
         }
         bannerAdapter.submitList(viewModel.getBanners())
         binding.rvBanners.adapter = bannerAdapter

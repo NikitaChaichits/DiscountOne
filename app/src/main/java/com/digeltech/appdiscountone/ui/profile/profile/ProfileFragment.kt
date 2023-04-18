@@ -40,7 +40,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
     private fun initUser() {
         Firebase.auth.currentUser?.let {
-            binding.tvProfileName.text = prefs.getName()
+            binding.tvProfileName.text = it.displayName
             binding.tvProfileEmail.text = it.email
             it.photoUrl?.let { uri ->
                 binding.ivProfileImage.setCircleImage(uri)
@@ -61,6 +61,9 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
             }
             llPersonalData.setOnClickListener {
                 navigate(R.id.profileDataFragment)
+            }
+            llSavedPublication.setOnClickListener {
+                navigate(R.id.savedPublicationsFragment)
             }
             llLogout.setOnClickListener {
                 Firebase.auth.signOut()

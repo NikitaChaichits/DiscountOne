@@ -1,4 +1,4 @@
-package com.digeltech.appdiscountone.ui.coupons.adapter
+package com.digeltech.appdiscountone.ui.common.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -8,15 +8,15 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.databinding.RvDealBinding
-import com.digeltech.appdiscountone.domain.model.Deal
-import com.digeltech.appdiscountone.util.copyTextToClipboard
-import com.digeltech.appdiscountone.util.getDiscountText
+import com.digeltech.appdiscountone.ui.common.addToBookmark
+import com.digeltech.appdiscountone.ui.common.model.DealParcelable
+import com.digeltech.appdiscountone.ui.common.removeFromBookmark
+import com.digeltech.appdiscountone.util.*
 import com.digeltech.appdiscountone.util.view.*
 
-
 class DealAdapter(
-    private val onClickListener: (id: Int) -> Unit,
-) : ListAdapter<Deal, DealAdapter.ItemViewholder>(DiffCallback()) {
+    private val onClickListener: (deal: DealParcelable) -> Unit,
+) : ListAdapter<DealParcelable, DealAdapter.ItemViewholder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewholder {
         return RvDealBinding.inflate(
@@ -37,16 +37,24 @@ class DealAdapter(
     inner class ItemViewholder(val binding: RvDealBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Deal) {
+        fun bind(item: DealParcelable) {
             with(binding) {
-                item.imageUrl?.let(ivDealImage::loadImage)
-                tvPrice.setStrikethrough(item.oldPrice.toString())
-                tvPriceWithDiscount.text = item.discountPrice.toString()
-                btnGetCoupon.text = getDiscountText(item.oldPrice, item.discountPrice)
+                item.imageUrl?.let(ivDealImage::setImageWithRadius)
+
+                if (item.sale.isNotNullAndNotEmpty()) {
+                    tvPriceWithDiscount.text = item.sale
+                    tvPrice.gone()
+                } else {
+                    tvPrice.setStrikethrough(item.priceCurrency + item.oldPrice)
+                    tvPriceWithDiscount.text = item.priceCurrency + item.discountPrice
+                }
+
                 tvTitle.text = item.title
 
 //                ivCouponCompanyLogo.setImageDrawable(ivCouponCompanyLogo.getImageDrawable(item.companyLogo))
-                tvCouponCompany.text = item.companyName
+                if (item.companyName.isNotEmpty()) {
+                    tvCouponCompany.text = item.companyName.capitalizeFirstLetter()
+                }
 
                 if (item.rating >= 0) {
                     ivRateArrow.setImageDrawable(ivRateArrow.getImageDrawable(R.drawable.ic_arrow_up))
@@ -55,22 +63,33 @@ class DealAdapter(
                 }
                 tvRate.text = item.rating.toString()
 
-                btnGetCoupon.setOnClickListener {
-                    onClickListener(item.id)
+                root.setOnClickListener { onClickListener(item) }
+
+                btnGetDeal.text = getDiscountText(item.oldPrice.safeToInt(), item.discountPrice.safeToInt())
+                btnGetDeal.setOnClickListener { it.openLink(item.link) }
+
+                if (item.promocode.isNotEmpty()) {
+                    btnCopy.visible()
+                    btnCopy.setOnClickListener {
+                        copyTextToClipboard(it.context, item.promocode)
+                        it.context.toast(it.getString(R.string.copied))
+                    }
+                } else {
+                    btnCopy.gone()
                 }
 
-                btnCopy.setOnClickListener {
-                    copyTextToClipboard(it.context, item.title)
-                    it.context.toast(it.getString(R.string.copied))
+                if (item.isAddedToBookmark) {
+                    ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_bookmark_solid))
                 }
-
                 ivBookmark.setOnClickListener {
                     if (item.isAddedToBookmark) {
                         item.isAddedToBookmark = false
+                        removeFromBookmark(item.id)
                         ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_bookmark))
                         it.context.toast(it.getString(R.string.removed_from_bookmarks))
                     } else {
                         item.isAddedToBookmark = true
+                        addToBookmark(item)
                         ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_bookmark_solid))
                         it.context.toast(it.getString(R.string.added_to_bookmarks))
                     }
@@ -85,10 +104,11 @@ class DealAdapter(
         }
     }
 
-    class DiffCallback : DiffUtil.ItemCallback<Deal>() {
-        override fun areItemsTheSame(oldItem: Deal, newItem: Deal): Boolean = oldItem.id == newItem.id
+    class DiffCallback : DiffUtil.ItemCallback<DealParcelable>() {
+        override fun areItemsTheSame(oldItem: DealParcelable, newItem: DealParcelable): Boolean =
+            oldItem.id == newItem.id
 
         @SuppressLint("DiffUtilEquals")
-        override fun areContentsTheSame(oldItem: Deal, newItem: Deal): Boolean = oldItem == newItem
+        override fun areContentsTheSame(oldItem: DealParcelable, newItem: DealParcelable): Boolean = oldItem == newItem
     }
 }

@@ -89,6 +89,13 @@ class OnboardingFragment : BaseFragment(R.layout.fragment_onboarding),
         }
     }
 
+    private fun updateFirebaseProfile(uri: Uri) {
+        val profileUpdates = userProfileChangeRequest {
+            photoUri = uri
+        }
+        Firebase.auth.currentUser?.updateProfile(profileUpdates)
+    }
+
     @SuppressLint("SetTextI18n")
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         binding.tvDateOfBirth.text = "$year-$month-$dayOfMonth"
@@ -101,12 +108,5 @@ class OnboardingFragment : BaseFragment(R.layout.fragment_onboarding),
         } else {
             binding.btnContinue.disable()
         }
-    }
-
-    private fun updateFirebaseProfile(uri: Uri) {
-        val profileUpdates = userProfileChangeRequest {
-            photoUri = uri
-        }
-        Firebase.auth.currentUser?.updateProfile(profileUpdates)
     }
 }

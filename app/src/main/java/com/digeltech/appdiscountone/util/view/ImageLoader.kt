@@ -7,7 +7,6 @@ import androidx.annotation.DimenRes
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
@@ -42,7 +41,8 @@ fun ImageView.setImageWithRadius(
     val radius: Int = context.resources.getDimension(radiusDimen).toInt()
     Glide.with(context)
         .load(url)
-        .transform(CenterCrop(), RoundedCorners(radius))
+//        .transform(CenterCrop(), RoundedCorners(radius))
+        .transform(RoundedCorners(radius))
         .transition(glideTransitionOption)
         .into(this)
 }

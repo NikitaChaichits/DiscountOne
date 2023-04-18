@@ -8,11 +8,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.digeltech.appdiscountone.databinding.RvFrHomeCategoriesBinding
 import com.digeltech.appdiscountone.domain.model.CategoryWithItems
-import com.digeltech.appdiscountone.ui.coupons.adapter.DealAdapter
+import com.digeltech.appdiscountone.ui.common.adapter.DealAdapter
+import com.digeltech.appdiscountone.ui.common.model.DealParcelable
 
 class CategoriesAdapter(
     private val onMoreDealsClick: (categoryId: Int) -> Unit,
-    private val onDealClick: (categoryId: Int) -> Unit,
+    private val onDealClick: (deal: DealParcelable) -> Unit,
 ) : ListAdapter<CategoryWithItems, CategoriesAdapter.ItemViewholder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewholder {
@@ -39,7 +40,9 @@ class CategoriesAdapter(
                 tvCategoryTitle.text = item.name
                 tvMoreDeals.setOnClickListener { onMoreDealsClick(item.id) }
 
-                val dealsAdapter = DealAdapter { onDealClick(it) }
+                val dealsAdapter = DealAdapter {
+//                    onDealClick(item.items.)
+                }
                 dealsAdapter.submitList(item.items)
                 rvDeals.adapter = dealsAdapter
             }

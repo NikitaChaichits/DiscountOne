@@ -19,6 +19,10 @@
     <string name="copied">Copied to clipboard</string>
     <string name="added_to_bookmarks">Added to bookmarks</string>
     <string name="removed_from_bookmarks">Removed from bookmarks</string>
+    <string name="incorrect_link_message">An error occurred opening the link. Please try again later or report the problem to the Helpdesk.</string>
+
+    <!-- Wildcard strings -->
+    <string name="price_wildcard">₹ %d</string>
 
     <!-- Permission -->
 
@@ -101,9 +105,13 @@
     <string name="fr_coupons_title">Coupons</string>
 
     <!-- Fragment Deal-->
+    <string name="fr_deal_published">Published %s</string>
     <string name="fr_deal_more_about_discount">More about the discount</string>
     <string name="fr_deal_disclosure">Disclosure: If you follow a link or buy an item from a post, Discount One may receive a commission from the store, but this does not affect what discounts are posted on the site. \n<u>Affiliate Disclosure</u></string>
     <string name="fr_deal_similar_products">Similar Products</string>
     <string name="fr_deal_similar_more_deals">More deals</string>
+
+    <!-- Fragment Saved Publications-->
+    <string name="fr_saved_publ_title">Saved Publications</string>
 
 </resources>

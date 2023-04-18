@@ -9,7 +9,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.common.base.BaseFragment
 import com.digeltech.appdiscountone.databinding.FragmentCategoryBinding
-import com.digeltech.appdiscountone.ui.coupons.adapter.DealAdapter
+import com.digeltech.appdiscountone.ui.common.adapter.DealAdapter
 import com.digeltech.appdiscountone.util.view.px
 import com.digeltech.appdiscountone.util.view.recycler.GridOffsetDecoration
 import dagger.hilt.android.AndroidEntryPoint

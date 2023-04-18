@@ -13,8 +13,6 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideDatabaseConnection(): DatabaseConnection {
-        return DatabaseConnection()
-    }
+    fun provideDatabaseConnection(): DatabaseConnection = DatabaseConnection()
 
 }
