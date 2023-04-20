@@ -12,7 +12,9 @@ import com.digeltech.appdiscountone.databinding.FragmentDealBinding
 import com.digeltech.appdiscountone.ui.common.addToBookmark
 import com.digeltech.appdiscountone.ui.common.model.DealParcelable
 import com.digeltech.appdiscountone.ui.common.removeFromBookmark
-import com.digeltech.appdiscountone.util.*
+import com.digeltech.appdiscountone.util.capitalizeFirstLetter
+import com.digeltech.appdiscountone.util.copyTextToClipboard
+import com.digeltech.appdiscountone.util.isNotNullAndNotEmpty
 import com.digeltech.appdiscountone.util.view.*
 
 class DealFragment : BaseFragment(R.layout.fragment_deal) {
@@ -62,7 +64,6 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
 
             tvRate.text = deal.rating.toString()
 
-            btnGetDeal.text = getDiscountText(deal.oldPrice.safeToInt(), deal.discountPrice.safeToInt())
             btnGetDeal.setOnClickListener { it.openLink(deal.link) }
 
             if (deal.promocode.isNotEmpty()) {

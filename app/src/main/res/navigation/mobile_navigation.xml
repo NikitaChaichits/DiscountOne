@@ -9,6 +9,7 @@
         android:id="@+id/homeFragment"
         android:name="com.digeltech.appdiscountone.ui.home.HomeFragment"
         android:label="@string/nav_home"
+
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/toProfileFragment"

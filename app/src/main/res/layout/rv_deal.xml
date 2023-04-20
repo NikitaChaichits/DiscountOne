@@ -116,11 +116,12 @@
         style="@style/ButtonColored.Coupon"
         android:layout_width="0dp"
         android:layout_height="40dp"
+        android:text="@string/shop_now"
+        android:textAllCaps="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/btnCopy"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:text="Get 50%" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/btnCopy"

@@ -125,8 +125,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/common_offset_16dp"
             android:layout_marginTop="@dimen/common_offset_24dp"
-            android:visibility="invisible"
             android:src="@drawable/ic_time_valid"
+            android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ivCouponCompanyLogo" />
 
@@ -182,10 +182,11 @@
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_marginTop="@dimen/common_offset_16dp"
+            android:text="@string/shop_now"
+            android:textAllCaps="true"
             app:layout_constraintEnd_toStartOf="@id/btnCopy"
             app:layout_constraintStart_toStartOf="@id/ivTimeValid"
-            app:layout_constraintTop_toBottomOf="@id/ivTimeValid"
-            tools:text="Get 50%" />
+            app:layout_constraintTop_toBottomOf="@id/ivTimeValid" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/btnCopy"

@@ -16,6 +16,7 @@ import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+
 @AndroidEntryPoint
 class CategoriesFragment : BaseFragment(R.layout.fragment_categories) {
 
@@ -58,9 +59,7 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories) {
     }
 
     private fun loadProfileImage() {
-        Firebase.auth.currentUser?.photoUrl?.let {
-            binding.ivProfile.setCircleImage(it)
-        }
+        Firebase.auth.currentUser?.photoUrl?.let(binding.ivProfile::setCircleImage)
     }
 
     private fun observeData() {

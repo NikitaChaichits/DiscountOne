@@ -11,7 +11,9 @@ import com.digeltech.appdiscountone.databinding.RvDealBinding
 import com.digeltech.appdiscountone.ui.common.addToBookmark
 import com.digeltech.appdiscountone.ui.common.model.DealParcelable
 import com.digeltech.appdiscountone.ui.common.removeFromBookmark
-import com.digeltech.appdiscountone.util.*
+import com.digeltech.appdiscountone.util.capitalizeFirstLetter
+import com.digeltech.appdiscountone.util.copyTextToClipboard
+import com.digeltech.appdiscountone.util.isNotNullAndNotEmpty
 import com.digeltech.appdiscountone.util.view.*
 
 class DealAdapter(
@@ -65,7 +67,6 @@ class DealAdapter(
 
                 root.setOnClickListener { onClickListener(item) }
 
-                btnGetDeal.text = getDiscountText(item.oldPrice.safeToInt(), item.discountPrice.safeToInt())
                 btnGetDeal.setOnClickListener { it.openLink(item.link) }
 
                 if (item.promocode.isNotEmpty()) {

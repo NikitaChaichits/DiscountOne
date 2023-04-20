@@ -3,6 +3,7 @@ package com.digeltech.appdiscountone
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.digeltech.appdiscountone.data.source.local.SharedPreferencesDataSource
@@ -11,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -32,11 +34,9 @@ class MainActivity : AppCompatActivity() {
         val navFragment =
             supportFragmentManager.findFragmentById(R.id.navigationHost) as NavHostFragment
         val navController = navFragment.navController
-
-        if (Firebase.auth.currentUser == null) {
-            navController.navigate(R.id.startFragment)
-            binding.bottomNavMenu.visibility = View.GONE
-        }
+        val navOptions = NavOptions.Builder()
+            .setPopUpTo(R.id.categoriesFragment, true)
+            .build()
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.homeFragment) {
@@ -48,5 +48,33 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.bottomNavMenu.setupWithNavController(navController)
+        binding.bottomNavMenu.setOnItemSelectedListener { menuItem ->
+            val navOptions = NavOptions.Builder()
+                .setPopUpTo(menuItem.itemId, false)
+                .build()
+            when (menuItem.itemId) {
+                R.id.homeFragment -> {
+                    navController.navigate(R.id.homeFragment, null, navOptions)
+                    true
+                }
+                R.id.categoriesFragment -> {
+                    navController.navigate(R.id.categoriesFragment, null, navOptions)
+                    true
+                }
+                R.id.dealsFragment -> {
+                    navController.navigate(R.id.dealsFragment, null, navOptions)
+                    true
+                }
+                R.id.shopsFragment -> {
+                    navController.navigate(R.id.shopsFragment, null, navOptions)
+                    true
+                }
+                R.id.couponsFragment -> {
+                    navController.navigate(R.id.couponsFragment, null, navOptions)
+                    true
+                }
+                else -> false
+            }
+        }
     }
 }
