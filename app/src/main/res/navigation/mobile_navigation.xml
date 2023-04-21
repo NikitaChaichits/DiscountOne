@@ -16,7 +16,16 @@
             app:destination="@id/profileFragment" />
         <action
             android:id="@+id/toDealFragment"
-            app:destination="@id/dealFragment">
+            app:destination="@id/dealFragment"></action>
+        <action
+            android:id="@+id/toCategoryFragment"
+            app:destination="@id/categoryAndShopFragment">
+            <argument
+                android:name="id"
+                app:argType="integer" />
+            <argument
+                android:name="title"
+                app:argType="string" />
         </action>
     </fragment>
 
@@ -30,26 +39,26 @@
             app:destination="@id/profileFragment" />
         <action
             android:id="@+id/toCategoryFragment"
-            app:destination="@id/categoryFragment">
+            app:destination="@id/categoryAndShopFragment">
             <argument
-                android:name="categoryId"
+                android:name="id"
                 app:argType="integer" />
             <argument
-                android:name="categoryName"
+                android:name="title"
                 app:argType="string" />
         </action>
     </fragment>
 
     <fragment
-        android:id="@+id/categoryFragment"
-        android:name="com.digeltech.appdiscountone.ui.categories.category.CategoryFragment"
+        android:id="@+id/categoryAndShopFragment"
+        android:name="com.digeltech.appdiscountone.ui.categories.categoryandshop.CategoryAndShopFragment"
         android:label="@string/nav_categories"
-        tools:layout="@layout/fragment_category">
+        tools:layout="@layout/fragment_category_and_shop">
         <argument
-            android:name="categoryId"
+            android:name="id"
             app:argType="integer" />
         <argument
-            android:name="categoryName"
+            android:name="title"
             app:argType="string" />
 
         <action
@@ -86,6 +95,9 @@
         <argument
             android:name="deal"
             app:argType="com.digeltech.appdiscountone.ui.common.model.DealParcelable" />
+        <action
+            android:id="@+id/toCategoriesFragment"
+            app:destination="@id/categoriesFragment" />
     </fragment>
 
     <fragment
@@ -96,6 +108,16 @@
         <action
             android:id="@+id/toProfileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/toCategoryFragment"
+            app:destination="@id/categoryAndShopFragment">
+            <argument
+                android:name="id"
+                app:argType="integer" />
+            <argument
+                android:name="title"
+                app:argType="string" />
+        </action>
     </fragment>
 
     <fragment

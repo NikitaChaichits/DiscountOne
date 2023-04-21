@@ -3,7 +3,7 @@ package com.digeltech.appdiscountone.util
 import android.os.SystemClock
 import android.util.Log
 
-private const val LOG_TAG = "DiscountOneLog"
+private const val LOG_TAG = "DiscountLog"
 
 fun log(msg: Any?) = Log.v(LOG_TAG, msg.toString())
 

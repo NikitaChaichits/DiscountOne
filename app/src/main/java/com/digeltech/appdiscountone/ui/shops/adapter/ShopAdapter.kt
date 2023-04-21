@@ -11,7 +11,7 @@ import com.digeltech.appdiscountone.domain.model.Shop
 import com.digeltech.appdiscountone.util.view.loadImage
 
 class ShopAdapter(
-    private val onClickListener: (id: Int) -> Unit,
+    private val onClickListener: (Pair<Int, String>) -> Unit,
 ) : ListAdapter<Shop, ShopAdapter.ItemViewholder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewholder {
@@ -43,7 +43,7 @@ class ShopAdapter(
                 }
 
                 root.setOnClickListener {
-                    onClickListener(item.id)
+                    onClickListener(Pair(item.id, item.name))
                 }
             }
         }
@@ -54,17 +54,9 @@ class ShopAdapter(
     }
 
     class DiffCallback : DiffUtil.ItemCallback<Shop>() {
-
-        override fun areItemsTheSame(
-            oldItem: Shop,
-            newItem: Shop
-        ): Boolean = oldItem.id == newItem.id
+        override fun areItemsTheSame(oldItem: Shop, newItem: Shop): Boolean = oldItem.id == newItem.id
 
         @SuppressLint("DiffUtilEquals")
-        override fun areContentsTheSame(
-            oldItem: Shop,
-            newItem: Shop
-        ): Boolean = oldItem == newItem
-
+        override fun areContentsTheSame(oldItem: Shop, newItem: Shop): Boolean = oldItem == newItem
     }
 }

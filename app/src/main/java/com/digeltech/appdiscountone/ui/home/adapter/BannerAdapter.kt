@@ -37,7 +37,7 @@ class BannerAdapter(
         fun bind(item: Banner) {
             binding.ivBannerImage.apply {
                 setImageWithRadius(item.urlImage, R.dimen.radius_16)
-                setOnClickListener { onClickListener(item.id) }
+                setOnClickListener { onClickListener(item.dealId) }
             }
         }
 
@@ -47,7 +47,7 @@ class BannerAdapter(
     }
 
     class DiffCallback : DiffUtil.ItemCallback<Banner>() {
-        override fun areItemsTheSame(oldItem: Banner, newItem: Banner): Boolean = oldItem.id == newItem.id
+        override fun areItemsTheSame(oldItem: Banner, newItem: Banner): Boolean = oldItem.dealId == newItem.dealId
 
         @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(oldItem: Banner, newItem: Banner): Boolean = oldItem == newItem

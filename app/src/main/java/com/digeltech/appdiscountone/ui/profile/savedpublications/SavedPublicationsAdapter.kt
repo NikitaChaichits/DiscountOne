@@ -54,8 +54,8 @@ class SavedPublicationsAdapter(
                 tvTitle.text = item.title
 
 //                ivCouponCompanyLogo.setImageDrawable(ivCouponCompanyLogo.getImageDrawable(item.companyLogo))
-                if (item.companyName.isNotEmpty()) {
-                    tvCouponCompany.text = item.companyName.capitalizeFirstLetter()
+                if (item.shopName.isNotNullAndNotEmpty()) {
+                    tvCouponCompany.text = item.shopName.capitalizeFirstLetter()
                 }
 
                 if (item.rating >= 0) {

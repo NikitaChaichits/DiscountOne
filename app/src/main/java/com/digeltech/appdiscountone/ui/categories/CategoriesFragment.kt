@@ -40,7 +40,7 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories) {
 
     private fun initAdapters() {
         categoryAdapter = CategoryAdapter {
-            navigate(CategoriesFragmentDirections.toCategoryFragment(categoryId = it.first, categoryName = it.second))
+            navigate(CategoriesFragmentDirections.toCategoryFragment(id = it.first, title = it.second))
         }
         binding.rvCategories.adapter = categoryAdapter
         binding.rvCategories.addItemDecoration(

@@ -8,12 +8,12 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class DealParcelable(
     val id: Int,
+    val categoryId: Int,
     val title: String,
     val description: String,
     var imageUrl: String? = null,
-    val companyName: String,
-    val companyLogoUrl: String? = null,
-    val categoryId: Int,
+    val shopName: String,
+    val shopImageUrl: String? = null,
     val oldPrice: String,
     val discountPrice: String,
     val priceCurrency: String = "₹",
@@ -26,19 +26,19 @@ data class DealParcelable(
     val sale: String,
 ) : Parcelable
 
-fun List<Deal>.toDealParcelableList(): List<DealParcelable> {
-    return map { it.toDealParcelable() }
+fun List<Deal>.toParcelableList(): List<DealParcelable> {
+    return map { it.toParcelable() }
 }
 
-fun Deal.toDealParcelable(): DealParcelable {
+fun Deal.toParcelable(): DealParcelable {
     return DealParcelable(
         id = id,
+        categoryId = categoryId,
         title = title,
         description = description,
         imageUrl = imageUrl,
-        companyName = companyName,
-        companyLogoUrl = companyLogoUrl,
-        categoryId = categoryId,
+        shopName = shopName,
+        shopImageUrl = shopImageUrl,
         oldPrice = oldPrice,
         discountPrice = discountPrice,
         priceCurrency = priceCurrency,

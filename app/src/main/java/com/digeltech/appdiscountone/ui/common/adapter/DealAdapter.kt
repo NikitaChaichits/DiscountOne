@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.databinding.RvDealBinding
 import com.digeltech.appdiscountone.ui.common.addToBookmark
+import com.digeltech.appdiscountone.ui.common.isAddedToBookmark
 import com.digeltech.appdiscountone.ui.common.model.DealParcelable
 import com.digeltech.appdiscountone.ui.common.removeFromBookmark
 import com.digeltech.appdiscountone.util.capitalizeFirstLetter
@@ -54,8 +55,8 @@ class DealAdapter(
                 tvTitle.text = item.title
 
 //                ivCouponCompanyLogo.setImageDrawable(ivCouponCompanyLogo.getImageDrawable(item.companyLogo))
-                if (item.companyName.isNotEmpty()) {
-                    tvCouponCompany.text = item.companyName.capitalizeFirstLetter()
+                if (item.shopName.isNotEmpty()) {
+                    tvCouponCompany.text = item.shopName.capitalizeFirstLetter()
                 }
 
                 if (item.rating >= 0) {
@@ -78,6 +79,8 @@ class DealAdapter(
                 } else {
                     btnCopy.gone()
                 }
+
+                item.isAddedToBookmark = isAddedToBookmark(item.id)
 
                 if (item.isAddedToBookmark) {
                     ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_bookmark_solid))

@@ -56,10 +56,10 @@
         <ImageView
             android:id="@+id/ivBannerSale"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="138dp"
             android:layout_marginTop="@dimen/common_offset_16dp"
-            android:paddingHorizontal="@dimen/common_offset_16dp"
-            android:src="@drawable/banner_sale"
+            android:paddingHorizontal="@dimen/common_offset_8dp"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/rvBanners" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -72,7 +72,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ivBannerSale"
             tools:itemCount="2"
-            tools:listitem="@layout/rv_fr_home_categories" />
+            tools:listitem="@layout/rv_home_categories" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

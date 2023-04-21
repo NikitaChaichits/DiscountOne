@@ -2,8 +2,10 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/common_offset_8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -287,6 +289,25 @@ Magnificent Sound, engineered to perfection with the new Integrated Processor V1
             app:layout_constraintBottom_toBottomOf="@id/tvSimilarProducts"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tvSimilarProducts" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvDeals"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/common_offset_16dp"
+            android:layout_marginTop="@dimen/common_offset_24dp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/tvSimilarProducts"
+            tools:itemCount="3"
+            tools:listitem="@layout/rv_deal" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/grSimilarProducts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:constraint_referenced_ids="tvSimilarProducts, tvMoreDeals, rvDeals" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

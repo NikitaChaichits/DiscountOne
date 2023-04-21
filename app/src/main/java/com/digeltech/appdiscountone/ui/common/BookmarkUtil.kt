@@ -27,3 +27,14 @@ fun removeFromBookmark(id: Int) {
 fun getListOfBookmarks(): List<DealParcelable> {
     return Hawk.get(KEY)
 }
+
+fun isAddedToBookmark(id: Int): Boolean {
+    if (Hawk.contains(KEY)) {
+        val listOfBookMark: List<DealParcelable> = Hawk.get(KEY)
+        listOfBookMark.forEach {
+            if (it.id == id)
+                return true
+        }
+    }
+    return false
+}

@@ -1,11 +1,12 @@
 package com.digeltech.appdiscountone.domain.repository
 
 import com.digeltech.appdiscountone.domain.model.Category
-import com.digeltech.appdiscountone.domain.model.Deal
+import com.digeltech.appdiscountone.domain.model.CategoryWithDeals
 
 interface CategoriesRepository {
 
     suspend fun getAllCategories(): List<Category>
 
-    suspend fun getCategoryDealsById(id: Int): List<Deal>
+    suspend fun getHomeCategories(): List<CategoryWithDeals>
+
 }

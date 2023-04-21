@@ -6,18 +6,20 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.digeltech.appdiscountone.databinding.RvFrHomeCategoriesBinding
-import com.digeltech.appdiscountone.domain.model.CategoryWithItems
+import com.digeltech.appdiscountone.databinding.RvHomeCategoriesBinding
+import com.digeltech.appdiscountone.domain.model.CategoryWithDeals
 import com.digeltech.appdiscountone.ui.common.adapter.DealAdapter
+import com.digeltech.appdiscountone.ui.common.model.CategoryWithDealsParcelable
 import com.digeltech.appdiscountone.ui.common.model.DealParcelable
+import com.digeltech.appdiscountone.ui.common.model.toParcelableList
 
 class CategoriesAdapter(
-    private val onMoreDealsClick: (categoryId: Int) -> Unit,
+    private val onMoreDealsClick: (category: CategoryWithDealsParcelable) -> Unit,
     private val onDealClick: (deal: DealParcelable) -> Unit,
-) : ListAdapter<CategoryWithItems, CategoriesAdapter.ItemViewholder>(DiffCallback()) {
+) : ListAdapter<CategoryWithDeals, CategoriesAdapter.ItemViewholder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewholder {
-        return RvFrHomeCategoriesBinding.inflate(
+        return RvHomeCategoriesBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
@@ -32,18 +34,17 @@ class CategoriesAdapter(
         holder.unbind()
     }
 
-    inner class ItemViewholder(val binding: RvFrHomeCategoriesBinding) :
+    inner class ItemViewholder(val binding: RvHomeCategoriesBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: CategoryWithItems) {
+        fun bind(item: CategoryWithDeals) {
             with(binding) {
                 tvCategoryTitle.text = item.name
-                tvMoreDeals.setOnClickListener { onMoreDealsClick(item.id) }
+                tvMoreDeals.setOnClickListener { onMoreDealsClick(item.toParcelableList()) }
 
-                val dealsAdapter = DealAdapter {
-//                    onDealClick(item.items.)
-                }
-                dealsAdapter.submitList(item.items)
+                val dealsAdapter = DealAdapter { onDealClick(it) }
+
+                dealsAdapter.submitList(item.items.toParcelableList())
                 rvDeals.adapter = dealsAdapter
             }
         }
@@ -51,12 +52,12 @@ class CategoriesAdapter(
         fun unbind() = Unit
     }
 
-    class DiffCallback : DiffUtil.ItemCallback<CategoryWithItems>() {
-        override fun areItemsTheSame(oldItem: CategoryWithItems, newItem: CategoryWithItems): Boolean =
+    class DiffCallback : DiffUtil.ItemCallback<CategoryWithDeals>() {
+        override fun areItemsTheSame(oldItem: CategoryWithDeals, newItem: CategoryWithDeals): Boolean =
             oldItem.id == newItem.id
 
         @SuppressLint("DiffUtilEquals")
-        override fun areContentsTheSame(oldItem: CategoryWithItems, newItem: CategoryWithItems): Boolean =
+        override fun areContentsTheSame(oldItem: CategoryWithDeals, newItem: CategoryWithDeals): Boolean =
             oldItem == newItem
     }
 }

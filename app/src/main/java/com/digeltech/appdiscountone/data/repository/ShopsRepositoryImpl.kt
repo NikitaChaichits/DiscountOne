@@ -7,12 +7,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+
 class ShopsRepositoryImpl @Inject constructor(
     private val databaseConnection: DatabaseConnection
 ) : ShopsRepository {
 
-    override suspend fun getShopsList(): List<Shop> = withContext(Dispatchers.IO) {
+    override suspend fun getAllShops(): List<Shop> = withContext(Dispatchers.IO) {
         databaseConnection.getAllShops()
     }
-
 }

@@ -1,4 +1,4 @@
-package com.digeltech.appdiscountone.ui.categories.category
+package com.digeltech.appdiscountone.ui.categories.categoryandshop
 
 import android.os.Bundle
 import android.view.View
@@ -8,7 +8,7 @@ import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.common.base.BaseFragment
-import com.digeltech.appdiscountone.databinding.FragmentCategoryBinding
+import com.digeltech.appdiscountone.databinding.FragmentCategoryAndShopBinding
 import com.digeltech.appdiscountone.ui.common.adapter.DealAdapter
 import com.digeltech.appdiscountone.util.view.px
 import com.digeltech.appdiscountone.util.view.recycler.GridOffsetDecoration
@@ -16,13 +16,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class CategoryFragment : BaseFragment(R.layout.fragment_category) {
+class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop) {
 
-    private val binding by viewBinding(FragmentCategoryBinding::bind)
+    private val binding by viewBinding(FragmentCategoryAndShopBinding::bind)
 
-    override val viewModel: CategoryViewModel by viewModels()
+    override val viewModel: CategoryAndShopViewModel by viewModels()
 
-    private val args: CategoryFragmentArgs by navArgs()
+    private val args: CategoryAndShopFragmentArgs by navArgs()
 
     private lateinit var dealAdapter: DealAdapter
 
@@ -32,15 +32,15 @@ class CategoryFragment : BaseFragment(R.layout.fragment_category) {
         initAdapters()
         initListeners()
 
-        binding.tvTitle.text = args.categoryName
-        viewModel.getCategoryDeals(args.categoryId)
+        binding.tvTitle.text = args.title
+        viewModel.getDeals(args.id)
 
         observeData()
     }
 
     private fun initAdapters() {
         dealAdapter = DealAdapter {
-            navigate(CategoryFragmentDirections.toDealFragment(it))
+            navigate(CategoryAndShopFragmentDirections.toDealFragment(it))
         }
         binding.rvDeals.adapter = dealAdapter
         binding.rvDeals.addItemDecoration(
