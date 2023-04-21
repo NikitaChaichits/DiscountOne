@@ -22,9 +22,9 @@ class SharedPreferencesDataSource @Inject constructor(applicationContext: Contex
     /**
      * Хранение имени Пользователя
      */
-    fun setName(name: String) = sharedPrefs.put(NAME, name)
+    fun setAuthorized(isAuthorized: Boolean) = sharedPrefs.put(AUTHORIZED, isAuthorized)
 
-    fun getName(): String = sharedPrefs.get(NAME, "")
+    fun isAuthorized(): Boolean = sharedPrefs.get(AUTHORIZED, false)
 
     /**
      * Хранение даты рождения Пользователя

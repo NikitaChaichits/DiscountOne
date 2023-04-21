@@ -11,6 +11,7 @@ import com.digeltech.appdiscountone.databinding.FragmentShopsBinding
 import com.digeltech.appdiscountone.ui.categories.CategoriesFragmentDirections
 import com.digeltech.appdiscountone.ui.shops.adapter.ShopAdapter
 import com.digeltech.appdiscountone.util.view.setCircleImage
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,9 +25,12 @@ class ShopsFragment : BaseFragment(R.layout.fragment_shops) {
     override val viewModel: ShopsViewModel by viewModels()
 
     private lateinit var shopAdapter: ShopAdapter
+    private lateinit var auth: FirebaseAuth
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        auth = Firebase.auth
 
         initAdapter()
         initListeners()
@@ -46,7 +50,11 @@ class ShopsFragment : BaseFragment(R.layout.fragment_shops) {
 
     private fun initListeners() {
         binding.ivProfile.setOnClickListener {
-            navigate(R.id.profileFragment)
+            if (auth.currentUser == null) {
+                navigate(R.id.startFragment)
+            } else {
+                navigate(R.id.profileFragment)
+            }
         }
     }
 

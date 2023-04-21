@@ -13,6 +13,7 @@ import com.digeltech.appdiscountone.util.view.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.orhanobut.hawk.Hawk
 
 
 class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
@@ -68,6 +69,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
             llLogout.setOnClickListener {
                 Firebase.auth.signOut()
                 prefs.clear()
+                Hawk.deleteAll()
                 navigate(R.id.startFragment)
             }
             llPrivacyPolicy.setOnClickListener {

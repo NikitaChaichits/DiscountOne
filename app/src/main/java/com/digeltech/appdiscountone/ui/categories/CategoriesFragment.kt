@@ -11,6 +11,7 @@ import com.digeltech.appdiscountone.databinding.FragmentCategoriesBinding
 import com.digeltech.appdiscountone.ui.categories.adapter.CategoryAdapter
 import com.digeltech.appdiscountone.util.view.recycler.GridOffsetDecoration
 import com.digeltech.appdiscountone.util.view.setCircleImage
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,9 +26,12 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories) {
     override val viewModel: CategoriesViewModel by viewModels()
 
     private lateinit var categoryAdapter: CategoryAdapter
+    private lateinit var auth: FirebaseAuth
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        auth = Firebase.auth
 
         initAdapters()
         initListeners()
@@ -54,7 +58,11 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories) {
 
     private fun initListeners() {
         binding.ivProfile.setOnClickListener {
-            navigate(R.id.profileFragment)
+            if (auth.currentUser == null) {
+                navigate(R.id.startFragment)
+            } else {
+                navigate(R.id.profileFragment)
+            }
         }
     }
 

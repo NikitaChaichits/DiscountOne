@@ -8,11 +8,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.digeltech.appdiscountone.data.source.local.SharedPreferencesDataSource
 import com.digeltech.appdiscountone.databinding.ActivityMainBinding
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
-
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -20,7 +16,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private lateinit var prefs: SharedPreferencesDataSource
-    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,14 +24,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         prefs = SharedPreferencesDataSource(baseContext)
-        auth = Firebase.auth
 
         val navFragment =
             supportFragmentManager.findFragmentById(R.id.navigationHost) as NavHostFragment
         val navController = navFragment.navController
-        val navOptions = NavOptions.Builder()
-            .setPopUpTo(R.id.categoriesFragment, true)
-            .build()
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.homeFragment) {

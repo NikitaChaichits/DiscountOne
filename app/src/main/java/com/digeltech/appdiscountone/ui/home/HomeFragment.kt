@@ -13,6 +13,7 @@ import com.digeltech.appdiscountone.ui.home.adapter.CategoriesAdapter
 import com.digeltech.appdiscountone.util.view.setCircleImage
 import com.digeltech.appdiscountone.util.view.setImageWithRadius
 import com.digeltech.appdiscountone.util.view.visible
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,9 +27,12 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
     private lateinit var bannerAdapter: BannerAdapter
     private lateinit var categoriesAdapter: CategoriesAdapter
+    private lateinit var auth: FirebaseAuth
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        auth = Firebase.auth
 
         loadProfileImage()
         initAdapters()
@@ -39,7 +43,11 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
     private fun initListeners() {
         binding.ivProfile.setOnClickListener {
-            navigate(R.id.profileFragment)
+            if (auth.currentUser == null) {
+                navigate(R.id.startFragment)
+            } else {
+                navigate(R.id.profileFragment)
+            }
         }
     }
 

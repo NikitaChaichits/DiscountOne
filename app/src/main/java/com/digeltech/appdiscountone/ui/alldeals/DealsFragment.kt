@@ -12,6 +12,7 @@ import com.digeltech.appdiscountone.ui.coupons.CouponsFragmentDirections
 import com.digeltech.appdiscountone.util.view.px
 import com.digeltech.appdiscountone.util.view.recycler.GridOffsetDecoration
 import com.digeltech.appdiscountone.util.view.setCircleImage
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -21,9 +22,12 @@ class DealsFragment : BaseFragment(R.layout.fragment_deals) {
     override val viewModel: DealsViewModel by viewModels()
 
     private lateinit var adapter: DealAdapter
+    private lateinit var auth: FirebaseAuth
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        auth = Firebase.auth
 
         initAdapter()
         initListeners()
@@ -49,7 +53,11 @@ class DealsFragment : BaseFragment(R.layout.fragment_deals) {
 
     private fun initListeners() {
         binding.ivProfile.setOnClickListener {
-            navigate(R.id.profileFragment)
+            if (auth.currentUser == null) {
+                navigate(R.id.startFragment)
+            } else {
+                navigate(R.id.profileFragment)
+            }
         }
     }
 
