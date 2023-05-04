@@ -52,7 +52,9 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
     }
 
     private fun initAdapters() {
-        bannerAdapter = BannerAdapter(viewModel::getDeal)
+        bannerAdapter = BannerAdapter {
+            viewModel.getDeal(dealId = it.first, categoryId = it.second)
+        }
         binding.rvBanners.adapter = bannerAdapter
 
         categoriesAdapter = CategoriesAdapter(
@@ -77,7 +79,9 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
                 banner?.let {
                     binding.ivBannerSale.apply {
                         setImageWithRadius(banner.urlImage, R.dimen.radius_16)
-                        setOnClickListener { viewModel.getDeal(banner.dealId) }
+                        setOnClickListener {
+                            viewModel.getDeal(dealId = banner.dealId, categoryId = banner.categoryId)
+                        }
                         visible()
                     }
 

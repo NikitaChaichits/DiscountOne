@@ -12,7 +12,7 @@ import com.digeltech.appdiscountone.util.view.setImageWithRadius
 
 
 class BannerAdapter(
-    private val onClickListener: (id: Int) -> Unit,
+    private val onClickListener: (Pair<Int, Int>) -> Unit,
 ) : ListAdapter<Banner, BannerAdapter.ItemViewholder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewholder {
@@ -37,7 +37,7 @@ class BannerAdapter(
         fun bind(item: Banner) {
             binding.ivBannerImage.apply {
                 setImageWithRadius(item.urlImage, R.dimen.radius_16)
-                setOnClickListener { onClickListener(item.dealId) }
+                setOnClickListener { onClickListener(Pair(item.dealId, item.categoryId)) }
             }
         }
 

@@ -16,12 +16,12 @@ class DealsRepositoryImpl @Inject constructor(
         databaseConnection.getDealsById(id)
     }
 
-    override suspend fun getSimilarDeals(categoryId: Int, dealId: Int): List<Deal> = withContext(Dispatchers.IO) {
-        databaseConnection.getSimilarDeals(categoryId, dealId)
+    override suspend fun getSimilarDeals(dealId: Int, categoryId: Int): List<Deal> = withContext(Dispatchers.IO) {
+        databaseConnection.getSimilarDeals(dealId = dealId, categoryId = categoryId)
     }
 
-    override suspend fun getDealById(id: Int): Deal = withContext(Dispatchers.IO) {
-        databaseConnection.getDealById(id, 0)
+    override suspend fun getDealById(dealId: Int, categoryId: Int): Deal = withContext(Dispatchers.IO) {
+        databaseConnection.getDealById(dealId = dealId, categoryId = categoryId)
     }
 
     override suspend fun getBanners(): List<Banner> = withContext(Dispatchers.IO) {

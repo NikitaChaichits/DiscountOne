@@ -10,9 +10,9 @@
         android:layout_width="@dimen/common_offset_24dp"
         android:layout_height="@dimen/common_offset_24dp"
         android:layout_marginStart="@dimen/common_offset_16dp"
+        app:layout_constraintBottom_toBottomOf="@id/searchView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/searchView"
-        app:layout_constraintBottom_toBottomOf="@id/searchView"
         app:srcCompat="@drawable/ic_launcher" />
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -29,8 +29,8 @@
         android:id="@+id/searchView"
         android:layout_width="0dp"
         android:layout_height="@dimen/common_offset_40dp"
-        android:layout_marginTop="@dimen/common_offset_8dp"
         android:layout_marginHorizontal="@dimen/common_offset_16dp"
+        android:layout_marginTop="@dimen/common_offset_8dp"
         android:background="@drawable/shape_border"
         android:queryHint="Search by ads"
         app:layout_constraintEnd_toStartOf="@id/ivProfile"
@@ -52,10 +52,12 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/common_offset_20dp"
-        android:layout_marginStart="@dimen/common_offset_12dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintVertical_bias="0.0"
         app:spanCount="3"
         tools:itemCount="9"
         tools:listitem="@layout/rv_category_and_shop" />

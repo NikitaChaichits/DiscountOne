@@ -8,8 +8,9 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.common.base.BaseFragment
 import com.digeltech.appdiscountone.databinding.FragmentShopsBinding
-import com.digeltech.appdiscountone.ui.categories.CategoriesFragmentDirections
 import com.digeltech.appdiscountone.ui.shops.adapter.ShopAdapter
+import com.digeltech.appdiscountone.util.view.px
+import com.digeltech.appdiscountone.util.view.recycler.GridOffsetDecoration
 import com.digeltech.appdiscountone.util.view.setCircleImage
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -43,9 +44,16 @@ class ShopsFragment : BaseFragment(R.layout.fragment_shops) {
 
     private fun initAdapter() {
         shopAdapter = ShopAdapter {
-            navigate(CategoriesFragmentDirections.toCategoryFragment(id = it.first, title = it.second))
+            navigate(ShopsFragmentDirections.toShopFragment(id = it.first, title = it.second))
         }
         binding.rvShops.adapter = shopAdapter
+        binding.rvShops.addItemDecoration(
+            GridOffsetDecoration(
+                edgesOffset = 16.px,
+                horizontalOffset = 16.px,
+                verticalOffset = 16.px
+            )
+        )
     }
 
     private fun initListeners() {

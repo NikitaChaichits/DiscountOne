@@ -6,9 +6,9 @@ import com.digeltech.appdiscountone.ui.home.adapter.Banner
 interface DealsRepository {
     suspend fun getDealsById(id: Int): List<Deal>
 
-    suspend fun getSimilarDeals(categoryId: Int, dealId: Int): List<Deal>
+    suspend fun getSimilarDeals(dealId: Int, categoryId: Int): List<Deal>
 
-    suspend fun getDealById(id: Int): Deal
+    suspend fun getDealById(dealId: Int, categoryId: Int): Deal
 
     suspend fun getBanners(): List<Banner>
 }

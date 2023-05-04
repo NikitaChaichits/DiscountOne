@@ -1,4 +1,4 @@
-package com.digeltech.appdiscountone.ui.profile.savedpublications
+package com.digeltech.appdiscountone.ui.common.adapter
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -8,8 +8,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.digeltech.appdiscountone.R
-import com.digeltech.appdiscountone.databinding.RvDealGridBinding
+import com.digeltech.appdiscountone.databinding.RvDealLinearBinding
 import com.digeltech.appdiscountone.ui.common.addToBookmark
+import com.digeltech.appdiscountone.ui.common.isAddedToBookmark
 import com.digeltech.appdiscountone.ui.common.model.DealParcelable
 import com.digeltech.appdiscountone.ui.common.removeFromBookmark
 import com.digeltech.appdiscountone.util.capitalizeFirstLetter
@@ -20,12 +21,12 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 
-class SavedPublicationsAdapter(
+class LinearDealAdapter(
     private val onClickListener: (deal: DealParcelable) -> Unit,
-) : ListAdapter<DealParcelable, SavedPublicationsAdapter.ItemViewholder>(DiffCallback()) {
+) : ListAdapter<DealParcelable, LinearDealAdapter.ItemViewholder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewholder {
-        return RvDealGridBinding.inflate(
+        return RvDealLinearBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
@@ -40,7 +41,7 @@ class SavedPublicationsAdapter(
         holder.unbind()
     }
 
-    inner class ItemViewholder(val binding: RvDealGridBinding) :
+    inner class ItemViewholder(val binding: RvDealLinearBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: DealParcelable) {
@@ -58,7 +59,8 @@ class SavedPublicationsAdapter(
                 tvTitle.text = item.title
 
                 item.shopImageUrl?.let { ivCouponCompanyLogo.setImageWithRadius(it, R.dimen.radius_10) }
-                if (item.shopName.isNotNullAndNotEmpty()) {
+
+                if (item.shopName.isNotEmpty()) {
                     tvCouponCompany.text = item.shopName.capitalizeFirstLetter()
                 }
 
@@ -89,6 +91,8 @@ class SavedPublicationsAdapter(
                     btnCopy.gone()
                 }
 
+                item.isAddedToBookmark = isAddedToBookmark(item.id)
+
                 if (item.isAddedToBookmark) {
                     ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_bookmark_solid))
                 }
@@ -96,11 +100,6 @@ class SavedPublicationsAdapter(
                     if (item.isAddedToBookmark) {
                         item.isAddedToBookmark = false
                         removeFromBookmark(item.id)
-
-                        val list = currentList.toMutableList()
-                        list.removeAt(adapterPosition)
-                        submitList(list)
-
                         ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_bookmark))
                         it.context.toast(it.getString(R.string.removed_from_bookmarks))
                     } else {

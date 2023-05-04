@@ -7,7 +7,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.common.base.BaseFragment
 import com.digeltech.appdiscountone.databinding.FragmentDealsBinding
-import com.digeltech.appdiscountone.ui.common.adapter.DealAdapter
+import com.digeltech.appdiscountone.ui.common.adapter.GridDealAdapter
 import com.digeltech.appdiscountone.ui.coupons.CouponsFragmentDirections
 import com.digeltech.appdiscountone.util.view.px
 import com.digeltech.appdiscountone.util.view.recycler.GridOffsetDecoration
@@ -21,7 +21,7 @@ class DealsFragment : BaseFragment(R.layout.fragment_deals) {
     private val binding by viewBinding(FragmentDealsBinding::bind)
     override val viewModel: DealsViewModel by viewModels()
 
-    private lateinit var adapter: DealAdapter
+    private lateinit var adapter: GridDealAdapter
     private lateinit var auth: FirebaseAuth
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,7 +37,7 @@ class DealsFragment : BaseFragment(R.layout.fragment_deals) {
     }
 
     private fun initAdapter() {
-        adapter = DealAdapter {
+        adapter = GridDealAdapter {
             navigate(CouponsFragmentDirections.toDealFragment(it))
         }
 //        adapter.submitList(getListOfCoupons())

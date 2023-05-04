@@ -26,6 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/common_offset_24dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/ivBack"
             app:layout_constraintEnd_toStartOf="@id/ivBookmark"
             app:layout_constraintTop_toTopOf="@id/ivBack"
@@ -111,12 +112,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/common_offset_8dp"
+            android:layout_marginEnd="@dimen/common_offset_8dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/black"
             android:textSize="@dimen/common_textSize_14sp"
             app:layout_constraintBottom_toBottomOf="@id/ivCouponCompanyLogo"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/ivRateArrowUp"
             app:layout_constraintStart_toEndOf="@id/ivCouponCompanyLogo"
             app:layout_constraintTop_toTopOf="@id/ivCouponCompanyLogo"
             tools:text="Nike" />
@@ -128,7 +130,7 @@
             android:layout_marginStart="@dimen/common_offset_16dp"
             android:layout_marginTop="@dimen/common_offset_24dp"
             android:src="@drawable/ic_time_valid"
-            android:visibility="invisible"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ivCouponCompanyLogo" />
 
@@ -139,7 +141,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/common_offset_16dp"
             android:textSize="@dimen/common_textSize_12sp"
-            android:visibility="invisible"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/ivTimeValid"
             app:layout_constraintStart_toEndOf="@id/ivTimeValid"
             app:layout_constraintTop_toTopOf="@id/ivTimeValid"
@@ -151,9 +153,9 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/common_offset_12dp"
             android:src="@drawable/ic_arrow_up_big"
-            app:layout_constraintBottom_toBottomOf="@id/ivTimeValid"
             app:layout_constraintEnd_toStartOf="@id/tvRate"
-            app:layout_constraintTop_toTopOf="@id/ivTimeValid" />
+            app:layout_constraintTop_toTopOf="@id/ivCouponCompanyLogo"
+            app:layout_constraintBottom_toBottomOf="@id/ivCouponCompanyLogo" />
 
         <TextView
             android:id="@+id/tvRate"
@@ -162,9 +164,9 @@
             android:layout_marginEnd="@dimen/common_offset_12dp"
             android:textColor="@color/black"
             android:textSize="@dimen/common_textSize_14sp"
-            app:layout_constraintBottom_toBottomOf="@id/ivTimeValid"
+            app:layout_constraintTop_toTopOf="@id/ivCouponCompanyLogo"
+            app:layout_constraintBottom_toBottomOf="@id/ivCouponCompanyLogo"
             app:layout_constraintEnd_toStartOf="@id/ivRateArrowDown"
-            app:layout_constraintTop_toTopOf="@id/ivTimeValid"
             tools:text="273" />
 
         <ImageView
@@ -174,20 +176,21 @@
             android:layout_marginEnd="@dimen/common_offset_20dp"
             android:rotation="180"
             android:src="@drawable/ic_arrow_up_big"
-            app:layout_constraintBottom_toBottomOf="@id/ivTimeValid"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/ivTimeValid" />
+            app:layout_constraintTop_toTopOf="@id/ivCouponCompanyLogo"
+            app:layout_constraintBottom_toBottomOf="@id/ivCouponCompanyLogo"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnGetDeal"
             style="@style/ButtonColored.Coupon"
             android:layout_width="0dp"
             android:layout_height="40dp"
+            android:layout_marginStart="@dimen/common_offset_16dp"
             android:layout_marginTop="@dimen/common_offset_16dp"
             android:text="@string/shop_now"
             android:textAllCaps="true"
             app:layout_constraintEnd_toStartOf="@id/btnCopy"
-            app:layout_constraintStart_toStartOf="@id/ivTimeValid"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ivTimeValid" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -222,7 +225,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/common_offset_16dp"
-            android:layout_marginTop="@dimen/common_offset_16dp"
+            android:layout_marginTop="@dimen/common_offset_32dp"
             android:text="@string/fr_deal_more_about_discount"
             android:textColor="@color/black"
             android:textSize="@dimen/common_textSize_16sp"
@@ -300,7 +303,7 @@ Magnificent Sound, engineered to perfection with the new Integrated Processor V1
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@id/tvSimilarProducts"
             tools:itemCount="3"
-            tools:listitem="@layout/rv_deal" />
+            tools:listitem="@layout/rv_deal_linear" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/grSimilarProducts"

@@ -9,8 +9,10 @@ import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.common.base.BaseFragment
+import com.digeltech.appdiscountone.data.source.remote.KEY_SHOPS
 import com.digeltech.appdiscountone.databinding.FragmentDealBinding
-import com.digeltech.appdiscountone.ui.common.adapter.DealAdapter
+import com.digeltech.appdiscountone.domain.model.Shop
+import com.digeltech.appdiscountone.ui.common.adapter.LinearDealAdapter
 import com.digeltech.appdiscountone.ui.common.addToBookmark
 import com.digeltech.appdiscountone.ui.common.isAddedToBookmark
 import com.digeltech.appdiscountone.ui.common.model.DealParcelable
@@ -19,6 +21,10 @@ import com.digeltech.appdiscountone.util.capitalizeFirstLetter
 import com.digeltech.appdiscountone.util.copyTextToClipboard
 import com.digeltech.appdiscountone.util.isNotNullAndNotEmpty
 import com.digeltech.appdiscountone.util.view.*
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
+import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -30,7 +36,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
 
     private val args: DealFragmentArgs by navArgs()
 
-    private lateinit var dealAdapter: DealAdapter
+    private lateinit var dealAdapter: LinearDealAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,7 +47,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
     }
 
     private fun initAdapter() {
-        dealAdapter = DealAdapter {
+        dealAdapter = LinearDealAdapter {
             initCoupon(it)
             binding.scrollView.scrollTo(0, 0)
         }
@@ -51,9 +57,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
     private fun initCoupon(deal: DealParcelable) {
         with(binding) {
             initListeners(deal)
-
-            // categoryId=0 только в случае когда был переход с HomeFragment по нажатию на баннер
-            if (deal.categoryId != 0) viewModel.getSimilarDeals(deal.categoryId, deal.id)
+            viewModel.getSimilarDeals(deal.categoryId, deal.id)
 
             deal.imageUrl?.let(ivDealImage::loadImage)
 
@@ -75,7 +79,8 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
             tvPublishedDate.text = getString(R.string.fr_deal_published, deal.publishedDate)
             tvDealName.text = deal.title
 
-//            ivCouponCompanyLogo.setImageDrawable(ivCouponCompanyLogo.getImageDrawable(deal.companyLogo))
+
+            deal.shopImageUrl?.let { ivCouponCompanyLogo.setImageWithRadius(it, R.dimen.radius_10) }
             if (deal.shopName.isNotEmpty()) {
                 tvCouponCompany.text = deal.shopName.capitalizeFirstLetter()
             }
@@ -88,8 +93,6 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
 
             tvRate.text = deal.rating.toString()
 
-            btnGetDeal.setOnClickListener { it.openLink(deal.link) }
-
             if (deal.promocode.isNotEmpty()) {
                 tvCouponText.text = deal.promocode
                 btnCopy.visible()
@@ -97,39 +100,57 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
                 btnCopy.gone()
             }
 
-            tvMoreAboutDiscountText.text = deal.description.parseAsHtml()
+            if (deal.description.isNotEmpty()) {
+                tvMoreAboutDiscountText.text = deal.description.parseAsHtml()
+            } else {
+                tvMoreAboutDiscount.gone()
+                tvMoreAboutDiscountText.gone()
+            }
         }
     }
 
-    private fun FragmentDealBinding.initListeners(coupon: DealParcelable) {
+    private fun FragmentDealBinding.initListeners(deal: DealParcelable) {
         ivBack.setOnClickListener {
             navigateBack()
         }
         ivBookmark.setOnClickListener {
-            if (coupon.isAddedToBookmark) {
-                coupon.isAddedToBookmark = false
-                removeFromBookmark(coupon.id)
+            if (deal.isAddedToBookmark) {
+                deal.isAddedToBookmark = false
+                removeFromBookmark(deal.id)
                 ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_bookmark_deal))
                 it.context.toast(it.getString(R.string.removed_from_bookmarks))
             } else {
-                coupon.isAddedToBookmark = true
-                addToBookmark(coupon)
+                deal.isAddedToBookmark = true
+                addToBookmark(deal)
                 ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_bookmark_deal_solid))
                 it.context.toast(it.getString(R.string.added_to_bookmarks))
             }
         }
+        ivCouponCompanyLogo.setOnClickListener {
+            navigate(DealFragmentDirections.toShopFragment(getShopIdByName(deal.shopName), deal.shopName))
+        }
+        tvCouponCompany.setOnClickListener {
+            navigate(DealFragmentDirections.toShopFragment(getShopIdByName(deal.shopName), deal.shopName))
+        }
         ivRateArrowUp.setOnClickListener {
             ivRateArrowUp.setColorFilter(it.getColorValue(R.color.green))
             ivRateArrowDown.setColorFilter(it.getColorValue(R.color.grey))
-            tvRate.text = coupon.rating.inc().toString()
+            tvRate.text = deal.rating.inc().toString()
         }
         ivRateArrowDown.setOnClickListener {
             ivRateArrowDown.setColorFilter(it.getColorValue(R.color.red))
             ivRateArrowUp.setColorFilter(it.getColorValue(R.color.grey))
-            tvRate.text = coupon.rating.dec().toString()
+            tvRate.text = deal.rating.dec().toString()
+        }
+        btnGetDeal.setOnClickListener {
+            it.openLink(deal.link)
+
+            val params = Bundle()
+            params.putString(FirebaseAnalytics.Param.ITEM_NAME, deal.link)
+            Firebase.analytics.logEvent(FirebaseAnalytics.Event.PURCHASE, params)
         }
         btnCopy.setOnClickListener {
-            copyTextToClipboard(it.context, coupon.title)
+            copyTextToClipboard(it.context, deal.title)
             it.context.toast(it.getString(R.string.copied))
         }
         tvMoreDeals.setOnClickListener {
@@ -146,5 +167,12 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
                 }
             }
         }
+    }
+
+    private fun getShopIdByName(name: String): Int {
+        val listOfShops: List<Shop> = Hawk.get(KEY_SHOPS)
+        return listOfShops.find {
+            it.name.equals(name, true)
+        }?.id ?: 0
     }
 }

@@ -1,13 +1,14 @@
 package com.digeltech.appdiscountone.ui.common.adapter
 
 import android.annotation.SuppressLint
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.digeltech.appdiscountone.R
-import com.digeltech.appdiscountone.databinding.RvDealBinding
+import com.digeltech.appdiscountone.databinding.RvDealGridBinding
 import com.digeltech.appdiscountone.ui.common.addToBookmark
 import com.digeltech.appdiscountone.ui.common.isAddedToBookmark
 import com.digeltech.appdiscountone.ui.common.model.DealParcelable
@@ -16,13 +17,16 @@ import com.digeltech.appdiscountone.util.capitalizeFirstLetter
 import com.digeltech.appdiscountone.util.copyTextToClipboard
 import com.digeltech.appdiscountone.util.isNotNullAndNotEmpty
 import com.digeltech.appdiscountone.util.view.*
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 
-class DealAdapter(
+class GridDealAdapter(
     private val onClickListener: (deal: DealParcelable) -> Unit,
-) : ListAdapter<DealParcelable, DealAdapter.ItemViewholder>(DiffCallback()) {
+) : ListAdapter<DealParcelable, GridDealAdapter.ItemViewholder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewholder {
-        return RvDealBinding.inflate(
+        return RvDealGridBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
@@ -37,7 +41,7 @@ class DealAdapter(
         holder.unbind()
     }
 
-    inner class ItemViewholder(val binding: RvDealBinding) :
+    inner class ItemViewholder(val binding: RvDealGridBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: DealParcelable) {
@@ -54,7 +58,8 @@ class DealAdapter(
 
                 tvTitle.text = item.title
 
-//                ivCouponCompanyLogo.setImageDrawable(ivCouponCompanyLogo.getImageDrawable(item.companyLogo))
+                item.shopImageUrl?.let { ivCouponCompanyLogo.setImageWithRadius(it, R.dimen.radius_10) }
+
                 if (item.shopName.isNotEmpty()) {
                     tvCouponCompany.text = item.shopName.capitalizeFirstLetter()
                 }
@@ -68,7 +73,13 @@ class DealAdapter(
 
                 root.setOnClickListener { onClickListener(item) }
 
-                btnGetDeal.setOnClickListener { it.openLink(item.link) }
+                btnGetDeal.setOnClickListener {
+                    it.openLink(item.link)
+
+                    val params = Bundle()
+                    params.putString(FirebaseAnalytics.Param.ITEM_NAME, item.link)
+                    Firebase.analytics.logEvent(FirebaseAnalytics.Event.PURCHASE, params)
+                }
 
                 if (item.promocode.isNotEmpty()) {
                     btnCopy.visible()

@@ -21,7 +21,8 @@ class DealViewModel @Inject constructor(
 
     fun getSimilarDeals(categoryId: Int, dealId: Int) {
         viewModelScope.launch {
-            val listOfDeals = dealsRepository.getSimilarDeals(categoryId, dealId).toParcelableList()
+            val listOfDeals =
+                dealsRepository.getSimilarDeals(dealId = dealId, categoryId = categoryId).toParcelableList()
             if (listOfDeals.isNotEmpty()) _similarDeals.emit(listOfDeals)
         }
     }

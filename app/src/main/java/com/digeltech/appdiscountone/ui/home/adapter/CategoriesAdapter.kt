@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.digeltech.appdiscountone.databinding.RvHomeCategoriesBinding
 import com.digeltech.appdiscountone.domain.model.CategoryWithDeals
-import com.digeltech.appdiscountone.ui.common.adapter.DealAdapter
+import com.digeltech.appdiscountone.ui.common.adapter.LinearDealAdapter
 import com.digeltech.appdiscountone.ui.common.model.CategoryWithDealsParcelable
 import com.digeltech.appdiscountone.ui.common.model.DealParcelable
 import com.digeltech.appdiscountone.ui.common.model.toParcelableList
@@ -42,7 +42,7 @@ class CategoriesAdapter(
                 tvCategoryTitle.text = item.name
                 tvMoreDeals.setOnClickListener { onMoreDealsClick(item.toParcelableList()) }
 
-                val dealsAdapter = DealAdapter { onDealClick(it) }
+                val dealsAdapter = LinearDealAdapter { onDealClick(it) }
 
                 dealsAdapter.submitList(item.items.toParcelableList())
                 rvDeals.adapter = dealsAdapter

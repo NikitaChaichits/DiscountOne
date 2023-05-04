@@ -15,7 +15,7 @@ import java.sql.ResultSet
 import javax.inject.Inject
 
 private const val DATABASE_URL = "jdbc:mysql://p3plzcpnl497327.prod.phx3.secureserver.net:3306/main"
-private const val KEY_SHOPS = "all-shops"
+const val KEY_SHOPS = "all-shops"
 private const val KEY_CATEGORIES = "all-categories"
 private const val KEY_HOME_CATEGORIES = "all-home-categories"
 
@@ -133,7 +133,6 @@ class DatabaseConnection @Inject constructor() {
 
             shops.forEach {
                 it.icon = getImageUrl(it.id)
-                log("${it.id} ${it.name} ${it.icon}")
             }
 
             Hawk.put(KEY_SHOPS, shops)
@@ -159,29 +158,52 @@ class DatabaseConnection @Inject constructor() {
         val listOfBanners = mutableListOf<Banner>()
 
         tryCatch {
-            val query = "SELECT wp_postmeta.meta_key,wp_postmeta.meta_value, wp_posts.guid\n" +
-                    "FROM wp_postmeta\n" +
-                    "JOIN wp_posts ON wp_postmeta.meta_value = wp_posts.ID\n" +
+            // первый запрос для получения ссылок на картинки для баннеров
+            val queryForImageUrl = "SELECT wp_postmeta.meta_key, wp_posts.guid " +
+                    "FROM wp_postmeta JOIN wp_posts ON wp_postmeta.meta_value = wp_posts.ID " +
                     "WHERE (wp_postmeta.meta_key LIKE \"%slider_1%\" OR wp_postmeta.meta_key LIKE \"%slider_3%\") " +
-                    "AND wp_postmeta.post_id = 6\n" +
+                    "AND wp_postmeta.post_id = 6 " +
                     "ORDER BY wp_postmeta.meta_key ASC"
-            val resultSet = executeQuery(query)
 
+            // второй запрос для получения id Deal и id Category
+            val queryForId =
+                "SELECT DISTINCT wp_postmeta.meta_key,wp_term_relationships.term_taxonomy_id, wp_postmeta.meta_value\n" +
+                        "FROM wp_postmeta\n" +
+                        "JOIN wp_posts ON wp_postmeta.meta_value = wp_posts.ID\n" +
+                        "JOIN wp_term_relationships ON wp_posts.ID = wp_term_relationships.object_id\n" +
+                        "WHERE (wp_postmeta.meta_key LIKE \"%slider_1%\" OR wp_postmeta.meta_key LIKE \"%slider_3%\") " +
+                        "AND wp_postmeta.post_id = 6\n" +
+                        "GROUP BY wp_postmeta.meta_value\n" +
+                        "ORDER BY wp_postmeta.meta_key ASC"
+
+            val resultSetUrl = executeQuery(queryForImageUrl)
             val listOfBannersUrl = mutableListOf<String>()
-            val listOfDealsId = mutableListOf<Int>()
 
-            while (resultSet?.next() == true) {
-                val metaKey = resultSet.getString("meta_key")
+            while (resultSetUrl?.next() == true) {
+                val metaKey = resultSetUrl.getString("meta_key")
                 if (metaKey.contains("image")) {
-                    val imageUrl = resultSet.getString("guid")
+                    val imageUrl = resultSetUrl.getString("guid")
                     listOfBannersUrl.add(imageUrl)
-                } else {
-                    val dealId = resultSet.getString("meta_value")
-                    listOfDealsId.add(dealId.toInt())
                 }
             }
+
+            val resultSetId = executeQuery(queryForId)
+            val listOfDealsId = mutableListOf<Pair<Int, Int>>()
+
+            while (resultSetId?.next() == true) {
+                val dealId = resultSetId.getString("meta_value")
+                val categoryId = resultSetId.getString("term_taxonomy_id")
+                listOfDealsId.add(Pair(dealId.toInt(), categoryId.toInt()))
+            }
+
             listOfBannersUrl.forEachIndexed { index, url ->
-                listOfBanners.add(Banner(urlImage = url, dealId = listOfDealsId[index]))
+                listOfBanners.add(
+                    Banner(
+                        urlImage = url,
+                        dealId = listOfDealsId[index].first,
+                        categoryId = listOfDealsId[index].second
+                    )
+                )
             }
         }
 
@@ -204,6 +226,9 @@ class DatabaseConnection @Inject constructor() {
             if (shops.isEmpty())
                 getAllShops() // вызов метода нужен для получения иконок магазинов
 
+            /**
+             * получение списка id Категорий, которые отображаются на главном экране
+             */
             tryCatch {
                 val query = "SELECT meta_value FROM wp_postmeta WHERE post_id=6 AND meta_key=\"another_deals\""
                 val resultSet = executeQuery(query)
@@ -246,7 +271,7 @@ class DatabaseConnection @Inject constructor() {
         var oldPrice = ""
         var price = ""
         var sale = ""
-        var shop = ""
+        var shopName = ""
         var rating = ""
         var imageId = ""
         var promocode = ""
@@ -273,7 +298,7 @@ class DatabaseConnection @Inject constructor() {
                 when (resultSet.getString("meta_key")) {
                     "old_price" -> oldPrice = resultSet.getString("meta_value")
                     "price" -> price = resultSet.getString("meta_value")
-                    "source" -> shop = resultSet.getString("meta_value")
+                    "source" -> shopName = resultSet.getString("meta_value")
                     "rating" -> rating = resultSet.getString("meta_value")
                     "link" -> link = resultSet.getString("meta_value")
                     "promocode" -> promocode = resultSet.getString("meta_value")
@@ -286,7 +311,7 @@ class DatabaseConnection @Inject constructor() {
 
         val imageUrl = getDealImageUrl(imageId)
         val shopImageUrl = shops.find {
-            it.name == shop
+            it.name.equals(shopName, true)
         }?.icon ?: ""
 
         return Deal(
@@ -295,7 +320,7 @@ class DatabaseConnection @Inject constructor() {
             title = title,
             description = description,
             imageUrl = imageUrl,
-            shopName = shop,
+            shopName = shopName,
             shopImageUrl = shopImageUrl,
             oldPrice = oldPrice,
             discountPrice = price,
@@ -308,7 +333,7 @@ class DatabaseConnection @Inject constructor() {
         )
     }
 
-    fun getSimilarDeals(categoryId: Int, dealId: Int): List<Deal> {
+    fun getSimilarDeals(dealId: Int, categoryId: Int): List<Deal> {
         val listOfDeals = homeCategories.find {
             it.id == categoryId
         }?.items?.filter {
@@ -326,8 +351,9 @@ class DatabaseConnection @Inject constructor() {
 
         tryCatch {
             val query = "SELECT * FROM wp_term_relationships WHERE term_taxonomy_id=$categoryId " +
-                    "ORDER BY term_taxonomy_id ASC " +
+                    "ORDER BY object_id DESC " +
                     "LIMIT 6"
+
             val resultSet = executeQuery(query)
             while (resultSet?.next() == true) {
                 listOfDealsId.add(resultSet.getInt("object_id"))

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavOptions
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.common.base.BaseFragment
@@ -70,7 +71,10 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
                 Firebase.auth.signOut()
                 prefs.clear()
                 Hawk.deleteAll()
-                navigate(R.id.startFragment)
+                val navOptions = NavOptions.Builder()
+                    .setPopUpTo(R.id.startFragment, false)
+                    .build()
+                navigate(ProfileFragmentDirections.toStartFragment(), navOptions)
             }
             llPrivacyPolicy.setOnClickListener {
                 binding.webView.openWebView(getString(R.string.privacy_policy_link))

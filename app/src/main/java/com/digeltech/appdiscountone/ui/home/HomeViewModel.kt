@@ -39,9 +39,9 @@ class HomeViewModel @Inject constructor(
     }
 
 
-    fun getDeal(dealId: Int) {
+    fun getDeal(dealId: Int, categoryId: Int) {
         viewModelScope.launchWithLoading {
-            val deal = interactor.getDeal(dealId).toParcelable()
+            val deal = interactor.getDeal(dealId = dealId, categoryId = categoryId).toParcelable()
             _deal.value = deal
         }
     }

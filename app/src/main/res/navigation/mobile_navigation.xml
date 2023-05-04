@@ -106,6 +106,16 @@
         <action
             android:id="@+id/toCategoriesFragment"
             app:destination="@id/categoriesFragment" />
+        <action
+            android:id="@+id/toShopFragment"
+            app:destination="@id/categoryAndShopFragment">
+            <argument
+                android:name="id"
+                app:argType="integer" />
+            <argument
+                android:name="title"
+                app:argType="string" />
+        </action>
     </fragment>
 
     <fragment
@@ -117,7 +127,7 @@
             android:id="@+id/toProfileFragment"
             app:destination="@id/profileFragment" />
         <action
-            android:id="@+id/toCategoryFragment"
+            android:id="@+id/toShopFragment"
             app:destination="@id/categoryAndShopFragment">
             <argument
                 android:name="id"

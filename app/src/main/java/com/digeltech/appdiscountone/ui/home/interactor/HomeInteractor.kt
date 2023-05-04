@@ -10,6 +10,6 @@ interface HomeInteractor {
 
     suspend fun getCategories(): List<CategoryWithDeals>
 
-    suspend fun getDeal(dealId: Int): Deal
+    suspend fun getDeal(dealId: Int, categoryId: Int): Deal
 
 }

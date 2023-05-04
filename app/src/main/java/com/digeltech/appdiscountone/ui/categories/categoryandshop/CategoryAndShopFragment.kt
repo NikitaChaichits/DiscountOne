@@ -9,7 +9,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.common.base.BaseFragment
 import com.digeltech.appdiscountone.databinding.FragmentCategoryAndShopBinding
-import com.digeltech.appdiscountone.ui.common.adapter.DealAdapter
+import com.digeltech.appdiscountone.ui.common.adapter.GridDealAdapter
 import com.digeltech.appdiscountone.util.view.px
 import com.digeltech.appdiscountone.util.view.recycler.GridOffsetDecoration
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,7 +24,7 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
 
     private val args: CategoryAndShopFragmentArgs by navArgs()
 
-    private lateinit var dealAdapter: DealAdapter
+    private lateinit var dealAdapter: GridDealAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,13 +39,13 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
     }
 
     private fun initAdapters() {
-        dealAdapter = DealAdapter {
+        dealAdapter = GridDealAdapter {
             navigate(CategoryAndShopFragmentDirections.toDealFragment(it))
         }
         binding.rvDeals.adapter = dealAdapter
         binding.rvDeals.addItemDecoration(
             GridOffsetDecoration(
-                edgesOffset = 0.px,
+                edgesOffset = 16.px,
                 horizontalOffset = 16.px,
                 verticalOffset = 16.px
             )
