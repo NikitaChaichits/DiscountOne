@@ -8,7 +8,9 @@ interface HomeInteractor {
 
     suspend fun getBanners(): List<Banner>
 
-    suspend fun getCategories(): List<CategoryWithDeals>
+    suspend fun getInitCategories(): List<CategoryWithDeals>
+
+    suspend fun getAllCategories(): List<CategoryWithDeals>
 
     suspend fun getDeal(dealId: Int, categoryId: Int): Deal
 

@@ -12,16 +12,21 @@ class DealsRepositoryImpl @Inject constructor(
     private val databaseConnection: DatabaseConnection,
 ) : DealsRepository {
 
-    override suspend fun getDealsById(id: Int): List<Deal> = withContext(Dispatchers.IO) {
-        databaseConnection.getDealsById(id)
+    override suspend fun getAllDeals(limit: Int, offset: Int): List<Deal> = withContext(Dispatchers.IO) {
+        databaseConnection.getAllDeals(limit, offset)
     }
 
-    override suspend fun getSimilarDeals(dealId: Int, categoryId: Int): List<Deal> = withContext(Dispatchers.IO) {
-        databaseConnection.getSimilarDeals(dealId = dealId, categoryId = categoryId)
+    override suspend fun getAllCoupons(limit: Int, offset: Int): List<Deal> = withContext(Dispatchers.IO) {
+        databaseConnection.getAllCoupons(limit, offset)
     }
+
+    override suspend fun getDealsByCategoryId(categoryId: Int, limit: Int, offset: Int): List<Deal> =
+        withContext(Dispatchers.IO) {
+            databaseConnection.getDealsById(categoryId, limit, offset)
+        }
 
     override suspend fun getDealById(dealId: Int, categoryId: Int): Deal = withContext(Dispatchers.IO) {
-        databaseConnection.getDealById(dealId = dealId, categoryId = categoryId)
+        databaseConnection.getDeal(dealId = dealId, categoryId = categoryId)
     }
 
     override suspend fun getBanners(): List<Banner> = withContext(Dispatchers.IO) {

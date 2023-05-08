@@ -6,6 +6,8 @@ import com.digeltech.appdiscountone.domain.model.Category
 import com.digeltech.appdiscountone.domain.model.CategoryWithDeals
 import com.digeltech.appdiscountone.domain.model.Deal
 import com.digeltech.appdiscountone.domain.model.Shop
+import com.digeltech.appdiscountone.ui.common.addedDealToCache
+import com.digeltech.appdiscountone.ui.common.getDealFromCache
 import com.digeltech.appdiscountone.ui.home.adapter.Banner
 import com.digeltech.appdiscountone.util.log
 import com.orhanobut.hawk.Hawk
@@ -15,9 +17,9 @@ import java.sql.ResultSet
 import javax.inject.Inject
 
 private const val DATABASE_URL = "jdbc:mysql://p3plzcpnl497327.prod.phx3.secureserver.net:3306/main"
-const val KEY_SHOPS = "all-shops"
 private const val KEY_CATEGORIES = "all-categories"
-private const val KEY_HOME_CATEGORIES = "all-home-categories"
+const val KEY_SHOPS = "all-shops"
+const val KEY_HOME_CATEGORIES = "all-home-categories"
 
 /**
  * При загрузке приложения сначала вызывается метод getBanners
@@ -29,6 +31,8 @@ class DatabaseConnection @Inject constructor() {
     private var categories: MutableList<Category> = mutableListOf()
     private var homeCategories: MutableList<CategoryWithDeals> = mutableListOf()
     private var shops: MutableList<Shop> = mutableListOf()
+
+    private var homeCategoriesId = listOf<Int>()
 
     /**
      * Функция для установления соединения с базой данных
@@ -88,6 +92,25 @@ class DatabaseConnection @Inject constructor() {
         } else {
             checkConnection()
 
+            tryCatch {
+                val query = "SELECT wp_terms.term_id, wp_terms.name, wp_term_taxonomy.count, wp_termmeta.*\n" +
+                        "FROM wp_terms\n" +
+                        "JOIN wp_term_taxonomy ON wp_terms.term_id = wp_term_taxonomy.term_id\n" +
+                        "JOIN wp_termmeta ON wp_termmeta.term_id = wp_term_taxonomy.term_id\n" +
+                        "WHERE wp_term_taxonomy.taxonomy = \"categories\"\n" +
+                        "AND wp_termmeta.meta_key = \"popular\"\n" +
+                        "AND wp_termmeta.meta_value = 1\n" +
+                        "ORDER BY wp_terms.name ASC"
+
+                val resultSet = executeQuery(query)
+                while (resultSet?.next() == true) {
+                    val id = resultSet.getInt("term_id")
+                    val name = resultSet.getString("name")
+                    val count = resultSet.getInt("count")
+
+                    categories.add(Category(id = id, name = name, countOfItems = count, icon = ""))
+                }
+            }
             categories.forEach {
                 it.icon = getImageUrl(it.id)
                 log("${it.id} ${it.name} ${it.icon}")
@@ -114,7 +137,6 @@ class DatabaseConnection @Inject constructor() {
                         "JOIN wp_termmeta ON wp_termmeta.term_id = wp_term_taxonomy.term_id\n" +
                         "WHERE wp_term_taxonomy.taxonomy = \"categories-shops\"\n" +
                         "AND wp_termmeta.meta_key = \"popular\"\n" +
-                        "AND wp_termmeta.meta_value = 1\n" +
                         "ORDER BY wp_terms.name ASC"
 
                 val resultSet = executeQuery(query)
@@ -122,10 +144,11 @@ class DatabaseConnection @Inject constructor() {
                     val id = resultSet.getInt("term_id")
                     val name = resultSet.getString("name")
                     val count = resultSet.getInt("count")
+                    val metaValue = resultSet.getInt("meta_value")
 
                     shops.add(
                         Shop(
-                            id = id, name = name, countOfItems = count, icon = ""
+                            id = id, name = name, countOfItems = count, icon = "", popular = metaValue == 1
                         )
                     )
                 }
@@ -133,6 +156,7 @@ class DatabaseConnection @Inject constructor() {
 
             shops.forEach {
                 it.icon = getImageUrl(it.id)
+                log("${it.id} ${it.name} ${it.icon}")
             }
 
             Hawk.put(KEY_SHOPS, shops)
@@ -141,12 +165,66 @@ class DatabaseConnection @Inject constructor() {
     }
 
     /**
-     * Метод для получения Купона по его id
+     * Метод для получения всех Скидок
      */
-    fun getDealsById(id: Int): List<Deal> {
+    fun getAllDeals(limit: Int, offset: Int): List<Deal> {
         checkConnection()
 
-        return getListOfDeals(id)
+        val listOfDeals = mutableListOf<Deal>()
+        val listOfId = mutableListOf<Pair<Int, Int>>()
+
+        tryCatch {
+            val query = "SELECT * FROM wp_term_relationships " +
+                    "GROUP BY wp_term_relationships.object_id DESC " +
+                    "LIMIT $limit " +
+                    "OFFSET $offset"
+
+            val resultSet = executeQuery(query)
+            while (resultSet?.next() == true) {
+                val dealId = resultSet.getInt("object_id")
+                val categoryId = resultSet.getInt("term_taxonomy_id")
+                listOfId.add(Pair(dealId, categoryId))
+            }
+        }
+
+        listOfId.forEach {
+            listOfDeals.add(getDeal(it.first, it.second))
+        }
+
+        return listOfDeals
+    }
+
+    /**
+     * Метод для получения всех Скидок
+     */
+    fun getAllCoupons(limit: Int, offset: Int): List<Deal> {
+        checkConnection()
+
+        val listOfDeals = mutableListOf<Deal>()
+        val listOfId = mutableListOf<Pair<Int, Int>>()
+
+        tryCatch {
+            val query = "SELECT * FROM wp_term_relationships " +
+                    "JOIN wp_postmeta ON wp_term_relationships.object_id = wp_postmeta.post_id " +
+                    "WHERE wp_postmeta.meta_key = \"promocode\" " +
+                    "AND wp_postmeta.meta_value != \"\" " +
+                    "GROUP BY wp_term_relationships.object_id DESC " +
+                    "LIMIT $limit " +
+                    "OFFSET $offset"
+
+            val resultSet = executeQuery(query)
+            while (resultSet?.next() == true) {
+                val dealId = resultSet.getInt("object_id")
+                val categoryId = resultSet.getInt("term_taxonomy_id")
+                listOfId.add(Pair(dealId, categoryId))
+            }
+        }
+
+        listOfId.forEach {
+            listOfDeals.add(getDeal(it.first, it.second))
+        }
+
+        return listOfDeals
     }
 
     /**
@@ -213,146 +291,173 @@ class DatabaseConnection @Inject constructor() {
     /**
      * Метод для получения списка Категорий, которые отображаются на главном экране
      */
-    fun getHomeCategories(): List<CategoryWithDeals> {
-        if (Hawk.contains(KEY_HOME_CATEGORIES)) {
-            homeCategories = Hawk.get(KEY_HOME_CATEGORIES)
-        } else {
-            checkConnection()
+    fun getInitHomeCategories(): List<CategoryWithDeals> {
+        checkConnection()
 
-            var listOfCategoriesId = listOf<Int>()
+        if (categories.isEmpty())
+            getAllCategories() // вызов метода нужен для получения наименований категорий
+        if (shops.isEmpty())
+            getAllShops() // вызов метода нужен для получения иконок магазинов
 
-            if (categories.isEmpty())
-                getCategories() // вызов метода нужен для получения наименований категорий
-            if (shops.isEmpty())
-                getAllShops() // вызов метода нужен для получения иконок магазинов
+        /**
+         * получение списка id Категорий, которые отображаются на главном экране
+         */
+        tryCatch {
+            val query = "SELECT meta_value FROM wp_postmeta WHERE post_id=6 AND meta_key=\"another_deals\""
+            val resultSet = executeQuery(query)
 
-            /**
-             * получение списка id Категорий, которые отображаются на главном экране
-             */
-            tryCatch {
-                val query = "SELECT meta_value FROM wp_postmeta WHERE post_id=6 AND meta_key=\"another_deals\""
-                val resultSet = executeQuery(query)
-
-                while (resultSet?.next() == true) {
-                    listOfCategoriesId = extractCategoriesId(resultSet.getString("meta_value"))
-                }
-                log(listOfCategoriesId)
+            while (resultSet?.next() == true) {
+                homeCategoriesId = extractCategoriesId(resultSet.getString("meta_value"))
             }
-
-            listOfCategoriesId.forEach {
-                val listOfDeals = getListOfDeals(it)
-                val categoryName = categories.find { category ->
-                    category.id == it
-                }?.name ?: ""
-
-                homeCategories.add(
-                    CategoryWithDeals(
-                        id = it,
-                        name = categoryName,
-                        items = listOfDeals
-                    )
-                )
-            }
-
-            Hawk.put(KEY_HOME_CATEGORIES, homeCategories)
+            log(homeCategoriesId)
         }
 
+        for (i in 0..4) { // предзагрузка 5 категорий, а после грузим в фоновом режиме
+            val listOfDeals = getListOfDeals(homeCategoriesId[i], 6, 0)
+            val categoryName = categories.find { category ->
+                category.id == homeCategoriesId[i]
+            }?.name ?: ""
+
+            homeCategories.add(
+                CategoryWithDeals(
+                    id = homeCategoriesId[i],
+                    name = categoryName,
+                    items = listOfDeals
+                )
+            )
+            log("Home $categoryName loaded")
+        }
+        return homeCategories
+    }
+
+    fun getAllHomeCategories(): List<CategoryWithDeals> {
+        for (i in 5..homeCategoriesId.size.dec()) {
+            val listOfDeals = getListOfDeals(homeCategoriesId[i], 6, 0)
+            val categoryName = categories.find { category ->
+                category.id == homeCategoriesId[i]
+            }?.name ?: ""
+
+            homeCategories.add(
+                CategoryWithDeals(
+                    id = homeCategoriesId[i],
+                    name = categoryName,
+                    items = listOfDeals
+                )
+            )
+            log("Home $categoryName loaded")
+        }
+        Hawk.put(KEY_HOME_CATEGORIES, homeCategories)
         return homeCategories
     }
 
     /**
-     * Метод для получения Купонов по его id и id Категории
+     * Метод для получения Купонов по id Категории/Магазина
      */
-    fun getDealById(dealId: Int, categoryId: Int): Deal {
+    fun getDealsById(id: Int, limit: Int, offset: Int): List<Deal> {
         checkConnection()
 
-        var title = ""
-        var description = ""
-        var oldPrice = ""
-        var price = ""
-        var sale = ""
-        var shopName = ""
-        var rating = ""
-        var imageId = ""
-        var promocode = ""
-        var link = ""
-        var postDate = ""
-        var validDate = ""
-
-        tryCatch {
-            val query = "SELECT * FROM wp_posts WHERE ID=$dealId"
-            val resultSet = executeQuery(query)
-
-            while (resultSet?.next() == true) {
-                title = resultSet.getString("post_title")
-                description = resultSet.getString("post_content")
-                postDate = resultSet.getString("post_date")
-            }
-        }
-
-        tryCatch {
-            val query = "SELECT * FROM wp_postmeta WHERE post_id=$dealId ORDER BY wp_postmeta.meta_id ASC"
-            val resultSet = executeQuery(query)
-
-            while (resultSet?.next() == true) {
-                when (resultSet.getString("meta_key")) {
-                    "old_price" -> oldPrice = resultSet.getString("meta_value")
-                    "price" -> price = resultSet.getString("meta_value")
-                    "source" -> shopName = resultSet.getString("meta_value")
-                    "rating" -> rating = resultSet.getString("meta_value")
-                    "link" -> link = resultSet.getString("meta_value")
-                    "promocode" -> promocode = resultSet.getString("meta_value")
-                    "expiration_date" -> validDate = resultSet.getString("meta_value")
-                    "_thumbnail_id" -> imageId = resultSet.getString("meta_value")
-                    "sale" -> sale = resultSet.getString("meta_value")
-                }
-            }
-        }
-
-        val imageUrl = getDealImageUrl(imageId)
-        val shopImageUrl = shops.find {
-            it.name.equals(shopName, true)
-        }?.icon ?: ""
-
-        return Deal(
-            id = dealId,
-            categoryId = categoryId,
-            title = title,
-            description = description,
-            imageUrl = imageUrl,
-            shopName = shopName,
-            shopImageUrl = shopImageUrl,
-            oldPrice = oldPrice,
-            discountPrice = price,
-            sale = sale,
-            rating = rating,
-            promocode = promocode,
-            link = link,
-            publishedDate = postDate,
-            validDate = validDate,
-        )
+        return getListOfDeals(id, limit, offset)
     }
 
-    fun getSimilarDeals(dealId: Int, categoryId: Int): List<Deal> {
-        val listOfDeals = homeCategories.find {
-            it.id == categoryId
-        }?.items?.filter {
-            it.id != dealId
-        }
+    /**
+     * Метод для получения Купона по его id и id Категории
+     */
+    fun getDeal(dealId: Int, categoryId: Int): Deal {
+        val cachedDeal = getDealFromCache(dealId)
+        if (cachedDeal != null) {
+            log("Loaded deal=$dealId from cache")
+            return cachedDeal
+        } else {
+            checkConnection()
 
-        return listOfDeals ?: emptyList()
+            var title = ""
+            var description = ""
+            var oldPrice = ""
+            var price = ""
+            var sale = ""
+            var shopName = ""
+            var rating = ""
+            var imageId = ""
+            var promocode = ""
+            var link = ""
+            var postDate = ""
+            var validDate = ""
+
+            tryCatch {
+                val query = "SELECT * FROM wp_posts WHERE ID=$dealId"
+                val resultSet = executeQuery(query)
+
+                while (resultSet?.next() == true) {
+                    title = resultSet.getString("post_title")
+                    description = resultSet.getString("post_content")
+                    postDate = resultSet.getString("post_date")
+                }
+            }
+
+            tryCatch {
+                val query = "SELECT * FROM wp_postmeta WHERE post_id=$dealId ORDER BY wp_postmeta.meta_id ASC"
+                val resultSet = executeQuery(query)
+
+                while (resultSet?.next() == true) {
+                    when (resultSet.getString("meta_key")) {
+                        "old_price" -> oldPrice = resultSet.getString("meta_value")
+                        "price" -> price = resultSet.getString("meta_value")
+                        "source" -> shopName = resultSet.getString("meta_value")
+                        "rating" -> rating = resultSet.getString("meta_value")
+                        "link" -> link = resultSet.getString("meta_value")
+                        "promocode" -> promocode = resultSet.getString("meta_value")
+                        "expiration_date" -> validDate = resultSet.getString("meta_value")
+                        "_thumbnail_id" -> imageId = resultSet.getString("meta_value")
+                        "sale" -> sale = resultSet.getString("meta_value")
+                    }
+                }
+            }
+
+            val imageUrl = getDealImageUrl(imageId)
+            val shopImageUrl = shops.find {
+                it.name.equals(shopName.trim(), true)
+            }?.icon ?: ""
+
+            log("Loaded deal=$dealId from database")
+            val deal = Deal(
+                id = dealId,
+                categoryId = categoryId,
+                title = title,
+                description = description,
+                imageUrl = imageUrl,
+                shopName = shopName,
+                shopImageUrl = shopImageUrl,
+                oldPrice = oldPrice,
+                discountPrice = price,
+                sale = sale,
+                rating = rating,
+                promocode = promocode,
+                link = link,
+                publishedDate = postDate,
+                validDate = validDate,
+            )
+            addedDealToCache(deal)
+            return deal
+        }
     }
 
     /**
      * Метод для получения списка id Купонов по id Категории или id Магазина
      */
-    private fun getListOfDealsId(categoryId: Int): List<Int> {
+    private fun getListOfDealsId(categoryId: Int, limit: Int, offset: Int): List<Int> {
         val listOfDealsId = mutableListOf<Int>()
 
         tryCatch {
-            val query = "SELECT * FROM wp_term_relationships WHERE term_taxonomy_id=$categoryId " +
-                    "ORDER BY object_id DESC " +
-                    "LIMIT 6"
+            val query = if (limit > 0) {
+                "SELECT * FROM wp_term_relationships WHERE term_taxonomy_id=$categoryId " +
+                        "ORDER BY object_id DESC " +
+                        "LIMIT $limit " +
+                        "OFFSET $offset"
+            } else {
+                "SELECT * FROM wp_term_relationships WHERE term_taxonomy_id=$categoryId " +
+                        "ORDER BY object_id DESC " +
+                        "OFFSET $offset"
+            }
 
             val resultSet = executeQuery(query)
             while (resultSet?.next() == true) {
@@ -366,41 +471,26 @@ class DatabaseConnection @Inject constructor() {
     /**
      * Метод для получения списка Купонов по id Категории или id Магазина
      */
-    private fun getListOfDeals(id: Int): List<Deal> {
+    private fun getListOfDeals(id: Int, limit: Int, offset: Int): List<Deal> {
         val listOfDeals = mutableListOf<Deal>()
 
-        getListOfDealsId(id).forEach { dealId ->
-            listOfDeals.add(getDealById(dealId, id))
+        getListOfDealsId(id, limit, offset).forEach { dealId ->
+            listOfDeals.add(getDeal(dealId, id))
         }
         return listOfDeals
     }
 
-    /**
-     * Метод для получения списка Категорий без картинок
-     */
-    private fun getCategories(): List<Category> {
-        checkConnection()
-
+    private fun getCategoryIdByDealId(dealId: Int): Int {
         tryCatch {
-            val query = "SELECT wp_terms.term_id, wp_terms.name, wp_term_taxonomy.count, wp_termmeta.*\n" +
-                    "FROM wp_terms\n" +
-                    "JOIN wp_term_taxonomy ON wp_terms.term_id = wp_term_taxonomy.term_id\n" +
-                    "JOIN wp_termmeta ON wp_termmeta.term_id = wp_term_taxonomy.term_id\n" +
-                    "WHERE wp_term_taxonomy.taxonomy = \"categories\"\n" +
-                    "AND wp_termmeta.meta_key = \"popular\"\n" +
-                    "AND wp_termmeta.meta_value = 1\n" +
-                    "ORDER BY wp_terms.name ASC"
-
+            val query = "SELECT term_taxonomy_id FROM wp_term_relationships \n" +
+                    "WHERE object_id=$dealId \n" +
+                    "LIMIT 1"
             val resultSet = executeQuery(query)
             while (resultSet?.next() == true) {
-                val id = resultSet.getInt("term_id")
-                val name = resultSet.getString("name")
-                val count = resultSet.getInt("count")
-
-                categories.add(Category(id = id, name = name, countOfItems = count, icon = ""))
+                return resultSet.getInt("term_taxonomy_id")
             }
         }
-        return categories
+        return 0
     }
 
     /**

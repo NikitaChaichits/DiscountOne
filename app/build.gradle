@@ -112,6 +112,9 @@ dependencies {
     // WorkManager with coroutines
     api appDependencies.coroutineWorkManager
 
+    // Paging
+    implementation appDependencies.paging
+
     // View Binding property buster
     implementation appDependencies.viewBindingPropertyDelegate
 
@@ -133,9 +136,6 @@ dependencies {
 
     //ImagePicker for Camera
     implementation 'com.github.dhaval2404:imagepicker:2.1'
-
-    //SSH
-    implementation 'com.jcraft:jsch:0.1.55'
 
     //Cache
     implementation 'com.orhanobut:hawk:2.0.1'

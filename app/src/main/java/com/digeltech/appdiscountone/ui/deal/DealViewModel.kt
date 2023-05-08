@@ -2,7 +2,7 @@ package com.digeltech.appdiscountone.ui.deal
 
 import androidx.lifecycle.viewModelScope
 import com.digeltech.appdiscountone.common.base.BaseViewModel
-import com.digeltech.appdiscountone.domain.repository.DealsRepository
+import com.digeltech.appdiscountone.ui.common.getSimilarDealsFromCache
 import com.digeltech.appdiscountone.ui.common.model.DealParcelable
 import com.digeltech.appdiscountone.ui.common.model.toParcelableList
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,17 +13,15 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DealViewModel @Inject constructor(
-    private val dealsRepository: DealsRepository
-) : BaseViewModel() {
+class DealViewModel @Inject constructor() : BaseViewModel() {
+
     private val _similarDeals = MutableStateFlow<List<DealParcelable>>(listOf())
     val similarDeals: StateFlow<List<DealParcelable>> = _similarDeals.asStateFlow()
 
     fun getSimilarDeals(categoryId: Int, dealId: Int) {
         viewModelScope.launch {
-            val listOfDeals =
-                dealsRepository.getSimilarDeals(dealId = dealId, categoryId = categoryId).toParcelableList()
-            if (listOfDeals.isNotEmpty()) _similarDeals.emit(listOfDeals)
+            val listOfDeals = getSimilarDealsFromCache(dealId = dealId, categoryId = categoryId)
+            if (listOfDeals.isNotEmpty()) _similarDeals.emit(listOfDeals.toParcelableList())
         }
     }
 }

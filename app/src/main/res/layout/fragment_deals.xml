@@ -47,15 +47,28 @@
         android:text="@string/fr_deals_title"
         app:layout_constraintTop_toBottomOf="@id/searchView" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvCoupons"
+    <TextView
+        android:id="@+id/tvSearchResultEmpty"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/common_offset_16dp"
+        android:layout_marginTop="@dimen/common_offset_24dp"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:visibility="gone"
+        android:text="@string/empty_search_result"
+        app:layout_constraintTop_toBottomOf="@id/searchView" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvDeals"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="@dimen/common_offset_20dp"
         android:paddingBottom="@dimen/common_offset_8dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
         app:spanCount="2"
         tools:itemCount="8"

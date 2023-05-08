@@ -47,6 +47,18 @@
         android:text="@string/fr_cat_title"
         app:layout_constraintTop_toBottomOf="@id/searchView" />
 
+    <TextView
+        android:id="@+id/tvSearchResultEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/common_offset_16dp"
+        android:layout_marginTop="@dimen/common_offset_24dp"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:visibility="gone"
+        android:text="@string/empty_search_result"
+        app:layout_constraintTop_toBottomOf="@id/searchView" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvCategories"
         android:layout_width="match_parent"

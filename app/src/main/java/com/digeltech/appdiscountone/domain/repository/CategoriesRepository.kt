@@ -7,6 +7,8 @@ interface CategoriesRepository {
 
     suspend fun getAllCategories(): List<Category>
 
-    suspend fun getHomeCategories(): List<CategoryWithDeals>
+    suspend fun getInitHomeCategories(): List<CategoryWithDeals>
+
+    suspend fun getAllHomeCategories(): List<CategoryWithDeals>
 
 }

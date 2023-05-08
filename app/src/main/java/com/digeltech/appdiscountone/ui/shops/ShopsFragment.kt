@@ -2,6 +2,7 @@ package com.digeltech.appdiscountone.ui.shops
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -9,9 +10,11 @@ import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.common.base.BaseFragment
 import com.digeltech.appdiscountone.databinding.FragmentShopsBinding
 import com.digeltech.appdiscountone.ui.shops.adapter.ShopAdapter
+import com.digeltech.appdiscountone.util.view.invisible
 import com.digeltech.appdiscountone.util.view.px
 import com.digeltech.appdiscountone.util.view.recycler.GridOffsetDecoration
 import com.digeltech.appdiscountone.util.view.setCircleImage
+import com.digeltech.appdiscountone.util.view.visible
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -19,7 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class ShopsFragment : BaseFragment(R.layout.fragment_shops) {
+class ShopsFragment : BaseFragment(R.layout.fragment_shops), SearchView.OnQueryTextListener {
 
     private val binding by viewBinding(FragmentShopsBinding::bind)
 
@@ -40,6 +43,13 @@ class ShopsFragment : BaseFragment(R.layout.fragment_shops) {
 
         loadProfileImage()
         observeData()
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean = false
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        viewModel.searchShops(newText.toString())
+        return true
     }
 
     private fun initAdapter() {
@@ -64,6 +74,8 @@ class ShopsFragment : BaseFragment(R.layout.fragment_shops) {
                 navigate(R.id.profileFragment)
             }
         }
+        binding.searchView.setOnQueryTextListener(this)
+        binding.searchView.queryHint = getString(R.string.search_by_shops)
     }
 
     private fun loadProfileImage() {
@@ -75,6 +87,18 @@ class ShopsFragment : BaseFragment(R.layout.fragment_shops) {
     private fun observeData() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.shops.collect(shopAdapter::submitList)
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.searchResult.collect {
+                if (it.isEmpty() && !binding.searchView.query.isNullOrEmpty()) {
+                    binding.tvSearchResultEmpty.visible()
+                    binding.tvTitle.invisible()
+                } else {
+                    binding.tvSearchResultEmpty.invisible()
+                    binding.tvTitle.visible()
+                }
+                shopAdapter.submitList(it)
+            }
         }
     }
 }

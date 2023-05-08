@@ -14,7 +14,9 @@ internal class HomeInteractorImpl @Inject constructor(
 
     override suspend fun getBanners(): List<Banner> = dealsRepository.getBanners()
 
-    override suspend fun getCategories(): List<CategoryWithDeals> = categoriesRepository.getHomeCategories()
+    override suspend fun getInitCategories(): List<CategoryWithDeals> = categoriesRepository.getInitHomeCategories()
+
+    override suspend fun getAllCategories(): List<CategoryWithDeals> = categoriesRepository.getAllHomeCategories()
 
     override suspend fun getDeal(dealId: Int, categoryId: Int): Deal =
         dealsRepository.getDealById(dealId = dealId, categoryId = categoryId)

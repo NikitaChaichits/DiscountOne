@@ -20,6 +20,11 @@
     <string name="added_to_bookmarks">Added to bookmarks</string>
     <string name="removed_from_bookmarks">Removed from bookmarks</string>
     <string name="incorrect_link_message">An error occurred opening the link. Please try again later or report the problem to the Helpdesk.</string>
+    <string name="search_by_deals">Search by deals</string>
+    <string name="search_by_coupons">Search by coupons</string>
+    <string name="search_by_categories">Search by categories</string>
+    <string name="search_by_shops">Search by shops</string>
+    <string name="empty_search_result"><b>Nothing found</b>\nTry different phrasing</string>
 
     <!-- Wildcard strings -->
     <string name="price_wildcard">₹ %d</string>

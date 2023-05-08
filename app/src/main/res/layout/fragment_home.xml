@@ -74,5 +74,38 @@
             tools:itemCount="2"
             tools:listitem="@layout/rv_home_categories" />
 
+        <TextView
+            android:id="@+id/tvSearchResultEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/common_offset_16dp"
+            android:layout_marginTop="@dimen/common_offset_24dp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:visibility="gone"
+            android:text="@string/empty_search_result"
+            app:layout_constraintTop_toBottomOf="@id/searchView" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvDeals"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/common_offset_24dp"
+            android:paddingBottom="@dimen/common_offset_8dp"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/searchView"
+            app:spanCount="2"
+            tools:itemCount="8"
+            tools:listitem="@layout/rv_deal_grid" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/homeGroup"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:constraint_referenced_ids="rvBanners, ivBannerSale, rvCategories" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

@@ -2,6 +2,7 @@ package com.digeltech.appdiscountone.ui.categories
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -9,9 +10,11 @@ import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.common.base.BaseFragment
 import com.digeltech.appdiscountone.databinding.FragmentCategoriesBinding
 import com.digeltech.appdiscountone.ui.categories.adapter.CategoryAdapter
+import com.digeltech.appdiscountone.util.view.invisible
 import com.digeltech.appdiscountone.util.view.px
 import com.digeltech.appdiscountone.util.view.recycler.GridOffsetDecoration
 import com.digeltech.appdiscountone.util.view.setCircleImage
+import com.digeltech.appdiscountone.util.view.visible
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -20,7 +23,7 @@ import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class CategoriesFragment : BaseFragment(R.layout.fragment_categories) {
+class CategoriesFragment : BaseFragment(R.layout.fragment_categories), SearchView.OnQueryTextListener {
 
     private val binding by viewBinding(FragmentCategoriesBinding::bind)
 
@@ -41,6 +44,13 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories) {
 
         loadProfileImage()
         observeData()
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean = false
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        viewModel.searchCategories(newText.toString())
+        return true
     }
 
     private fun initAdapters() {
@@ -65,6 +75,8 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories) {
                 navigate(R.id.profileFragment)
             }
         }
+        binding.searchView.setOnQueryTextListener(this)
+        binding.searchView.queryHint = getString(R.string.search_by_categories)
     }
 
     private fun loadProfileImage() {
@@ -74,6 +86,18 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories) {
     private fun observeData() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.categories.collect(categoryAdapter::submitList)
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.searchResult.collect {
+                if (it.isEmpty() && !binding.searchView.query.isNullOrEmpty()) {
+                    binding.tvSearchResultEmpty.visible()
+                    binding.tvTitle.invisible()
+                } else {
+                    binding.tvSearchResultEmpty.invisible()
+                    binding.tvTitle.visible()
+                }
+                categoryAdapter.submitList(it)
+            }
         }
     }
 }

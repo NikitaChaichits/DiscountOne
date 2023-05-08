@@ -122,6 +122,7 @@
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/llNotification"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -224,6 +225,7 @@
             android:id="@+id/llTheme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatImageView
