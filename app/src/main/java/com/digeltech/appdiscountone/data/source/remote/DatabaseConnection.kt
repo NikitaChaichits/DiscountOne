@@ -17,7 +17,7 @@ import java.sql.ResultSet
 import javax.inject.Inject
 
 private const val DATABASE_URL = "jdbc:mysql://p3plzcpnl497327.prod.phx3.secureserver.net:3306/main"
-private const val KEY_CATEGORIES = "all-categories"
+const val KEY_CATEGORIES = "all-categories"
 const val KEY_SHOPS = "all-shops"
 const val KEY_HOME_CATEGORIES = "all-home-categories"
 
@@ -31,7 +31,6 @@ class DatabaseConnection @Inject constructor() {
     private var categories: MutableList<Category> = mutableListOf()
     private var homeCategories: MutableList<CategoryWithDeals> = mutableListOf()
     private var shops: MutableList<Shop> = mutableListOf()
-
     private var homeCategoriesId = listOf<Int>()
 
     /**
@@ -86,8 +85,8 @@ class DatabaseConnection @Inject constructor() {
     /**
      * Метод для получения списка Категорий
      */
-    fun getAllCategories(): List<Category> {
-        if (Hawk.contains(KEY_CATEGORIES)) {
+    fun getAllCategories(isCacheUpdate: Boolean): List<Category> {
+        if (!isCacheUpdate && Hawk.contains(KEY_CATEGORIES)) {
             categories = Hawk.get(KEY_CATEGORIES)
         } else {
             checkConnection()
@@ -124,8 +123,8 @@ class DatabaseConnection @Inject constructor() {
     /**
      * Метод для получения списка магазинов
      */
-    fun getAllShops(): List<Shop> {
-        if (Hawk.contains(KEY_SHOPS)) {
+    fun getAllShops(isCacheUpdate: Boolean): List<Shop> {
+        if (!isCacheUpdate && Hawk.contains(KEY_SHOPS)) {
             shops = Hawk.get(KEY_SHOPS)
         } else {
             checkConnection()
@@ -295,9 +294,9 @@ class DatabaseConnection @Inject constructor() {
         checkConnection()
 
         if (categories.isEmpty())
-            getAllCategories() // вызов метода нужен для получения наименований категорий
+            getAllCategories(false) // вызов метода нужен для получения наименований категорий
         if (shops.isEmpty())
-            getAllShops() // вызов метода нужен для получения иконок магазинов
+            getAllShops(false) // вызов метода нужен для получения иконок магазинов
 
         /**
          * получение списка id Категорий, которые отображаются на главном экране
@@ -348,6 +347,46 @@ class DatabaseConnection @Inject constructor() {
         }
         Hawk.put(KEY_HOME_CATEGORIES, homeCategories)
         return homeCategories
+    }
+
+    fun updateHomeCategoriesDealsInCache() {
+        checkConnection()
+
+        if (categories.isEmpty())
+            getAllCategories(false)
+        if (shops.isEmpty())
+            getAllShops(false)
+
+        /**
+         * получение списка id Категорий, которые отображаются на главном экране
+         */
+        tryCatch {
+            val query = "SELECT meta_value FROM wp_postmeta WHERE post_id=6 AND meta_key=\"another_deals\""
+            val resultSet = executeQuery(query)
+
+            while (resultSet?.next() == true) {
+                homeCategoriesId = extractCategoriesId(resultSet.getString("meta_value"))
+            }
+            log(homeCategoriesId)
+        }
+
+        homeCategoriesId.forEach { id ->
+            val listOfDeals = getListOfDeals(id, 6, 0)
+            val categoryName = categories.find { category ->
+                category.id == id
+            }?.name ?: ""
+
+            homeCategories.add(
+                CategoryWithDeals(
+                    id = id,
+                    name = categoryName,
+                    items = listOfDeals
+                )
+            )
+            log("$categoryName loaded")
+        }
+        Hawk.put(KEY_HOME_CATEGORIES, homeCategories)
+        log("Home categories updated in cache")
     }
 
     /**

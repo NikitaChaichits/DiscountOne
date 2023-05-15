@@ -90,7 +90,7 @@ fun getSimilarDealsFromCache(dealId: Int, categoryId: Int): List<Deal> {
 
 fun getAllDealsFromCache(): List<Deal> {
     if (Hawk.contains(KEY_LOADED_ITEMS)) {
-        return Hawk.get(KEY_LOADED_ITEMS)
+        return Hawk.get<List<Deal>?>(KEY_LOADED_ITEMS).sortedByDescending(Deal::id)
     }
     return emptyList()
 }

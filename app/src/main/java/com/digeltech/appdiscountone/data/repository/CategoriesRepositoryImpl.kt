@@ -14,7 +14,7 @@ class CategoriesRepositoryImpl @Inject constructor(
 ) : CategoriesRepository {
 
     override suspend fun getAllCategories(): List<Category> = withContext(Dispatchers.IO) {
-        databaseConnection.getAllCategories()
+        databaseConnection.getAllCategories(false)
     }
 
     override suspend fun getInitHomeCategories(): List<CategoryWithDeals> = withContext(Dispatchers.IO) {

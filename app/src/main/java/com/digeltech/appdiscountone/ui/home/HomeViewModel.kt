@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private const val KEY_BANNERS = "all-banners"
+const val KEY_BANNERS = "all-banners"
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(

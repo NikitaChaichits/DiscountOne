@@ -25,6 +25,7 @@
     <string name="search_by_categories">Search by categories</string>
     <string name="search_by_shops">Search by shops</string>
     <string name="empty_search_result"><b>Nothing found</b>\nTry different phrasing</string>
+    <string name="toast_bookmark">You must be logged in to add bookmark</string>
 
     <!-- Wildcard strings -->
     <string name="price_wildcard">₹ %d</string>

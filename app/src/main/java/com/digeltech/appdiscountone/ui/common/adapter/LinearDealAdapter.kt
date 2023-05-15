@@ -19,6 +19,7 @@ import com.digeltech.appdiscountone.util.isNotNullAndNotEmpty
 import com.digeltech.appdiscountone.util.view.*
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 class LinearDealAdapter(
@@ -103,10 +104,14 @@ class LinearDealAdapter(
                         ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_bookmark))
                         it.context.toast(it.getString(R.string.removed_from_bookmarks))
                     } else {
-                        item.isAddedToBookmark = true
-                        addToBookmark(item)
-                        ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_bookmark_solid))
-                        it.context.toast(it.getString(R.string.added_to_bookmarks))
+                        if (Firebase.auth.currentUser == null) {
+                            it.context.toast(R.string.toast_bookmark)
+                        } else {
+                            item.isAddedToBookmark = true
+                            addToBookmark(item)
+                            ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_bookmark_solid))
+                            it.context.toast(it.getString(R.string.added_to_bookmarks))
+                        }
                     }
                 }
             }

@@ -13,6 +13,6 @@ class ShopsRepositoryImpl @Inject constructor(
 ) : ShopsRepository {
 
     override suspend fun getAllShops(): List<Shop> = withContext(Dispatchers.IO) {
-        databaseConnection.getAllShops()
+        databaseConnection.getAllShops(false)
     }
 }
