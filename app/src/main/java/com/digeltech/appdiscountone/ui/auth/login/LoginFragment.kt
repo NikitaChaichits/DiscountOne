@@ -8,6 +8,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.common.base.BaseFragment
 import com.digeltech.appdiscountone.databinding.FragmentLoginBinding
+import com.digeltech.appdiscountone.ui.common.logLogin
 import com.digeltech.appdiscountone.util.validation.isValidEmail
 import com.digeltech.appdiscountone.util.validation.isValidPassword
 import com.digeltech.appdiscountone.util.view.disable
@@ -42,6 +43,7 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
             )
                 .addOnCompleteListener(requireActivity()) { task ->
                     if (task.isSuccessful) {
+                        logLogin(binding.etEmail.text.toString().trim())
                         navigate(R.id.homeFragment)
                     } else {
                         binding.tvPasswordError.visible()

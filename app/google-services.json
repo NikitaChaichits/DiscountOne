@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "1068740463242",
-    "project_id": "discount-one",
-    "storage_bucket": "discount-one.appspot.com"
+    "project_number": "80119115101",
+    "project_id": "discount-one-28706",
+    "storage_bucket": "discount-one-28706.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1068740463242:android:ff78ab874bd3f6478a3b73",
+        "mobilesdk_app_id": "1:80119115101:android:b4317425b4b2c7eae14cb4",
         "android_client_info": {
           "package_name": "com.digeltech.appdiscountone"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1068740463242-etqt80do3630td2jo84s9m6s4i2l2gcr.apps.googleusercontent.com",
+          "client_id": "80119115101-vmovqn9p2li96ept55gs8td1325i266n.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDGnoZcp2F76RjOtYcbI7zBQc4eIkSRC4o"
+          "current_key": "AIzaSyBDHP2a-Ahujnv81SLViHMh6ZoEIfEypSQ"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1068740463242-etqt80do3630td2jo84s9m6s4i2l2gcr.apps.googleusercontent.com",
+              "client_id": "80119115101-vmovqn9p2li96ept55gs8td1325i266n.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

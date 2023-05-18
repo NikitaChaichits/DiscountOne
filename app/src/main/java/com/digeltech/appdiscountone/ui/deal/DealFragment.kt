@@ -12,18 +12,13 @@ import com.digeltech.appdiscountone.common.base.BaseFragment
 import com.digeltech.appdiscountone.data.source.remote.KEY_SHOPS
 import com.digeltech.appdiscountone.databinding.FragmentDealBinding
 import com.digeltech.appdiscountone.domain.model.Shop
+import com.digeltech.appdiscountone.ui.common.*
 import com.digeltech.appdiscountone.ui.common.adapter.LinearDealAdapter
-import com.digeltech.appdiscountone.ui.common.addToBookmark
-import com.digeltech.appdiscountone.ui.common.isAddedToBookmark
 import com.digeltech.appdiscountone.ui.common.model.DealParcelable
-import com.digeltech.appdiscountone.ui.common.removeFromBookmark
 import com.digeltech.appdiscountone.util.capitalizeFirstLetter
 import com.digeltech.appdiscountone.util.copyTextToClipboard
 import com.digeltech.appdiscountone.util.isNotNullAndNotEmpty
 import com.digeltech.appdiscountone.util.view.*
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -56,6 +51,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
 
     private fun initCoupon(deal: DealParcelable) {
         with(binding) {
+            logOpenDeal(deal.title)
             initListeners(deal)
             viewModel.getSimilarDeals(deal.categoryId, deal.id)
 
@@ -144,10 +140,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
         }
         btnGetDeal.setOnClickListener {
             it.openLink(deal.link)
-
-            val params = Bundle()
-            params.putString(FirebaseAnalytics.Param.ITEM_NAME, deal.link)
-            Firebase.analytics.logEvent(FirebaseAnalytics.Event.PURCHASE, params)
+            logShopNow(name = deal.title, url = deal.link)
         }
         btnCopy.setOnClickListener {
             copyTextToClipboard(it.context, deal.title)

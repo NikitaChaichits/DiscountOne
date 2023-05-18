@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.common.base.BaseFragment
 import com.digeltech.appdiscountone.databinding.FragmentHomeBinding
 import com.digeltech.appdiscountone.ui.common.adapter.GridDealAdapter
+import com.digeltech.appdiscountone.ui.common.logSearch
 import com.digeltech.appdiscountone.ui.home.adapter.BannerAdapter
 import com.digeltech.appdiscountone.ui.home.adapter.CategoriesAdapter
 import com.digeltech.appdiscountone.util.view.*
@@ -17,7 +17,6 @@ import com.digeltech.appdiscountone.util.view.recycler.GridOffsetDecoration
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTextListener {
@@ -47,6 +46,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
             binding.tvSearchResultEmpty.invisible()
             binding.rvDeals.invisible()
         } else {
+            logSearch(newText.toString())
             viewModel.searchDeals(newText.toString())
         }
         return true
@@ -98,50 +98,41 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
     }
 
     private fun observeData() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.banners.collect(bannerAdapter::submitList)
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.soloBanner.collect { banner ->
-                banner?.let {
-                    binding.ivBannerSale.apply {
-                        setImageWithRadius(banner.urlImage, R.dimen.radius_16)
-                        setOnClickListener {
-                            viewModel.getDeal(dealId = banner.dealId, categoryId = banner.categoryId)
-                        }
-                        visible()
+        viewModel.banners.observe(viewLifecycleOwner, bannerAdapter::submitList)
+        viewModel.soloBanner.observe(viewLifecycleOwner) { banner ->
+            banner?.let {
+                binding.ivBannerSale.apply {
+                    setImageWithRadius(banner.urlImage, R.dimen.radius_16)
+                    setOnClickListener {
+                        viewModel.getDeal(dealId = banner.dealId, categoryId = banner.categoryId)
                     }
+                    visible()
+                }
 
-                }
             }
         }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.categories.collect(categoriesAdapter::submitList)
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.deal.collect { deal ->
-                deal?.let {
-                    navigate(HomeFragmentDirections.toDealFragment(it))
-                }
+        viewModel.categories.observe(viewLifecycleOwner, categoriesAdapter::submitList)
+        viewModel.deal.observe(viewLifecycleOwner) { deal ->
+            deal?.let {
+                viewModel.deleteDeal()
+                navigate(HomeFragmentDirections.toDealFragment(deal))
             }
         }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.searchResult.collect {
-                if (binding.searchView.query.isNullOrEmpty()) {
-                    binding.homeGroup.visible()
-                    binding.tvSearchResultEmpty.invisible()
-                    binding.rvDeals.invisible()
-                } else if (it.isEmpty() && !binding.searchView.query.isNullOrEmpty()) {
-                    binding.tvSearchResultEmpty.visible()
-                    binding.homeGroup.invisible()
-                    binding.rvDeals.invisible()
-                } else {
-                    binding.tvSearchResultEmpty.invisible()
-                    binding.rvDeals.visible()
-                    binding.homeGroup.invisible()
-                }
-                searchDealAdapter.submitList(it)
+        viewModel.searchResult.observe(viewLifecycleOwner) {
+            if (binding.searchView.query.isNullOrEmpty()) {
+                binding.homeGroup.visible()
+                binding.tvSearchResultEmpty.invisible()
+                binding.rvDeals.invisible()
+            } else if (it.isEmpty() && !binding.searchView.query.isNullOrEmpty()) {
+                binding.tvSearchResultEmpty.visible()
+                binding.homeGroup.invisible()
+                binding.rvDeals.invisible()
+            } else {
+                binding.tvSearchResultEmpty.invisible()
+                binding.rvDeals.visible()
+                binding.homeGroup.invisible()
             }
+            searchDealAdapter.submitList(it)
         }
     }
 }

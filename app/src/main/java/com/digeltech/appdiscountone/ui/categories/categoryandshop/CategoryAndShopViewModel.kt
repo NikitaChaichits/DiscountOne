@@ -1,10 +1,11 @@
 package com.digeltech.appdiscountone.ui.categories.categoryandshop
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.digeltech.appdiscountone.common.base.BaseViewModel
 import com.digeltech.appdiscountone.ui.categories.interactor.CategoriesInteractor
 import com.digeltech.appdiscountone.ui.common.DEALS_PAGE_SIZE
-import com.digeltech.appdiscountone.ui.common.SCREEN_DEALS_SIZE
 import com.digeltech.appdiscountone.ui.common.SEARCH_DELAY
 import com.digeltech.appdiscountone.ui.common.model.DealParcelable
 import com.digeltech.appdiscountone.ui.common.model.toParcelableList
@@ -12,9 +13,6 @@ import com.digeltech.appdiscountone.util.log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,27 +21,36 @@ class CategoryAndShopViewModel @Inject constructor(
     private val categoriesInteractor: CategoriesInteractor
 ) : BaseViewModel() {
 
-    private val _deals = MutableStateFlow<List<DealParcelable>>(listOf())
-    val deals: StateFlow<List<DealParcelable>> = _deals.asStateFlow()
+    private val _deals: MutableLiveData<List<DealParcelable>> = MutableLiveData()
+    val deals: LiveData<List<DealParcelable>> = _deals
 
-    private val _searchResult = MutableStateFlow<List<DealParcelable>>(listOf())
-    val searchResult: StateFlow<List<DealParcelable>> = _searchResult.asStateFlow()
+    private val _searchResult: MutableLiveData<List<DealParcelable>> = MutableLiveData()
+    val searchResult: LiveData<List<DealParcelable>> = _searchResult
 
     private var searchJob: Job? = null
+    private var loadDealsJob: Job? = null
 
     private var currentOffset = 0
+    private var isScreenInit = false
 
     fun initDeals(categoryId: Int) {
-        viewModelScope.launchWithLoading {
-            val listOfDeals = categoriesInteractor.getCategoryDealsList(categoryId, limit = DEALS_PAGE_SIZE)
-            _deals.emit(listOfDeals.toParcelableList())
-            currentOffset += DEALS_PAGE_SIZE
-            getNextDeals(categoryId)
+        if (isScreenInit && !deals.value.isNullOrEmpty()) {
+            viewModelScope.launch {
+                getNextDeals(categoryId)
+            }
+        } else {
+            viewModelScope.launchWithLoading {
+                val listOfDeals = categoriesInteractor.getCategoryDealsList(categoryId, limit = DEALS_PAGE_SIZE)
+                _deals.postValue(listOfDeals.toParcelableList())
+                currentOffset += DEALS_PAGE_SIZE
+                isScreenInit = true
+                getNextDeals(categoryId)
+            }
         }
     }
 
     fun getNextDeals(categoryId: Int) {
-        viewModelScope.launch {
+        loadDealsJob = viewModelScope.launch {
             val newListOfDeals = categoriesInteractor.getCategoryDealsList(
                 categoryId = categoryId,
                 limit = DEALS_PAGE_SIZE,
@@ -52,21 +59,27 @@ class CategoryAndShopViewModel @Inject constructor(
                 .toParcelableList()
                 .toMutableList()
 
-            newListOfDeals.addAll(_deals.value)
-            _deals.emit(newListOfDeals.sortedByDescending { it.id })
-            currentOffset += DEALS_PAGE_SIZE
-            if (_deals.value.size < SCREEN_DEALS_SIZE) // TODO костыль чтобы не грузилось больше 100 купонов на экране
-                getNextDeals(categoryId)
+            if (newListOfDeals.isNotEmpty()) {
+                _deals.value?.let { newListOfDeals.addAll(it) }
+                _deals.postValue(newListOfDeals.sortedByDescending { it.id })
+                currentOffset += DEALS_PAGE_SIZE
+            }
+            getNextDeals(categoryId)
         }
+    }
+
+    fun stopLoadingDeals() {
+        if (loadDealsJob?.isActive == true) loadDealsJob?.cancel()
     }
 
     fun searchDeals(searchText: String) {
         if (searchJob?.isActive == true) searchJob?.cancel()
+        stopLoadingDeals()
         val searchResults = mutableListOf<DealParcelable>()
 
         searchJob = viewModelScope.launch {
             delay(SEARCH_DELAY)
-            deals.value.forEach {
+            _deals.value?.forEach {
                 if (it.title.contains(searchText, true)) {
                     searchResults.add(it)
                     log("Find this deal ${it.title}")

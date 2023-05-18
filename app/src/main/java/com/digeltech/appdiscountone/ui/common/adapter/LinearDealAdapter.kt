@@ -1,7 +1,6 @@
 package com.digeltech.appdiscountone.ui.common.adapter
 
 import android.annotation.SuppressLint
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -11,14 +10,13 @@ import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.databinding.RvDealLinearBinding
 import com.digeltech.appdiscountone.ui.common.addToBookmark
 import com.digeltech.appdiscountone.ui.common.isAddedToBookmark
+import com.digeltech.appdiscountone.ui.common.logShopNow
 import com.digeltech.appdiscountone.ui.common.model.DealParcelable
 import com.digeltech.appdiscountone.ui.common.removeFromBookmark
 import com.digeltech.appdiscountone.util.capitalizeFirstLetter
 import com.digeltech.appdiscountone.util.copyTextToClipboard
 import com.digeltech.appdiscountone.util.isNotNullAndNotEmpty
 import com.digeltech.appdiscountone.util.view.*
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -76,10 +74,7 @@ class LinearDealAdapter(
 
                 btnGetDeal.setOnClickListener {
                     it.openLink(item.link)
-
-                    val params = Bundle()
-                    params.putString(FirebaseAnalytics.Param.ITEM_NAME, item.link)
-                    Firebase.analytics.logEvent(FirebaseAnalytics.Event.PURCHASE, params)
+                    logShopNow(name = item.title, url = item.link)
                 }
 
                 if (item.promocode.isNotEmpty()) {

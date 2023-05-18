@@ -10,6 +10,8 @@ import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.common.base.BaseFragment
 import com.digeltech.appdiscountone.databinding.FragmentCategoriesBinding
 import com.digeltech.appdiscountone.ui.categories.adapter.CategoryAdapter
+import com.digeltech.appdiscountone.ui.common.logOpenCategoryDeals
+import com.digeltech.appdiscountone.ui.common.logSearch
 import com.digeltech.appdiscountone.util.view.invisible
 import com.digeltech.appdiscountone.util.view.px
 import com.digeltech.appdiscountone.util.view.recycler.GridOffsetDecoration
@@ -49,6 +51,7 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories), SearchVie
     override fun onQueryTextSubmit(query: String?): Boolean = false
 
     override fun onQueryTextChange(newText: String?): Boolean {
+        logSearch(newText.toString())
         viewModel.searchCategories(newText.toString())
         return true
     }
@@ -56,6 +59,7 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories), SearchVie
     private fun initAdapters() {
         categoryAdapter = CategoryAdapter {
             navigate(CategoriesFragmentDirections.toCategoryFragment(id = it.first, title = it.second))
+            logOpenCategoryDeals(it.second)
         }
         binding.rvCategories.adapter = categoryAdapter
         binding.rvCategories.addItemDecoration(

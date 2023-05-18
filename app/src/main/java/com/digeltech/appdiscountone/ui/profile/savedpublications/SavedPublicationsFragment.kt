@@ -4,17 +4,16 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.common.base.BaseFragment
 import com.digeltech.appdiscountone.databinding.FragmentSavedPublicationsBinding
+import com.digeltech.appdiscountone.ui.common.logSearch
 import com.digeltech.appdiscountone.util.view.invisible
 import com.digeltech.appdiscountone.util.view.px
 import com.digeltech.appdiscountone.util.view.recycler.GridOffsetDecoration
 import com.digeltech.appdiscountone.util.view.visible
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SavedPublicationsFragment : BaseFragment(R.layout.fragment_saved_publications), SearchView.OnQueryTextListener {
@@ -40,6 +39,7 @@ class SavedPublicationsFragment : BaseFragment(R.layout.fragment_saved_publicati
         if (newText.isNullOrEmpty()) {
             viewModel.getSavedPublications()
         } else {
+            logSearch(newText.toString())
             viewModel.searchDeals(newText.toString())
         }
         return true
@@ -68,20 +68,16 @@ class SavedPublicationsFragment : BaseFragment(R.layout.fragment_saved_publicati
     }
 
     private fun observeData() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.deals.collect(adapter::submitList)
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.searchResult.collect {
-                if (it.isEmpty() && !binding.searchView.query.isNullOrEmpty()) {
-                    binding.tvSearchResultEmpty.visible()
-                    binding.tvTitle.invisible()
-                } else {
-                    binding.tvSearchResultEmpty.invisible()
-                    binding.tvTitle.visible()
-                }
-                adapter.submitList(it)
+        viewModel.deals.observe(viewLifecycleOwner, adapter::submitList)
+        viewModel.searchResult.observe(viewLifecycleOwner) {
+            if (it.isEmpty() && !binding.searchView.query.isNullOrEmpty()) {
+                binding.tvSearchResultEmpty.visible()
+                binding.tvTitle.invisible()
+            } else {
+                binding.tvSearchResultEmpty.invisible()
+                binding.tvTitle.visible()
             }
+            adapter.submitList(it)
         }
     }
 }

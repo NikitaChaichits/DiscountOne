@@ -9,6 +9,7 @@ import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.common.base.BaseFragment
 import com.digeltech.appdiscountone.data.source.local.SharedPreferencesDataSource
 import com.digeltech.appdiscountone.databinding.FragmentNewAccountBinding
+import com.digeltech.appdiscountone.ui.common.logSignUp
 import com.digeltech.appdiscountone.util.log
 import com.digeltech.appdiscountone.util.time.getCurrentDateTime
 import com.digeltech.appdiscountone.util.validation.PASSWORD_MIN
@@ -76,6 +77,7 @@ class NewAccountFragment : BaseFragment(R.layout.fragment_new_account) {
                     updateProfile()
                     Firebase.auth.currentUser?.sendEmailVerification()
                     navigate(R.id.onboardingFragment)
+                    logSignUp(email)
                 } else {
                     log("createUserWithEmail:failure ${task.exception}")
                     toast("Authentication failed")

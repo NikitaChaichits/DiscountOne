@@ -1,5 +1,7 @@
 package com.digeltech.appdiscountone.ui.home
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.digeltech.appdiscountone.common.base.BaseViewModel
 import com.digeltech.appdiscountone.data.source.remote.KEY_HOME_CATEGORIES
@@ -15,9 +17,6 @@ import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,20 +27,20 @@ class HomeViewModel @Inject constructor(
     private val interactor: HomeInteractor,
 ) : BaseViewModel() {
 
-    private val _banners = MutableStateFlow<List<Banner>>(listOf())
-    val banners: StateFlow<List<Banner>> = _banners.asStateFlow()
+    private val _banners: MutableLiveData<List<Banner>> = MutableLiveData()
+    val banners: LiveData<List<Banner>> = _banners
 
-    private val _soloBanner = MutableStateFlow<Banner?>(null)
-    val soloBanner: StateFlow<Banner?> = _soloBanner.asStateFlow()
+    private val _soloBanner: MutableLiveData<Banner> = MutableLiveData()
+    val soloBanner: LiveData<Banner?> = _soloBanner
 
-    private val _categories = MutableStateFlow<List<CategoryWithDeals>>(listOf())
-    val categories: StateFlow<List<CategoryWithDeals>> = _categories.asStateFlow()
+    private val _categories: MutableLiveData<List<CategoryWithDeals>> = MutableLiveData()
+    val categories: LiveData<List<CategoryWithDeals>> = _categories
 
-    private val _deal = MutableStateFlow<DealParcelable?>(null)
-    val deal: StateFlow<DealParcelable?> = _deal.asStateFlow()
+    private val _deal: MutableLiveData<DealParcelable?> = MutableLiveData()
+    val deal: LiveData<DealParcelable?> = _deal
 
-    private val _searchResult = MutableStateFlow<List<DealParcelable>>(listOf())
-    val searchResult: StateFlow<List<DealParcelable>> = _searchResult.asStateFlow()
+    private val _searchResult: MutableLiveData<List<DealParcelable>> = MutableLiveData()
+    val searchResult: LiveData<List<DealParcelable>> = _searchResult
 
     private var searchJob: Job? = null
 
@@ -54,6 +53,10 @@ class HomeViewModel @Inject constructor(
             val deal = interactor.getDeal(dealId = dealId, categoryId = categoryId).toParcelable()
             _deal.value = deal
         }
+    }
+
+    fun deleteDeal() {
+        _deal.value = null
     }
 
     fun searchDeals(searchText: String) {
@@ -96,7 +99,7 @@ class HomeViewModel @Inject constructor(
     private fun getInitCategories() {
         viewModelScope.launchWithLoading {
             val listOfCategories = interactor.getInitCategories()
-            _categories.emit(listOfCategories)
+            _categories.postValue(listOfCategories)
             getAllCategories()
         }
     }
@@ -104,7 +107,7 @@ class HomeViewModel @Inject constructor(
     private fun getAllCategories() {
         viewModelScope.launch {
             val listOfCategories = interactor.getAllCategories()
-            _categories.emit(listOfCategories)
+            _categories.postValue(listOfCategories)
         }
     }
 
