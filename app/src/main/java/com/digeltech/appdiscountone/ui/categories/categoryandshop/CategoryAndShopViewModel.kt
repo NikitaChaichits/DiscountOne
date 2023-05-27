@@ -5,10 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.digeltech.appdiscountone.common.base.BaseViewModel
 import com.digeltech.appdiscountone.ui.categories.interactor.CategoriesInteractor
-import com.digeltech.appdiscountone.ui.common.DEALS_PAGE_SIZE
 import com.digeltech.appdiscountone.ui.common.SEARCH_DELAY
 import com.digeltech.appdiscountone.ui.common.model.DealParcelable
 import com.digeltech.appdiscountone.ui.common.model.toParcelableList
+import com.digeltech.appdiscountone.ui.shops.interactor.ShopsInteractor
 import com.digeltech.appdiscountone.util.log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -18,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoryAndShopViewModel @Inject constructor(
-    private val categoriesInteractor: CategoriesInteractor
+    private val categoriesInteractor: CategoriesInteractor,
+    private val shopsInteractor: ShopsInteractor
 ) : BaseViewModel() {
 
     private val _deals: MutableLiveData<List<DealParcelable>> = MutableLiveData()
@@ -30,43 +31,31 @@ class CategoryAndShopViewModel @Inject constructor(
     private var searchJob: Job? = null
     private var loadDealsJob: Job? = null
 
-    private var currentOffset = 0
-    private var isScreenInit = false
+//    private var currentOffset = 0
 
-    fun initDeals(categoryId: Int) {
-        if (isScreenInit && !deals.value.isNullOrEmpty()) {
-            viewModelScope.launch {
-                getNextDeals(categoryId)
-            }
-        } else {
-            viewModelScope.launchWithLoading {
-                val listOfDeals = categoriesInteractor.getCategoryDealsList(categoryId, limit = DEALS_PAGE_SIZE)
-                _deals.postValue(listOfDeals.toParcelableList())
-                currentOffset += DEALS_PAGE_SIZE
-                isScreenInit = true
-                getNextDeals(categoryId)
-            }
+    fun initDeals(id: Int, isCategoryId: Boolean) {
+        viewModelScope.launchWithLoading {
+            val listOfDeals = categoriesInteractor.getCategoryDealsList(id)
+            _deals.postValue(listOfDeals.toParcelableList().sortedByDescending { it.id })
         }
     }
 
-    fun getNextDeals(categoryId: Int) {
-        loadDealsJob = viewModelScope.launch {
-            val newListOfDeals = categoriesInteractor.getCategoryDealsList(
-                categoryId = categoryId,
-                limit = DEALS_PAGE_SIZE,
-                offset = currentOffset
-            )
-                .toParcelableList()
-                .toMutableList()
-
-            if (newListOfDeals.isNotEmpty()) {
-                _deals.value?.let { newListOfDeals.addAll(it) }
-                _deals.postValue(newListOfDeals.sortedByDescending { it.id })
-                currentOffset += DEALS_PAGE_SIZE
-            }
-            getNextDeals(categoryId)
-        }
-    }
+//    fun getNextDeals(categoryId: Int) {
+//        loadDealsJob = viewModelScope.launch {
+//            val newListOfDeals = categoriesInteractor.getCategoryDealsList(
+//                categoryId = categoryId,
+//            )
+//                .toParcelableList()
+//                .toMutableList()
+//
+//            if (newListOfDeals.isNotEmpty()) {
+//                _deals.value?.let { newListOfDeals.addAll(it) }
+//                _deals.postValue(newListOfDeals.sortedByDescending { it.id })
+//                currentOffset += DEALS_PAGE_SIZE
+//            }
+//            getNextDeals(categoryId)
+//        }
+//    }
 
     fun stopLoadingDeals() {
         if (loadDealsJob?.isActive == true) loadDealsJob?.cancel()

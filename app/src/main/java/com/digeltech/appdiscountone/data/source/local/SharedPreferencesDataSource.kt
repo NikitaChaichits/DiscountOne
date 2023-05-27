@@ -22,9 +22,9 @@ class SharedPreferencesDataSource @Inject constructor(applicationContext: Contex
     /**
      * Хранение имени Пользователя
      */
-    fun setAuthorized(isAuthorized: Boolean) = sharedPrefs.put(AUTHORIZED, isAuthorized)
+    fun setFirstLaunch(isFirstLaunch: Boolean) = sharedPrefs.put(FIRST_LAUNCH, isFirstLaunch)
 
-    fun isAuthorized(): Boolean = sharedPrefs.get(AUTHORIZED, false)
+    fun isFirstLaunch(): Boolean = sharedPrefs.get(FIRST_LAUNCH, true)
 
     /**
      * Хранение даты рождения Пользователя
@@ -40,4 +40,10 @@ class SharedPreferencesDataSource @Inject constructor(applicationContext: Contex
 
     fun getCity(): String = sharedPrefs.get(CITY, "")
 
+    /**
+     * Хранение текущей темы Пользователя
+     */
+    fun setTheme(isDarkTheme: Boolean) = sharedPrefs.put(THEME, isDarkTheme)
+
+    fun getTheme(): Boolean = sharedPrefs.get(THEME, false)
 }

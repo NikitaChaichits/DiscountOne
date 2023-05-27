@@ -68,7 +68,11 @@ class SavedPublicationsFragment : BaseFragment(R.layout.fragment_saved_publicati
     }
 
     private fun observeData() {
-        viewModel.deals.observe(viewLifecycleOwner, adapter::submitList)
+        viewModel.deals.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
+            binding.tvSearchResultEmpty.invisible()
+            binding.tvTitle.visible()
+        }
         viewModel.searchResult.observe(viewLifecycleOwner) {
             if (it.isEmpty() && !binding.searchView.query.isNullOrEmpty()) {
                 binding.tvSearchResultEmpty.visible()

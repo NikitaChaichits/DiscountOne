@@ -11,19 +11,20 @@ data class DealParcelable(
     val categoryId: Int,
     val title: String,
     val description: String,
-    var imageUrl: String? = null,
+    var imageUrl: String,
     val shopName: String,
-    val shopImageUrl: String? = null,
-    val oldPrice: String,
-    val discountPrice: String,
+    val shopImageUrl: String,
+    val oldPrice: String?,
+    val price: String?,
     val priceCurrency: String = "₹",
-    val promocode: String,
+    val promocode: String?,
     val link: String,
     val rating: Int,
     var isAddedToBookmark: Boolean = false,
     val publishedDate: String,
-    val validDate: String,
-    val sale: String,
+    val expirationDate: String?,
+    val sale: String?,
+    val viewsClick: Int,
 ) : Parcelable
 
 fun List<Deal>.toParcelableList(): List<DealParcelable> {
@@ -40,15 +41,16 @@ fun Deal.toParcelable(): DealParcelable {
         shopName = shopName,
         shopImageUrl = shopImageUrl,
         oldPrice = oldPrice,
-        discountPrice = discountPrice,
+        price = price,
         priceCurrency = priceCurrency,
         promocode = promocode,
         link = link,
         rating = rating.safeToInt(),
         isAddedToBookmark = isAddedToBookmark,
         publishedDate = publishedDate,
-        validDate = validDate,
-        sale = sale
+        expirationDate = expirationDate,
+        sale = sale,
+        viewsClick = viewsClick,
     )
 }
 

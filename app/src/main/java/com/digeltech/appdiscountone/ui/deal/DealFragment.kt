@@ -70,7 +70,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
                 tvPriceWithDiscount.gone()
             } else {
                 tvPrice.setStrikethrough(deal.priceCurrency + deal.oldPrice)
-                tvPriceWithDiscount.text = deal.priceCurrency + deal.discountPrice
+                tvPriceWithDiscount.text = deal.priceCurrency + deal.price
             }
             tvPublishedDate.text = getString(R.string.fr_deal_published, deal.publishedDate)
             tvDealName.text = deal.title
@@ -81,15 +81,15 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
                 tvCouponCompany.text = deal.shopName.capitalizeFirstLetter()
             }
 
-            if (deal.validDate.isNotEmpty()) {
-                tvTimeValid.text = deal.validDate
+            if (deal.expirationDate.isNotNullAndNotEmpty()) {
+                tvTimeValid.text = deal.expirationDate
                 ivTimeValid.visible()
                 tvTimeValid.visible()
             }
 
             tvRate.text = deal.rating.toString()
 
-            if (deal.promocode.isNotEmpty()) {
+            if (deal.promocode.isNotNullAndNotEmpty()) {
                 tvCouponText.text = deal.promocode
                 btnCopy.visible()
             } else {

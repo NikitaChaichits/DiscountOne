@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/common_offset_16dp"
             android:layout_marginTop="@dimen/common_offset_24dp"
-            android:textColor="@color/black"
+            android:textColor="@color/defaultColor"
             android:textAlignment="center"
             android:visibility="gone"
             android:text="@string/empty_search_result"

@@ -1,36 +1,45 @@
 package com.digeltech.appdiscountone.data.repository
 
-import com.digeltech.appdiscountone.data.source.remote.DatabaseConnection
+import com.digeltech.appdiscountone.data.mapper.DealsMapper
+import com.digeltech.appdiscountone.data.mapper.HomepageMapper
+import com.digeltech.appdiscountone.data.source.remote.api.ServerApi
 import com.digeltech.appdiscountone.domain.model.Deal
+import com.digeltech.appdiscountone.domain.model.Homepage
 import com.digeltech.appdiscountone.domain.repository.DealsRepository
-import com.digeltech.appdiscountone.ui.home.adapter.Banner
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class DealsRepositoryImpl @Inject constructor(
-    private val databaseConnection: DatabaseConnection,
+    private val api: ServerApi,
 ) : DealsRepository {
 
-    override suspend fun getAllDeals(limit: Int, offset: Int): List<Deal> = withContext(Dispatchers.IO) {
-        databaseConnection.getAllDeals(limit, offset)
+    override suspend fun getAllDeals(): List<Deal> = withContext(Dispatchers.IO) {
+        DealsMapper().mapAllDeal(api.getAllDeals())
     }
 
-    override suspend fun getAllCoupons(limit: Int, offset: Int): List<Deal> = withContext(Dispatchers.IO) {
-        databaseConnection.getAllCoupons(limit, offset)
+    override suspend fun getAllCoupons(): List<Deal> = withContext(Dispatchers.IO) {
+        DealsMapper().mapAllDeal(api.getAllCoupons())
     }
 
-    override suspend fun getDealsByCategoryId(categoryId: Int, limit: Int, offset: Int): List<Deal> =
-        withContext(Dispatchers.IO) {
-            databaseConnection.getDealsById(categoryId, limit, offset)
-        }
+    override suspend fun getDealsByCategoryId(categoryId: Int): List<Deal> = withContext(Dispatchers.IO) {
+        DealsMapper().mapAllDeal(api.getCategoryDeals())
+    }
+
+    override suspend fun getDealsByShopId(shopId: Int): List<Deal> = withContext(Dispatchers.IO) {
+        DealsMapper().mapAllDeal(api.getShopDeals(shopId.toString(), "1"))
+    }
 
     override suspend fun getDealById(dealId: Int, categoryId: Int): Deal = withContext(Dispatchers.IO) {
-        databaseConnection.getDeal(dealId = dealId, categoryId = categoryId)
+        DealsMapper().mapToDeal(api.getDeal(dealId.toString()))
     }
 
-    override suspend fun getBanners(): List<Banner> = withContext(Dispatchers.IO) {
-        databaseConnection.getBanners()
+    override suspend fun getHomepage(): Homepage = withContext(Dispatchers.IO) {
+        HomepageMapper().map(api.getHomepage())
+    }
+
+    override suspend fun searchDeals(searchText: String): List<Deal> = withContext(Dispatchers.IO) {
+        DealsMapper().mapAllDeal(api.searchDeals(searchText))
     }
 
 }

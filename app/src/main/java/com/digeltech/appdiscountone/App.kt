@@ -2,6 +2,8 @@ package com.digeltech.appdiscountone
 
 import android.app.Application
 import android.content.Context
+import android.content.res.Configuration.UI_MODE_NIGHT_MASK
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.WorkManager
 import com.digeltech.appdiscountone.data.source.local.UpdateCacheWorker
@@ -15,7 +17,7 @@ class App : Application() {
         super.onCreate()
 
         Hawk.init(applicationContext).build()
-        scheduleHomeCategoryUpdate(applicationContext)
+//        scheduleHomeCategoryUpdate(applicationContext)
     }
 
     private fun scheduleHomeCategoryUpdate(context: Context) {
@@ -25,5 +27,10 @@ class App : Application() {
             ExistingPeriodicWorkPolicy.UPDATE,
             workRequest
         )
+    }
+
+    private fun isDarkThemeEnabled(context: Context): Boolean {
+        val currentNightMode = context.resources.configuration.uiMode and UI_MODE_NIGHT_MASK
+        return currentNightMode == UI_MODE_NIGHT_YES
     }
 }

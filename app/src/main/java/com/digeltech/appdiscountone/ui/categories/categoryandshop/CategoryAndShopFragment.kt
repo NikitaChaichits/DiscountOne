@@ -42,7 +42,7 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
 
     override fun onResume() {
         super.onResume()
-        viewModel.initDeals(args.id)
+        viewModel.initDeals(args.id, true)
     }
 
     override fun onPause() {
@@ -53,12 +53,8 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
     override fun onQueryTextSubmit(query: String?): Boolean = false
 
     override fun onQueryTextChange(newText: String?): Boolean {
-        if (newText.isNullOrEmpty()) {
-//            viewModel.getNextDeals()
-        } else {
-            logSearch(newText.toString())
-            viewModel.searchDeals(newText.toString())
-        }
+        logSearch(newText.toString())
+        viewModel.searchDeals(newText.toString())
         return true
     }
 

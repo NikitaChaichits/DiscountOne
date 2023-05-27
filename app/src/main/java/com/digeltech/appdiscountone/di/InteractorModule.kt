@@ -40,11 +40,9 @@ object InteractorModule {
 
     @Provides
     fun provideHomeInteractor(
-        categoriesRepository: CategoriesRepository,
         dealsRepository: DealsRepository
     ): HomeInteractor =
         HomeInteractorImpl(
-            categoriesRepository = categoriesRepository,
             dealsRepository = dealsRepository
         )
 

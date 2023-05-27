@@ -5,11 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.digeltech.appdiscountone.common.base.BaseViewModel
 import com.digeltech.appdiscountone.domain.repository.DealsRepository
-import com.digeltech.appdiscountone.ui.common.DEALS_PAGE_SIZE
 import com.digeltech.appdiscountone.ui.common.SEARCH_DELAY
 import com.digeltech.appdiscountone.ui.common.model.DealParcelable
 import com.digeltech.appdiscountone.ui.common.model.toParcelableList
-import com.digeltech.appdiscountone.util.log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -30,7 +28,7 @@ class CouponsViewModel @Inject constructor(
     private var searchJob: Job? = null
     private var loadDealsJob: Job? = null
 
-    private var currentOffset = 0
+//    private var currentOffset = 0
 
     init {
         initDeals()
@@ -38,27 +36,27 @@ class CouponsViewModel @Inject constructor(
 
     fun initDeals() {
         viewModelScope.launchWithLoading {
-            val listOfDeals = dealsRepository.getAllCoupons(limit = DEALS_PAGE_SIZE, offset = currentOffset)
-            _deals.postValue(listOfDeals.toParcelableList())
-            currentOffset += DEALS_PAGE_SIZE
-            getNextDeals()
+            val listOfDeals = dealsRepository.getAllCoupons()
+            _deals.postValue(listOfDeals.toParcelableList().sortedByDescending { it.viewsClick })
+//            currentOffset += DEALS_PAGE_SIZE
+//            getNextDeals()
         }
     }
 
-    fun getNextDeals() {
-        loadDealsJob = viewModelScope.launch {
-            val newListOfDeals = dealsRepository.getAllCoupons(limit = DEALS_PAGE_SIZE, offset = currentOffset)
-                .toParcelableList()
-                .toMutableList()
-
-            if (newListOfDeals.isNotEmpty()) {
-                _deals.value?.let { newListOfDeals.addAll(it) }
-                _deals.postValue(newListOfDeals.sortedByDescending { it.id })
-                currentOffset += DEALS_PAGE_SIZE
-            }
-            getNextDeals()
-        }
-    }
+//    fun getNextDeals() {
+//        loadDealsJob = viewModelScope.launch {
+//            val newListOfDeals = dealsRepository.getAllCoupons()
+//                .toParcelableList()
+//                .toMutableList()
+//
+//            if (newListOfDeals.isNotEmpty()) {
+//                _deals.value?.let { newListOfDeals.addAll(it) }
+//                _deals.postValue(newListOfDeals.sortedByDescending { it.id })
+//                currentOffset += DEALS_PAGE_SIZE
+//            }
+//            getNextDeals()
+//        }
+//    }
 
     fun stopLoadingDeals() {
         if (loadDealsJob?.isActive == true) loadDealsJob?.cancel()
@@ -67,17 +65,12 @@ class CouponsViewModel @Inject constructor(
     fun searchDeals(searchText: String) {
         if (searchJob?.isActive == true) searchJob?.cancel()
         stopLoadingDeals()
-        val searchResults = mutableListOf<DealParcelable>()
 
         searchJob = viewModelScope.launch {
             delay(SEARCH_DELAY)
-            deals.value?.forEach {
-                if (it.title.contains(searchText, true)) {
-                    searchResults.add(it)
-                    log("Find this deal ${it.title}")
-                }
-            }
-            _searchResult.value = searchResults
+
+            val deals = dealsRepository.searchDeals(searchText)
+            _searchResult.value = deals.toParcelableList()
         }
     }
 

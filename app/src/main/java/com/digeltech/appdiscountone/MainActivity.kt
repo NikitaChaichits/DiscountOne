@@ -11,6 +11,7 @@ import com.digeltech.appdiscountone.databinding.ActivityMainBinding
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
+import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,6 +28,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         prefs = SharedPreferencesDataSource(baseContext)
+        if (prefs.isFirstLaunch()) {
+            Hawk.deleteAll()
+            prefs.setFirstLaunch(false)
+        }
 
         val navFragment =
             supportFragmentManager.findFragmentById(R.id.navigationHost) as NavHostFragment

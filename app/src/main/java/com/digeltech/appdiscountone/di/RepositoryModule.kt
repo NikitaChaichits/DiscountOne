@@ -3,7 +3,7 @@ package com.digeltech.appdiscountone.di
 import com.digeltech.appdiscountone.data.repository.CategoriesRepositoryImpl
 import com.digeltech.appdiscountone.data.repository.DealsRepositoryImpl
 import com.digeltech.appdiscountone.data.repository.ShopsRepositoryImpl
-import com.digeltech.appdiscountone.data.source.remote.DatabaseConnection
+import com.digeltech.appdiscountone.data.source.remote.api.ServerApi
 import com.digeltech.appdiscountone.domain.repository.CategoriesRepository
 import com.digeltech.appdiscountone.domain.repository.DealsRepository
 import com.digeltech.appdiscountone.domain.repository.ShopsRepository
@@ -17,14 +17,14 @@ import dagger.hilt.components.SingletonComponent
 object RepositoryModule {
 
     @Provides
-    fun provideCouponRepository(databaseConnection: DatabaseConnection): DealsRepository =
-        DealsRepositoryImpl(databaseConnection)
+    fun provideCouponRepository(serverApi: ServerApi): DealsRepository =
+        DealsRepositoryImpl(serverApi)
 
     @Provides
-    fun provideCategoriesRepository(databaseConnection: DatabaseConnection): CategoriesRepository =
-        CategoriesRepositoryImpl(databaseConnection)
+    fun provideCategoriesRepository(serverApi: ServerApi): CategoriesRepository =
+        CategoriesRepositoryImpl(serverApi)
 
     @Provides
-    fun provideShopsRepository(databaseConnection: DatabaseConnection): ShopsRepository =
-        ShopsRepositoryImpl(databaseConnection)
+    fun provideShopsRepository(serverApi: ServerApi): ShopsRepository =
+        ShopsRepositoryImpl(serverApi)
 }

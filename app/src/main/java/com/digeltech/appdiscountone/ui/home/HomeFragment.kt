@@ -32,6 +32,8 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         super.onViewCreated(view, savedInstanceState)
 
         loadProfileImage()
+        viewModel.getHomepageData()
+
         initAdapters()
         initListeners()
 

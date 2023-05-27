@@ -38,9 +38,7 @@ class ShopAdapter(
                 tvTitle.text = item.name
                 tvSubtitle.text = "${item.countOfItems} publications"
 
-                if (item.icon.isNotEmpty()) {
-                    ivIcon.loadImage(item.icon)
-                }
+                item.icon?.let { ivIcon.loadImage(it) }
 
                 root.setOnClickListener {
                     onClickListener(Pair(item.id, item.name))

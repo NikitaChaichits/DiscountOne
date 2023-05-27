@@ -25,6 +25,7 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
     override val viewModel: CouponsViewModel by viewModels()
 
     private lateinit var dealAdapter: GridDealAdapter
+    private lateinit var searchAdapter: GridDealAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -35,21 +36,24 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
         observeData()
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.getNextDeals()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        viewModel.stopLoadingDeals()
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        viewModel.getNextDeals()
+//    }
+//
+//    override fun onPause() {
+//        super.onPause()
+//        viewModel.stopLoadingDeals()
+//    }
 
     override fun onQueryTextSubmit(query: String?): Boolean = false
 
     override fun onQueryTextChange(newText: String?): Boolean {
         if (newText.isNullOrEmpty()) {
-//            viewModel.getNextDeals()
+            binding.rvSearchDeals.invisible()
+            binding.rvDeals.visible()
+            binding.tvSearchResultEmpty.invisible()
+            binding.tvTitle.visible()
         } else {
             logSearch(newText.toString())
             viewModel.searchDeals(newText.toString())
@@ -60,7 +64,6 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
     private fun initAdapters() {
         dealAdapter = GridDealAdapter {
             navigate(CouponsFragmentDirections.toDealFragment(it))
-            binding.searchView.setQuery("", false)
         }
         binding.rvDeals.addItemDecoration(
             GridOffsetDecoration(
@@ -70,6 +73,19 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
             )
         )
         binding.rvDeals.adapter = dealAdapter
+
+        searchAdapter = GridDealAdapter {
+            navigate(CouponsFragmentDirections.toDealFragment(it))
+            binding.searchView.setQuery("", false)
+        }
+        binding.rvSearchDeals.addItemDecoration(
+            GridOffsetDecoration(
+                edgesOffset = 16.px,
+                horizontalOffset = 16.px,
+                verticalOffset = 16.px
+            )
+        )
+        binding.rvSearchDeals.adapter = searchAdapter
     }
 
     private fun initListeners() {
@@ -96,7 +112,9 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
                 binding.tvSearchResultEmpty.invisible()
                 binding.tvTitle.visible()
             }
-            dealAdapter.submitList(it)
+            searchAdapter.submitList(it)
+            binding.rvSearchDeals.visible()
+            binding.rvDeals.invisible()
         }
     }
 }

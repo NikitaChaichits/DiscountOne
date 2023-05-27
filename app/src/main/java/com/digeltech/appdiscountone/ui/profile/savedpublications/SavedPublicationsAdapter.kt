@@ -49,7 +49,7 @@ class SavedPublicationsAdapter(
                     tvPrice.gone()
                 } else {
                     tvPrice.setStrikethrough(item.priceCurrency + item.oldPrice)
-                    tvPriceWithDiscount.text = item.priceCurrency + item.discountPrice
+                    tvPriceWithDiscount.text = item.priceCurrency + item.price
                 }
 
                 tvTitle.text = item.title
@@ -73,10 +73,10 @@ class SavedPublicationsAdapter(
                     logShopNow(name = item.title, url = item.link)
                 }
 
-                if (item.promocode.isNotEmpty()) {
+                if (item.promocode.isNotNullAndNotEmpty()) {
                     btnCopy.visible()
                     btnCopy.setOnClickListener {
-                        copyTextToClipboard(it.context, item.promocode)
+                        copyTextToClipboard(it.context, item.promocode!!)
                         it.context.toast(it.getString(R.string.copied))
                     }
                 } else {

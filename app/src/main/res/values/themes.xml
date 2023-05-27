@@ -10,12 +10,11 @@
         <item name="colorSecondaryVariant">@color/black</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">@color/statusBarColor</item>
     </style>
 
     <style name="Theme.DiscountOne.TranslucentStatus">
         <item name="android:windowTranslucentStatus">true</item>
     </style>
-
 
 </resources>

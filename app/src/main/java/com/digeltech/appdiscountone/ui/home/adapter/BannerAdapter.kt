@@ -12,7 +12,7 @@ import com.digeltech.appdiscountone.util.view.setImageWithRadius
 
 
 class BannerAdapter(
-    private val onClickListener: (Pair<Int, Int>) -> Unit,
+    private val onClickListener: (Pair<Int?, Int?>) -> Unit,
 ) : ListAdapter<Banner, BannerAdapter.ItemViewholder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewholder {

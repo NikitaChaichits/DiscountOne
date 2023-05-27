@@ -10,6 +10,7 @@ import com.digeltech.appdiscountone.common.base.BaseFragment
 import com.digeltech.appdiscountone.databinding.FragmentDealsBinding
 import com.digeltech.appdiscountone.ui.common.adapter.GridDealAdapter
 import com.digeltech.appdiscountone.ui.common.logSearch
+import com.digeltech.appdiscountone.ui.coupons.CouponsFragmentDirections
 import com.digeltech.appdiscountone.util.view.invisible
 import com.digeltech.appdiscountone.util.view.px
 import com.digeltech.appdiscountone.util.view.recycler.GridOffsetDecoration
@@ -25,6 +26,7 @@ class DealsFragment : BaseFragment(R.layout.fragment_deals), SearchView.OnQueryT
     override val viewModel: DealsViewModel by viewModels()
 
     private lateinit var dealAdapter: GridDealAdapter
+    private lateinit var searchAdapter: GridDealAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -35,21 +37,24 @@ class DealsFragment : BaseFragment(R.layout.fragment_deals), SearchView.OnQueryT
         observeData()
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.getNextDeals()
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        viewModel.getNextDeals()
+//    }
 
-    override fun onPause() {
-        super.onPause()
-        viewModel.stopLoadingDeals()
-    }
+//    override fun onPause() {
+//        super.onPause()
+//        viewModel.stopLoadingDeals()
+//    }
 
     override fun onQueryTextSubmit(query: String?): Boolean = false
 
     override fun onQueryTextChange(newText: String?): Boolean {
         if (newText.isNullOrEmpty()) {
-//            viewModel.getNextDeals()
+            binding.rvSearchDeals.invisible()
+            binding.rvDeals.visible()
+            binding.tvSearchResultEmpty.invisible()
+            binding.tvTitle.visible()
         } else {
             logSearch(newText.toString())
             viewModel.searchDeals(newText.toString())
@@ -59,8 +64,7 @@ class DealsFragment : BaseFragment(R.layout.fragment_deals), SearchView.OnQueryT
 
     private fun initAdapters() {
         dealAdapter = GridDealAdapter {
-            navigate(DealsFragmentDirections.toDealFragment(it))
-            binding.searchView.setQuery("", false)
+            navigate(CouponsFragmentDirections.toDealFragment(it))
         }
         binding.rvDeals.addItemDecoration(
             GridOffsetDecoration(
@@ -70,6 +74,19 @@ class DealsFragment : BaseFragment(R.layout.fragment_deals), SearchView.OnQueryT
             )
         )
         binding.rvDeals.adapter = dealAdapter
+
+        searchAdapter = GridDealAdapter {
+            navigate(CouponsFragmentDirections.toDealFragment(it))
+            binding.searchView.setQuery("", false)
+        }
+        binding.rvSearchDeals.addItemDecoration(
+            GridOffsetDecoration(
+                edgesOffset = 16.px,
+                horizontalOffset = 16.px,
+                verticalOffset = 16.px
+            )
+        )
+        binding.rvSearchDeals.adapter = searchAdapter
     }
 
     private fun initListeners() {
@@ -96,7 +113,9 @@ class DealsFragment : BaseFragment(R.layout.fragment_deals), SearchView.OnQueryT
                 binding.tvSearchResultEmpty.invisible()
                 binding.tvTitle.visible()
             }
-            dealAdapter.submitList(it)
+            searchAdapter.submitList(it)
+            binding.rvSearchDeals.visible()
+            binding.rvDeals.invisible()
         }
     }
 }

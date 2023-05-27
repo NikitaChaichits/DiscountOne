@@ -16,7 +16,7 @@ import java.sql.DriverManager
 import java.sql.ResultSet
 import javax.inject.Inject
 
-private const val DATABASE_URL = "jdbc:mysql://p3plzcpnl497327.prod.phx3.secureserver.net:3306/main"
+private const val DATABASE_URL = "jdbc:mysql://discount.one/__pma:3306/discountone"
 const val KEY_CATEGORIES = "all-categories"
 const val KEY_SHOPS = "all-shops"
 const val KEY_HOME_CATEGORIES = "all-home-categories"
@@ -38,8 +38,8 @@ class DatabaseConnection @Inject constructor() {
      */
     private fun connect() {
         try {
-            val user = "pv7cyzxu6n54"
-            val password = "CdM9uwNOZu"
+            val user = "one"
+            val password = "\$yN5yBn*Quf*uc"
             connection = DriverManager.getConnection(DATABASE_URL, user, password)
             log("Connection to MySQL database successful!")
         } catch (e: SQLException) {
@@ -273,15 +273,15 @@ class DatabaseConnection @Inject constructor() {
                 listOfDealsId.add(Pair(dealId.toInt(), categoryId.toInt()))
             }
 
-            listOfBannersUrl.forEachIndexed { index, url ->
-                listOfBanners.add(
-                    Banner(
-                        urlImage = url,
-                        dealId = listOfDealsId[index].first,
-                        categoryId = listOfDealsId[index].second
-                    )
-                )
-            }
+//            listOfBannersUrl.forEachIndexed { index, url ->
+//                listOfBanners.add(
+//                    Banner(
+//                        urlImage = url,
+//                        dealId = listOfDealsId[index].first,
+//                        categoryId = listOfDealsId[index].second
+//                    )
+//                )
+//            }
         }
 
         return listOfBanners
@@ -467,13 +467,13 @@ class DatabaseConnection @Inject constructor() {
                 shopName = shopName,
                 shopImageUrl = shopImageUrl,
                 oldPrice = oldPrice,
-                discountPrice = price,
-                sale = sale,
+                price = price,
                 rating = rating,
                 promocode = promocode,
                 link = link,
                 publishedDate = postDate,
-                validDate = validDate,
+                expirationDate = validDate,
+                sale = sale,
             )
             addedDealToCache(deal)
             return deal
@@ -517,19 +517,6 @@ class DatabaseConnection @Inject constructor() {
             listOfDeals.add(getDeal(dealId, id))
         }
         return listOfDeals
-    }
-
-    private fun getCategoryIdByDealId(dealId: Int): Int {
-        tryCatch {
-            val query = "SELECT term_taxonomy_id FROM wp_term_relationships \n" +
-                    "WHERE object_id=$dealId \n" +
-                    "LIMIT 1"
-            val resultSet = executeQuery(query)
-            while (resultSet?.next() == true) {
-                return resultSet.getInt("term_taxonomy_id")
-            }
-        }
-        return 0
     }
 
     /**
