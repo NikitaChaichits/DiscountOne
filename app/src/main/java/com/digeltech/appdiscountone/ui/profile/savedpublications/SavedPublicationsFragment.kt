@@ -62,6 +62,7 @@ class SavedPublicationsFragment : BaseFragment(R.layout.fragment_saved_publicati
             navigateBack()
         }
         binding.searchView.apply {
+            setOnClickListener { onActionViewExpanded() }
             setOnQueryTextListener(this@SavedPublicationsFragment)
             queryHint = getString(R.string.search_by_deals)
         }

@@ -1,318 +1,327 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/common_offset_8dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/common_offset_16dp"
+        android:paddingVertical="@dimen/common_offset_12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_back" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivShare"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/common_offset_24dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/ivBack"
+        app:layout_constraintEnd_toStartOf="@id/ivBookmark"
+        app:layout_constraintTop_toTopOf="@id/ivBack"
+        app:srcCompat="@drawable/ic_uploading" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivBookmark"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginEnd="@dimen/common_offset_32dp"
+        app:layout_constraintBottom_toBottomOf="@id/ivBack"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ivBack"
+        app:srcCompat="@drawable/ic_bookmark_deal" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/ivBack"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/ivBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/common_offset_32dp"
-            android:layout_marginTop="@dimen/common_offset_16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_back" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/ivUploading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/common_offset_24dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/ivBack"
-            app:layout_constraintEnd_toStartOf="@id/ivBookmark"
-            app:layout_constraintTop_toTopOf="@id/ivBack"
-            app:srcCompat="@drawable/ic_uploading" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/ivBookmark"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_marginEnd="@dimen/common_offset_32dp"
-            app:layout_constraintBottom_toBottomOf="@id/ivBack"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/ivBack"
-            app:srcCompat="@drawable/ic_bookmark_deal" />
-
-        <ImageView
-            android:id="@+id/ivDealImage"
-            android:layout_width="0dp"
-            android:layout_height="360dp"
-            android:layout_marginTop="@dimen/common_offset_8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ivBack" />
-
-        <TextView
-            android:id="@+id/tvPrice"
-            style="@style/TextRegular.Title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/common_offset_16dp"
-            android:layout_marginTop="@dimen/common_offset_8dp"
-            android:textColor="@color/colorPrimary"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ivDealImage"
-            tools:text="₹ 1 799.00" />
-
-        <TextView
-            android:id="@+id/tvPriceWithDiscount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/common_offset_12dp"
-            android:textColor="@color/green"
-            android:textSize="@dimen/common_textSize_20sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/tvPrice"
-            app:layout_constraintStart_toEndOf="@id/tvPrice"
-            app:layout_constraintTop_toTopOf="@id/tvPrice"
-            tools:text="€65.00" />
-
-        <TextView
-            android:id="@+id/tvPublishedDate"
-            style="@style/TextRegular.Description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/common_offset_16dp"
-            android:layout_marginTop="@dimen/common_offset_32dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvPrice"
-            tools:text="Published today at 10:30 PM" />
-
-        <TextView
-            android:id="@+id/tvDealName"
-            style="@style/TextRegular.Title"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="0dp"
-            android:layout_marginTop="@dimen/common_offset_8dp"
-            android:paddingHorizontal="@dimen/common_offset_16dp"
-            app:layout_constraintTop_toBottomOf="@id/tvPublishedDate"
-            tools:text="WH-1000XM5 Wireless Industry Leading Noise Canceling Headphones" />
-
-        <ImageView
-            android:id="@+id/ivCouponCompanyLogo"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_margin="@dimen/common_offset_16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvDealName" />
-
-        <TextView
-            android:id="@+id/tvCouponCompany"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/common_offset_8dp"
-            android:layout_marginEnd="@dimen/common_offset_8dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="@color/defaultColor"
-            android:textSize="@dimen/common_textSize_14sp"
-            app:layout_constraintBottom_toBottomOf="@id/ivCouponCompanyLogo"
-            app:layout_constraintEnd_toStartOf="@id/ivRateArrowUp"
-            app:layout_constraintStart_toEndOf="@id/ivCouponCompanyLogo"
-            app:layout_constraintTop_toTopOf="@id/ivCouponCompanyLogo"
-            tools:text="Nike" />
-
-        <ImageView
-            android:id="@+id/ivTimeValid"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/common_offset_16dp"
-            android:layout_marginTop="@dimen/common_offset_24dp"
-            android:src="@drawable/ic_time_valid"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ivCouponCompanyLogo" />
-
-        <TextView
-            android:id="@+id/tvTimeValid"
-            style="@style/TextRegular.Description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/common_offset_16dp"
-            android:textSize="@dimen/common_textSize_12sp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/ivTimeValid"
-            app:layout_constraintStart_toEndOf="@id/ivTimeValid"
-            app:layout_constraintTop_toTopOf="@id/ivTimeValid"
-            tools:text="Valid until 23.02.23" />
-
-        <ImageView
-            android:id="@+id/ivRateArrowUp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/common_offset_12dp"
-            android:src="@drawable/ic_arrow_up_big"
-            android:visibility="gone"
-            app:layout_constraintEnd_toStartOf="@id/tvRate"
-            app:layout_constraintTop_toTopOf="@id/ivCouponCompanyLogo"
-            app:layout_constraintBottom_toBottomOf="@id/ivCouponCompanyLogo" />
-
-        <TextView
-            android:id="@+id/tvRate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/common_offset_12dp"
-            android:textColor="@color/defaultColor"
-            android:textSize="@dimen/common_textSize_14sp"
-            android:visibility="gone"
-            app:layout_constraintTop_toTopOf="@id/ivCouponCompanyLogo"
-            app:layout_constraintBottom_toBottomOf="@id/ivCouponCompanyLogo"
-            app:layout_constraintEnd_toStartOf="@id/ivRateArrowDown"
-            tools:text="273" />
-
-        <ImageView
-            android:id="@+id/ivRateArrowDown"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/common_offset_20dp"
-            android:rotation="180"
-            android:visibility="gone"
-            android:src="@drawable/ic_arrow_up_big"
-            app:layout_constraintTop_toTopOf="@id/ivCouponCompanyLogo"
-            app:layout_constraintBottom_toBottomOf="@id/ivCouponCompanyLogo"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnGetDeal"
-            style="@style/ButtonColored.Coupon"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="@dimen/common_offset_16dp"
-            android:layout_marginTop="@dimen/common_offset_16dp"
-            android:text="@string/shop_now"
-            android:textAllCaps="true"
-            app:layout_constraintEnd_toStartOf="@id/btnCopy"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ivTimeValid" />
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/btnCopy"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="@dimen/common_offset_16dp"
-            android:background="@drawable/shape_grey_border"
-            android:gravity="center_vertical|center_horizontal"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="@id/ivRateArrowDown"
-            app:layout_constraintStart_toEndOf="@id/btnGetDeal"
-            app:layout_constraintTop_toTopOf="@id/btnGetDeal">
+            android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/ivDealImage"
+                android:layout_width="0dp"
+                android:layout_height="360dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ivBack" />
+
+            <TextView
+                android:id="@+id/tvPrice"
+                style="@style/TextRegular.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/common_offset_16dp"
+                android:layout_marginTop="@dimen/common_offset_8dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ivDealImage"
+                tools:text="₹ 1 799.00" />
+
+            <TextView
+                android:id="@+id/tvPriceWithDiscount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/common_offset_12dp"
+                android:textColor="@color/green"
+                android:textSize="@dimen/common_textSize_20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/tvPrice"
+                app:layout_constraintStart_toEndOf="@id/tvPrice"
+                app:layout_constraintTop_toTopOf="@id/tvPrice"
+                tools:text="€65.00" />
+
+            <TextView
+                android:id="@+id/tvPublishedDate"
+                style="@style/TextRegular.Description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/common_offset_16dp"
+                android:layout_marginTop="@dimen/common_offset_32dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvPrice"
+                tools:text="Published today at 10:30 PM" />
+
+            <TextView
+                android:id="@+id/tvDealName"
+                style="@style/TextRegular.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="0dp"
+                android:layout_marginTop="@dimen/common_offset_8dp"
+                android:paddingHorizontal="@dimen/common_offset_16dp"
+                app:layout_constraintTop_toBottomOf="@id/tvPublishedDate"
+                tools:text="WH-1000XM5 Wireless Industry Leading Noise Canceling Headphones" />
+
+            <ImageView
+                android:id="@+id/ivCouponCompanyLogo"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_margin="@dimen/common_offset_16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvDealName" />
+
+            <TextView
+                android:id="@+id/tvCouponCompany"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/common_offset_8dp"
+                android:layout_marginEnd="@dimen/common_offset_8dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/defaultColor"
+                android:textSize="@dimen/common_textSize_14sp"
+                app:layout_constraintBottom_toBottomOf="@id/ivCouponCompanyLogo"
+                app:layout_constraintEnd_toStartOf="@id/ivRateArrowUp"
+                app:layout_constraintStart_toEndOf="@id/ivCouponCompanyLogo"
+                app:layout_constraintTop_toTopOf="@id/ivCouponCompanyLogo"
+                tools:text="Nike" />
+
+            <ImageView
+                android:id="@+id/ivTimeValid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/common_offset_16dp"
+                android:layout_marginTop="@dimen/common_offset_24dp"
+                android:src="@drawable/ic_time_valid"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ivCouponCompanyLogo" />
+
+            <TextView
+                android:id="@+id/tvTimeValid"
+                style="@style/TextRegular.Description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/common_offset_16dp"
+                android:textSize="@dimen/common_textSize_12sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/ivTimeValid"
+                app:layout_constraintStart_toEndOf="@id/ivTimeValid"
+                app:layout_constraintTop_toTopOf="@id/ivTimeValid"
+                tools:text="Valid until 23.02.23" />
+
+            <ImageView
+                android:id="@+id/ivRateArrowUp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/common_offset_12dp"
-                android:src="@drawable/ic_copy" />
+                android:src="@drawable/ic_arrow_up_big"
+                android:visibility="gone"
+                app:layout_constraintEnd_toStartOf="@id/tvRate"
+                app:layout_constraintTop_toTopOf="@id/ivCouponCompanyLogo"
+                app:layout_constraintBottom_toBottomOf="@id/ivCouponCompanyLogo" />
 
             <TextView
-                android:id="@+id/tvCouponText"
+                android:id="@+id/tvRate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/common_offset_12dp"
                 android:textColor="@color/defaultColor"
+                android:textSize="@dimen/common_textSize_14sp"
+                android:visibility="gone"
+                app:layout_constraintTop_toTopOf="@id/ivCouponCompanyLogo"
+                app:layout_constraintBottom_toBottomOf="@id/ivCouponCompanyLogo"
+                app:layout_constraintEnd_toStartOf="@id/ivRateArrowDown"
+                tools:text="273" />
+
+            <ImageView
+                android:id="@+id/ivRateArrowDown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/common_offset_20dp"
+                android:rotation="180"
+                android:visibility="gone"
+                android:src="@drawable/ic_arrow_up_big"
+                app:layout_constraintTop_toTopOf="@id/ivCouponCompanyLogo"
+                app:layout_constraintBottom_toBottomOf="@id/ivCouponCompanyLogo"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGetDeal"
+                style="@style/ButtonColored.Coupon"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="@dimen/common_offset_16dp"
+                android:layout_marginTop="@dimen/common_offset_16dp"
+                android:text="@string/shop_now"
+                android:textAllCaps="true"
+                app:layout_constraintEnd_toStartOf="@id/btnCopy"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ivTimeValid" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/btnCopy"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="@dimen/common_offset_16dp"
+                android:background="@drawable/shape_grey_border"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="@id/ivRateArrowDown"
+                app:layout_constraintStart_toEndOf="@id/btnGetDeal"
+                app:layout_constraintTop_toTopOf="@id/btnGetDeal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/common_offset_12dp"
+                    android:src="@drawable/ic_copy" />
+
+                <TextView
+                    android:id="@+id/tvCouponText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/defaultColor"
+                    android:textStyle="bold"
+                    tools:text="GIZ700" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <TextView
+                android:id="@+id/tvMoreAboutDiscount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/common_offset_16dp"
+                android:layout_marginTop="@dimen/common_offset_32dp"
+                android:text="@string/fr_deal_more_about_discount"
+                android:textColor="@color/defaultColor"
+                android:textSize="@dimen/common_textSize_16sp"
                 android:textStyle="bold"
-                tools:text="GIZ700" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btnGetDeal" />
 
-        <TextView
-            android:id="@+id/tvMoreAboutDiscount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/common_offset_16dp"
-            android:layout_marginTop="@dimen/common_offset_32dp"
-            android:text="@string/fr_deal_more_about_discount"
-            android:textColor="@color/defaultColor"
-            android:textSize="@dimen/common_textSize_16sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btnGetDeal" />
-
-        <TextView
-            android:id="@+id/tvMoreAboutDiscountText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/common_offset_16dp"
-            android:paddingHorizontal="@dimen/common_offset_16dp"
-            android:textColor="@color/defaultColor"
-            android:textSize="@dimen/common_textSize_16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvMoreAboutDiscount"
-            tools:text="Industry Leading noise cancellation-two processors control 8 microphones for unprecedented noise cancellation. With Auto NC Optimizer, noise canceling is automatically optimized based on your wearing conditions and environment.
+            <TextView
+                android:id="@+id/tvMoreAboutDiscountText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/common_offset_16dp"
+                android:paddingHorizontal="@dimen/common_offset_16dp"
+                android:textColor="@color/defaultColor"
+                android:textSize="@dimen/common_textSize_16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvMoreAboutDiscount"
+                tools:text="Industry Leading noise cancellation-two processors control 8 microphones for unprecedented noise cancellation. With Auto NC Optimizer, noise canceling is automatically optimized based on your wearing conditions and environment.
 Magnificent Sound, engineered to perfection with the new Integrated Processor V1" />
 
-        <View
-            android:id="@+id/separator"
-            style="@style/Separator"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginHorizontal="@dimen/common_offset_16dp"
-            app:layout_constraintTop_toBottomOf="@id/tvMoreAboutDiscountText" />
+            <View
+                android:id="@+id/separator"
+                style="@style/Separator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="@dimen/common_offset_16dp"
+                app:layout_constraintTop_toBottomOf="@id/tvMoreAboutDiscountText" />
 
-        <TextView
-            android:id="@+id/tvDisclosure"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/common_offset_16dp"
-            android:paddingHorizontal="@dimen/common_offset_16dp"
-            android:text="@string/fr_deal_disclosure"
-            android:textSize="@dimen/common_textSize_12sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/separator" />
+            <TextView
+                android:id="@+id/tvDisclosure"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/common_offset_16dp"
+                android:paddingHorizontal="@dimen/common_offset_16dp"
+                android:text="@string/fr_deal_disclosure"
+                android:textSize="@dimen/common_textSize_12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/separator" />
 
-        <TextView
-            android:id="@+id/tvSimilarProducts"
-            style="@style/TextRegular.Title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="0dp"
-            android:layout_marginTop="@dimen/common_offset_40dp"
-            android:layout_marginBottom="@dimen/common_offset_24dp"
-            android:paddingHorizontal="@dimen/common_offset_16dp"
-            android:text="@string/fr_deal_similar_products"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvDisclosure" />
+            <TextView
+                android:id="@+id/tvSimilarProducts"
+                style="@style/TextRegular.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="0dp"
+                android:layout_marginTop="@dimen/common_offset_40dp"
+                android:layout_marginBottom="@dimen/common_offset_24dp"
+                android:paddingHorizontal="@dimen/common_offset_16dp"
+                android:text="@string/fr_deal_similar_products"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvDisclosure" />
 
-        <TextView
-            android:id="@+id/tvMoreDeals"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/common_offset_32dp"
-            android:text="@string/fr_deal_similar_more_deals"
-            android:textColor="@color/colorPrimary"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/tvSimilarProducts"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tvSimilarProducts" />
+            <TextView
+                android:id="@+id/tvMoreDeals"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/common_offset_32dp"
+                android:text="@string/fr_deal_similar_more_deals"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/tvSimilarProducts"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tvSimilarProducts" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvDeals"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/common_offset_16dp"
-            android:layout_marginTop="@dimen/common_offset_24dp"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/tvSimilarProducts"
-            tools:itemCount="3"
-            tools:listitem="@layout/rv_deal_linear" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvDeals"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/common_offset_16dp"
+                android:layout_marginTop="@dimen/common_offset_24dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/tvSimilarProducts"
+                tools:itemCount="3"
+                tools:listitem="@layout/rv_deal_linear" />
 
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/grSimilarProducts"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:constraint_referenced_ids="tvSimilarProducts, tvMoreDeals, rvDeals" />
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/grSimilarProducts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:constraint_referenced_ids="tvSimilarProducts, tvMoreDeals, rvDeals" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

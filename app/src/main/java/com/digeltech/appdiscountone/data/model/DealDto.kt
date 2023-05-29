@@ -20,7 +20,7 @@ data class DealDto(
     @SerializedName("shop_image_url")
     val shopImageUrl: String?,
     @SerializedName("shop_link")
-    val link: String?,
+    val shopLink: String?,
     @SerializedName("old_price")
     val oldPrice: String?,
     @SerializedName("price")
@@ -32,9 +32,11 @@ data class DealDto(
     @SerializedName("promocode")
     val promocode: String?,
     @SerializedName("rating")
-    val rating: String,
+    val rating: String?,
     @SerializedName("expiration_date")
     val expirationDate: String?,
     @SerializedName("views_click")
     val viewsClick: Int,
+    @SerializedName("guid")
+    val webLink: String?,
 )

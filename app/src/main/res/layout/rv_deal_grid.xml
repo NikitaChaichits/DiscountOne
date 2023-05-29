@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="324dp"
+    android:layout_height="308dp"
     android:background="@drawable/shape_deal"
     android:padding="@dimen/common_offset_8dp"
     tools:ignore="ContentDescription">
@@ -31,9 +31,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_offset_16dp"
-        android:layout_marginEnd="@dimen/common_offset_12dp"
+        android:layout_marginEnd="@dimen/common_offset_8dp"
         android:textColor="@color/defaultColor"
-        android:textSize="@dimen/common_textSize_16sp"
+        android:textSize="@dimen/common_textSize_14sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/tvPriceWithDiscount"
@@ -47,9 +47,9 @@
         android:textStyle="bold"
         android:textColor="@color/green"
         android:textSize="@dimen/common_textSize_16sp"
-        android:layout_marginTop="@dimen/common_offset_16dp"
         app:layout_constraintStart_toEndOf="@id/tvPrice"
-        app:layout_constraintTop_toBottomOf="@id/ivDealImage"
+        app:layout_constraintTop_toTopOf="@id/tvPrice"
+        app:layout_constraintBottom_toBottomOf="@id/tvPrice"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="€65.00" />
 
@@ -64,7 +64,7 @@
         android:ellipsize="end"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvPriceWithDiscount"
-        tools:text="Nike Air Max 90 SE" />
+        tools:text="Nike Air Max 90 SENike Air Max 90 SENike Air Max 90 SENike Air Max 90 SENike Air Max 90 SE" />
 
     <ImageView
         android:id="@+id/ivCouponCompanyLogo"

@@ -37,16 +37,6 @@ class DealsFragment : BaseFragment(R.layout.fragment_deals), SearchView.OnQueryT
         observeData()
     }
 
-//    override fun onResume() {
-//        super.onResume()
-//        viewModel.getNextDeals()
-//    }
-
-//    override fun onPause() {
-//        super.onPause()
-//        viewModel.stopLoadingDeals()
-//    }
-
     override fun onQueryTextSubmit(query: String?): Boolean = false
 
     override fun onQueryTextChange(newText: String?): Boolean {
@@ -98,6 +88,7 @@ class DealsFragment : BaseFragment(R.layout.fragment_deals), SearchView.OnQueryT
             }
         }
         binding.searchView.apply {
+            setOnClickListener { onActionViewExpanded() }
             setOnQueryTextListener(this@DealsFragment)
             queryHint = getString(R.string.search_by_deals)
         }

@@ -1,27 +1,32 @@
 package com.digeltech.appdiscountone.ui.deal
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.digeltech.appdiscountone.common.base.BaseViewModel
-import com.digeltech.appdiscountone.ui.common.getSimilarDealsFromCache
+import com.digeltech.appdiscountone.domain.repository.DealsRepository
 import com.digeltech.appdiscountone.ui.common.model.DealParcelable
 import com.digeltech.appdiscountone.ui.common.model.toParcelableList
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DealViewModel @Inject constructor() : BaseViewModel() {
+class DealViewModel @Inject constructor(
+    private val dealsRepository: DealsRepository,
+) : BaseViewModel() {
 
-    private val _similarDeals = MutableStateFlow<List<DealParcelable>>(listOf())
-    val similarDeals: StateFlow<List<DealParcelable>> = _similarDeals.asStateFlow()
+    private val _similarDeals: MutableLiveData<List<DealParcelable>> = MutableLiveData()
+    val similarDeals: LiveData<List<DealParcelable>> = _similarDeals
 
     fun getSimilarDeals(categoryId: Int, dealId: Int) {
         viewModelScope.launch {
-            val listOfDeals = getSimilarDealsFromCache(dealId = dealId, categoryId = categoryId)
-            if (listOfDeals.isNotEmpty()) _similarDeals.emit(listOfDeals.toParcelableList())
+            val listOfDeals = dealsRepository.getDealsByCategoryId(categoryId)
+            listOfDeals.toMutableList().removeIf { it.id == dealId }
+
+            if (listOfDeals.size >= 5) {
+                _similarDeals.postValue(listOfDeals.toParcelableList().shuffled().take(5))
+            }
         }
     }
 }

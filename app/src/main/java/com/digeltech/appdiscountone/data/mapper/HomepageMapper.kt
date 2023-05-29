@@ -41,12 +41,13 @@ class HomepageMapper {
             oldPrice = oldPrice,
             price = price,
             promocode = promocode,
-            link = link.toString(),
-            rating = rating,
+            shopLink = shopLink.toString(),
+            rating = rating.toString(),
             publishedDate = publishedDate,
             expirationDate = expirationDate,
             sale = sale,
-            viewsClick = viewsClick
+            viewsClick = viewsClick,
+            webLink = webLink
         )
     }
 

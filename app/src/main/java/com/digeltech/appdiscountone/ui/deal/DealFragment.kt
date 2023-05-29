@@ -4,12 +4,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.text.parseAsHtml
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.common.base.BaseFragment
-import com.digeltech.appdiscountone.data.source.remote.KEY_SHOPS
 import com.digeltech.appdiscountone.databinding.FragmentDealBinding
 import com.digeltech.appdiscountone.domain.model.Shop
 import com.digeltech.appdiscountone.ui.common.*
@@ -21,7 +19,6 @@ import com.digeltech.appdiscountone.util.isNotNullAndNotEmpty
 import com.digeltech.appdiscountone.util.view.*
 import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class DealFragment : BaseFragment(R.layout.fragment_deal) {
@@ -55,7 +52,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
             initListeners(deal)
             viewModel.getSimilarDeals(deal.categoryId, deal.id)
 
-            deal.imageUrl?.let(ivDealImage::loadImage)
+            deal.imageUrl.let(ivDealImage::loadImage)
 
             deal.isAddedToBookmark = isAddedToBookmark(deal.id)
 
@@ -76,7 +73,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
             tvDealName.text = deal.title
 
 
-            deal.shopImageUrl?.let { ivCouponCompanyLogo.setImageWithRadius(it, R.dimen.radius_10) }
+            deal.shopImageUrl.let { ivCouponCompanyLogo.setImageWithRadius(it, R.dimen.radius_10) }
             if (deal.shopName.isNotEmpty()) {
                 tvCouponCompany.text = deal.shopName.capitalizeFirstLetter()
             }
@@ -109,6 +106,10 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
         ivBack.setOnClickListener {
             navigateBack()
         }
+        ivShare.setOnClickListener {
+            val shareText = getString(R.string.share_text, deal.webLink)
+            it.shareText(shareText)
+        }
         ivBookmark.setOnClickListener {
             if (deal.isAddedToBookmark) {
                 deal.isAddedToBookmark = false
@@ -139,8 +140,8 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
             tvRate.text = deal.rating.dec().toString()
         }
         btnGetDeal.setOnClickListener {
-            it.openLink(deal.link)
-            logShopNow(name = deal.title, url = deal.link)
+            it.openLink(deal.shopLink)
+            logShopNow(name = deal.title, url = deal.shopLink)
         }
         btnCopy.setOnClickListener {
             copyTextToClipboard(it.context, deal.title)
@@ -152,13 +153,9 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
     }
 
     private fun observeData() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.similarDeals.collect {
-                if (it.isNotEmpty()) {
-                    dealAdapter.submitList(it)
-                    binding.grSimilarProducts.visible()
-                }
-            }
+        viewModel.similarDeals.observe(viewLifecycleOwner) {
+            dealAdapter.submitList(it)
+            binding.grSimilarProducts.visible()
         }
     }
 

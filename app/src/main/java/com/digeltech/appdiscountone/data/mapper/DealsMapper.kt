@@ -21,12 +21,13 @@ class DealsMapper {
             oldPrice = data.oldPrice,
             price = data.price,
             promocode = data.promocode,
-            link = data.link.toString(),
-            rating = data.rating,
+            shopLink = data.shopLink.toString(),
+            rating = data.rating.toString(),
             publishedDate = data.publishedDate,
             expirationDate = data.expirationDate,
             sale = data.sale,
-            viewsClick = data.viewsClick
+            viewsClick = data.viewsClick,
+            webLink = data.webLink,
         )
     }
 }

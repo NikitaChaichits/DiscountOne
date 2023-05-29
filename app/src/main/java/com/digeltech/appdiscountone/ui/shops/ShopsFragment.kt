@@ -10,11 +10,8 @@ import com.digeltech.appdiscountone.common.base.BaseFragment
 import com.digeltech.appdiscountone.databinding.FragmentShopsBinding
 import com.digeltech.appdiscountone.ui.common.logOpenShopDeals
 import com.digeltech.appdiscountone.ui.shops.adapter.ShopAdapter
-import com.digeltech.appdiscountone.util.view.invisible
-import com.digeltech.appdiscountone.util.view.px
+import com.digeltech.appdiscountone.util.view.*
 import com.digeltech.appdiscountone.util.view.recycler.GridOffsetDecoration
-import com.digeltech.appdiscountone.util.view.setCircleImage
-import com.digeltech.appdiscountone.util.view.visible
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
@@ -92,8 +89,11 @@ class ShopsFragment : BaseFragment(R.layout.fragment_shops), SearchView.OnQueryT
                 navigate(R.id.profileFragment)
             }
         }
-        binding.searchView.setOnQueryTextListener(this)
-        binding.searchView.queryHint = getString(R.string.search_by_shops)
+        binding.searchView.apply {
+            setOnClickListener { onActionViewExpanded() }
+            setOnQueryTextListener(this@ShopsFragment)
+            queryHint = getString(R.string.search_by_shops)
+        }
     }
 
     private fun loadProfileImage() {

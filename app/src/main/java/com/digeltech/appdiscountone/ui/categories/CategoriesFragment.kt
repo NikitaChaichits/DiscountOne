@@ -95,8 +95,11 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories), SearchVie
                 navigate(R.id.profileFragment)
             }
         }
-        binding.searchView.setOnQueryTextListener(this)
-        binding.searchView.queryHint = getString(R.string.search_by_categories)
+        binding.searchView.apply {
+            setOnClickListener { onActionViewExpanded() }
+            setOnQueryTextListener(this@CategoriesFragment)
+            queryHint = getString(R.string.search_by_categories)
+        }
     }
 
     private fun loadProfileImage() {

@@ -1,5 +1,6 @@
 package com.digeltech.appdiscountone.util.view
 
+import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -106,4 +107,14 @@ fun View.openLink(
 } catch (e: Exception) {
     Toast.makeText(context, errorRes, Toast.LENGTH_SHORT)
         .show()
+}
+
+fun View.shareText(shareText: String) {
+    val sendIntent = Intent().apply {
+        action = Intent.ACTION_SEND
+        putExtra(Intent.EXTRA_TEXT, shareText)
+        type = "text/plain"
+    }
+    val shareIntent = Intent.createChooser(sendIntent, null)
+    context.startActivity(shareIntent)
 }

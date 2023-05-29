@@ -23,11 +23,11 @@ class DealsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getDealsByCategoryId(categoryId: Int): List<Deal> = withContext(Dispatchers.IO) {
-        DealsMapper().mapAllDeal(api.getCategoryDeals())
+        DealsMapper().mapAllDeal(api.getCategoryDeals(categoryId.toString()))
     }
 
     override suspend fun getDealsByShopId(shopId: Int): List<Deal> = withContext(Dispatchers.IO) {
-        DealsMapper().mapAllDeal(api.getShopDeals(shopId.toString(), "1"))
+        DealsMapper().mapAllDeal(api.getShopDeals(shopId.toString()))
     }
 
     override suspend fun getDealById(dealId: Int, categoryId: Int): Deal = withContext(Dispatchers.IO) {

@@ -36,16 +36,6 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
         observeData()
     }
 
-//    override fun onResume() {
-//        super.onResume()
-//        viewModel.getNextDeals()
-//    }
-//
-//    override fun onPause() {
-//        super.onPause()
-//        viewModel.stopLoadingDeals()
-//    }
-
     override fun onQueryTextSubmit(query: String?): Boolean = false
 
     override fun onQueryTextChange(newText: String?): Boolean {
@@ -97,8 +87,9 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
             }
         }
         binding.searchView.apply {
+            setOnClickListener { onActionViewExpanded() }
             setOnQueryTextListener(this@CouponsFragment)
-            queryHint = getString(R.string.search_by_coupons)
+            queryHint = getString(R.string.search_by_deals)
         }
     }
 

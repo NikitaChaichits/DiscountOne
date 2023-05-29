@@ -19,20 +19,20 @@ interface ServerApi {
     @GET("/wp-json/theme/v1/homepage")
     suspend fun getHomepage(): HomepageDto
 
-    @GET("/wp-json/theme/v1/promocodes/page=1&limit=100")
+    @GET("/wp-json/theme/v1/promocodes/page=1&limit=1000")
     suspend fun getAllCoupons(): List<DealDto>
 
-    @GET("/wp-json/theme/v1/products/page=1&limit=100")
+    @GET("/wp-json/theme/v1/products/page=1&limit=1000")
     suspend fun getAllDeals(): List<DealDto>
 
     @GET("/wp-json/theme/v1/products/id/{id}")
     suspend fun getDeal(@Path("id") id: String): DealDto
 
-    @GET("/wp-json/theme/v1/list_categories?id=13&page=1&limit=10&categories=categories")
-    suspend fun getCategoryDeals(): List<DealDto>
+    @GET("/wp-json/theme/v1/list_categories?categories=categories&page=1&limit=1000")
+    suspend fun getCategoryDeals(@Query("id") id: String): List<DealDto>
 
-    @GET("/wp-json/theme/v1/list_categories?id={id}&page={page}&limit=10&categories=categories-shops")
-    suspend fun getShopDeals(@Query("id") id: String, @Query("page") page: String): List<DealDto>
+    @GET("/wp-json/theme/v1/list_categories?categories=categories-shops&page=1&limit=1000")
+    suspend fun getShopDeals(@Query("id") id: String): List<DealDto>
 
     @GET("/wp-json/theme/v1/products/search/{searchText}")
     suspend fun searchDeals(@Path("searchText") id: String): List<DealDto>

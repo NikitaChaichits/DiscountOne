@@ -13,6 +13,8 @@ import com.digeltech.appdiscountone.ui.common.logSearch
 import com.digeltech.appdiscountone.ui.home.adapter.BannerAdapter
 import com.digeltech.appdiscountone.ui.home.adapter.CategoriesAdapter
 import com.digeltech.appdiscountone.util.view.*
+import com.digeltech.appdiscountone.util.view.recycler.AutoScrollHelper
+import com.digeltech.appdiscountone.util.view.recycler.CyclicScrollHelper
 import com.digeltech.appdiscountone.util.view.recycler.GridOffsetDecoration
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -27,6 +29,9 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
     private lateinit var bannerAdapter: BannerAdapter
     private lateinit var categoriesAdapter: CategoriesAdapter
     private lateinit var searchDealAdapter: GridDealAdapter
+    private lateinit var autoScrollHelper: AutoScrollHelper
+    private lateinit var cyclicScrollHelper: CyclicScrollHelper
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -54,6 +59,11 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         return true
     }
 
+    override fun onPause() {
+        super.onPause()
+        autoScrollHelper.stopAutoScroll()
+    }
+
     private fun initListeners() {
         binding.ivProfile.setOnClickListener {
             if (Firebase.auth.currentUser == null) {
@@ -63,6 +73,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
             }
         }
         binding.searchView.apply {
+            setOnClickListener { onActionViewExpanded() }
             setOnQueryTextListener(this@HomeFragment)
             queryHint = getString(R.string.search_by_deals)
         }
@@ -73,6 +84,11 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
             viewModel.getDeal(dealId = it.first, categoryId = it.second)
         }
         binding.rvBanners.adapter = bannerAdapter
+
+        autoScrollHelper = AutoScrollHelper(binding.rvBanners)
+        cyclicScrollHelper = CyclicScrollHelper()
+        cyclicScrollHelper.enableCyclicScroll(binding.rvBanners)
+        autoScrollHelper.startAutoScroll()
 
         categoriesAdapter = CategoriesAdapter(
             { navigate(HomeFragmentDirections.toCategoryFragment(id = it.id, title = it.name)) },

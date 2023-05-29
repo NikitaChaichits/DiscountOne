@@ -9,8 +9,7 @@
         android:id="@+id/ivBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/common_offset_16dp"
-        android:layout_marginTop="@dimen/common_offset_16dp"
+        android:padding="@dimen/common_offset_16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_back" />
@@ -20,7 +19,7 @@
         style="@style/TextRegular.Bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/common_offset_24dp"
+        android:layout_marginStart="@dimen/common_offset_8dp"
         android:text="@string/profile"
         app:layout_constraintBottom_toBottomOf="@id/ivBack"
         app:layout_constraintStart_toEndOf="@id/ivBack"
@@ -28,9 +27,9 @@
 
     <View
         android:id="@+id/separator"
-        style="@style/Separator"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:background="@color/light"
         app:layout_constraintTop_toBottomOf="@id/ivBack" />
 
     <androidx.appcompat.widget.AppCompatImageView

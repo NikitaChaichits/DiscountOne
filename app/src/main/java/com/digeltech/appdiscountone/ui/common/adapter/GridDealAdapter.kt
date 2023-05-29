@@ -73,8 +73,8 @@ class GridDealAdapter(
                 root.setOnClickListener { onClickListener(item) }
 
                 btnGetDeal.setOnClickListener {
-                    it.openLink(item.link)
-                    logShopNow(name = item.title, url = item.link)
+                    it.openLink(item.shopLink)
+                    logShopNow(name = item.title, url = item.shopLink)
                 }
 
                 if (item.promocode.isNotNullAndNotEmpty()) {

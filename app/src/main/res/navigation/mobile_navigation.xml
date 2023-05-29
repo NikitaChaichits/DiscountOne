@@ -65,6 +65,10 @@
         <argument
             android:name="title"
             app:argType="string" />
+        <argument
+            android:name="isFromCategory"
+            app:argType="boolean"
+            android:defaultValue="true" />
 
         <action
             android:id="@+id/toDealFragment"
@@ -115,6 +119,10 @@
             <argument
                 android:name="title"
                 app:argType="string" />
+            <argument
+                android:name="isFromCategory"
+                app:argType="boolean"
+                android:defaultValue="false" />
         </action>
     </fragment>
 
@@ -135,6 +143,10 @@
             <argument
                 android:name="title"
                 app:argType="string" />
+            <argument
+                android:name="isFromCategory"
+                app:argType="boolean"
+                android:defaultValue="false" />
         </action>
         <action
             android:id="@+id/toStartFragment"
