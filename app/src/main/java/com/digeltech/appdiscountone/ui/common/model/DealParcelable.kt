@@ -25,6 +25,7 @@ data class DealParcelable(
     val publishedDate: String,
     val expirationDate: String?,
     val sale: String?,
+    val saleSize: Int,
     val viewsClick: Int,
 ) : Parcelable
 
@@ -51,6 +52,7 @@ fun Deal.toParcelable(): DealParcelable {
         publishedDate = publishedDate,
         expirationDate = expirationDate,
         sale = sale,
+        saleSize = saleSize,
         viewsClick = viewsClick,
         webLink = webLink,
     )

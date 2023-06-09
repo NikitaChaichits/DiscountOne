@@ -48,4 +48,10 @@ class CategoryAndShopViewModel @Inject constructor(
             _searchResult.value = deals.toParcelableList()
         }
     }
+
+    fun updateDealViewsClick(id: String) {
+        viewModelScope.launch {
+            dealsRepository.updateDealViewsClick(id)
+        }
+    }
 }

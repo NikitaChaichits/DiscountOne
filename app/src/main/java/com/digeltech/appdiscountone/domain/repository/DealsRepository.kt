@@ -17,4 +17,6 @@ interface DealsRepository {
     suspend fun getHomepage(): Homepage
 
     suspend fun searchDeals(searchText: String): List<Deal>
+
+    suspend fun updateDealViewsClick(id: String)
 }

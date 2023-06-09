@@ -26,9 +26,6 @@ class DealsViewModel @Inject constructor(
     val searchResult: LiveData<List<DealParcelable>> = _searchResult
 
     private var searchJob: Job? = null
-    private var loadDealsJob: Job? = null
-
-//    private var currentOffset = 0
 
     init {
         initDeals()
@@ -37,38 +34,24 @@ class DealsViewModel @Inject constructor(
     fun initDeals() {
         viewModelScope.launchWithLoading {
             val listOfDeals = dealsRepository.getAllDeals()
-            _deals.postValue(listOfDeals.toParcelableList().sortedByDescending { it.viewsClick })
-//            currentOffset += DEALS_PAGE_SIZE
+            _deals.postValue(listOfDeals.toParcelableList())
         }
-    }
-
-//    fun getNextDeals() {
-//        loadDealsJob = viewModelScope.launch {
-//            val newListOfDeals = dealsRepository.getAllDeals()
-//                .toParcelableList()
-//                .toMutableList()
-//            if (newListOfDeals.isNotEmpty()) {
-//                _deals.value?.let { newListOfDeals.addAll(it) }
-//                _deals.postValue(newListOfDeals.sortedByDescending { it.id })
-//                currentOffset += DEALS_PAGE_SIZE
-//            }
-//            getNextDeals()
-//        }
-//    }
-
-    fun stopLoadingDeals() {
-        if (loadDealsJob?.isActive == true) loadDealsJob?.cancel()
     }
 
     fun searchDeals(searchText: String) {
         if (searchJob?.isActive == true) searchJob?.cancel()
-        stopLoadingDeals()
 
         searchJob = viewModelScope.launch {
             delay(SEARCH_DELAY)
 
             val deals = dealsRepository.searchDeals(searchText)
             _searchResult.value = deals.toParcelableList()
+        }
+    }
+
+    fun updateDealViewsClick(id: String) {
+        viewModelScope.launch {
+            dealsRepository.updateDealViewsClick(id)
         }
     }
 

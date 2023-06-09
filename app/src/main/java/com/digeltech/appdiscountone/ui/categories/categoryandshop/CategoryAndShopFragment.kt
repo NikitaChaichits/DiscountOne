@@ -62,6 +62,7 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
 
     private fun initAdapters() {
         dealAdapter = GridDealAdapter {
+            viewModel.updateDealViewsClick(it.id.toString())
             navigate(CategoryAndShopFragmentDirections.toDealFragment(it))
         }
         binding.rvDeals.addItemDecoration(
@@ -74,6 +75,7 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
         binding.rvDeals.adapter = dealAdapter
 
         searchAdapter = GridDealAdapter {
+            viewModel.updateDealViewsClick(it.id.toString())
             navigate(CategoryAndShopFragmentDirections.toDealFragment(it))
             binding.searchView.setQuery("", false)
         }

@@ -37,7 +37,6 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         super.onViewCreated(view, savedInstanceState)
 
         loadProfileImage()
-        viewModel.getHomepageData()
 
         initAdapters()
         initListeners()
@@ -92,7 +91,10 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
 
         categoriesAdapter = CategoriesAdapter(
             { navigate(HomeFragmentDirections.toCategoryFragment(id = it.id, title = it.name)) },
-            { navigate(HomeFragmentDirections.toDealFragment(it)) }
+            {
+                viewModel.updateDealViewsClick(it.id.toString())
+                navigate(HomeFragmentDirections.toDealFragment(it))
+            }
         )
         binding.rvCategories.adapter = categoriesAdapter
 
@@ -133,6 +135,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         viewModel.deal.observe(viewLifecycleOwner) { deal ->
             deal?.let {
                 viewModel.deleteDeal()
+                viewModel.updateDealViewsClick(it.id.toString())
                 navigate(HomeFragmentDirections.toDealFragment(deal))
             }
         }

@@ -53,6 +53,7 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
 
     private fun initAdapters() {
         dealAdapter = GridDealAdapter {
+            viewModel.updateDealViewsClick(it.id.toString())
             navigate(CouponsFragmentDirections.toDealFragment(it))
         }
         binding.rvDeals.addItemDecoration(
@@ -65,6 +66,7 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
         binding.rvDeals.adapter = dealAdapter
 
         searchAdapter = GridDealAdapter {
+            viewModel.updateDealViewsClick(it.id.toString())
             navigate(CouponsFragmentDirections.toDealFragment(it))
             binding.searchView.setQuery("", false)
         }

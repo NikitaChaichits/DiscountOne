@@ -17,4 +17,7 @@ internal class HomeInteractorImpl @Inject constructor(
     override suspend fun searchDeals(searchText: String): List<Deal> =
         dealsRepository.searchDeals(searchText)
 
+    override suspend fun updateDealViewsClick(id: String) =
+        dealsRepository.updateDealViewsClick(id)
+
 }

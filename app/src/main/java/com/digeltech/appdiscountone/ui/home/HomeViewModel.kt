@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 const val KEY_BANNERS = "all-banners"
-const val KEY_HOME_CATEGORIES = "all-home-categories"
+const val KEY_HOMEPAGE_DATA = "all-homepage-data"
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -44,14 +44,18 @@ class HomeViewModel @Inject constructor(
 
     private var searchJob: Job? = null
 
+    init {
+        getHomepageData()
+    }
+
     fun getHomepageData() {
         viewModelScope.launchWithLoading {
             val homepage = interactor.getHomepage()
             _soloBanner.value = homepage.soloBanner
             _banners.value = homepage.listOfBanners
-
-            Hawk.put(KEY_HOME_CATEGORIES, homepage.categories)
             _categories.value = homepage.categories
+
+            Hawk.put(KEY_HOMEPAGE_DATA, homepage)
         }
     }
 
@@ -78,6 +82,12 @@ class HomeViewModel @Inject constructor(
 
             val deals = interactor.searchDeals(searchText)
             _searchResult.value = deals.toParcelableList()
+        }
+    }
+
+    fun updateDealViewsClick(id: String) {
+        viewModelScope.launch {
+            interactor.updateDealViewsClick(id)
         }
     }
 

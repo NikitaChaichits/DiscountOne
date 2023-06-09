@@ -42,4 +42,8 @@ class DealsRepositoryImpl @Inject constructor(
         DealsMapper().mapAllDeal(api.searchDeals(searchText))
     }
 
+    override suspend fun updateDealViewsClick(id: String) = withContext(Dispatchers.IO) {
+        api.updateViewsClick(id)
+    }
+
 }

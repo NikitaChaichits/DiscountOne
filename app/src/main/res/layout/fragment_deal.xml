@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/clDeal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/common_offset_8dp">
@@ -21,7 +22,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/common_offset_24dp"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/ivBack"
         app:layout_constraintEnd_toStartOf="@id/ivBookmark"
         app:layout_constraintTop_toTopOf="@id/ivBack"
@@ -54,7 +54,7 @@
                 android:layout_height="360dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ivBack" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvPrice"
@@ -193,7 +193,7 @@
                 style="@style/ButtonColored.Coupon"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_marginStart="@dimen/common_offset_16dp"
+                android:layout_marginHorizontal="@dimen/common_offset_16dp"
                 android:layout_marginTop="@dimen/common_offset_16dp"
                 android:text="@string/shop_now"
                 android:textAllCaps="true"
@@ -205,11 +205,11 @@
                 android:id="@+id/btnCopy"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_marginStart="@dimen/common_offset_16dp"
+                android:layout_marginEnd="@dimen/common_offset_16dp"
                 android:background="@drawable/shape_grey_border"
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="@id/ivRateArrowDown"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/btnGetDeal"
                 app:layout_constraintTop_toTopOf="@id/btnGetDeal">
 

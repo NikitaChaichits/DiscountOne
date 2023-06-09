@@ -37,4 +37,7 @@ interface ServerApi {
     @GET("/wp-json/theme/v1/products/search/{searchText}")
     suspend fun searchDeals(@Path("searchText") id: String): List<DealDto>
 
+    @GET("/wp-json/theme/v1/views")
+    suspend fun updateViewsClick(@Query("id") id: String)
+
 }

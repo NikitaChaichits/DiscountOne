@@ -36,6 +36,16 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
         initCoupon(args.deal)
         initAdapter()
         observeData()
+
+        binding.scrollView.setOnTouchListener(object : OnSwipeTouchListener(requireContext()) {
+            override fun onSwipeLeft() {
+                navigateBack()
+            }
+
+            override fun onSwipeRight() {
+                navigateBack()
+            }
+        })
     }
 
     private fun initAdapter() {
@@ -50,7 +60,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
         with(binding) {
             logOpenDeal(deal.title)
             initListeners(deal)
-            viewModel.getSimilarDeals(deal.categoryId, deal.id)
+//            viewModel.getSimilarDeals(deal.categoryId, deal.id)
 
             deal.imageUrl.let(ivDealImage::loadImage)
 
@@ -153,10 +163,10 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
     }
 
     private fun observeData() {
-        viewModel.similarDeals.observe(viewLifecycleOwner) {
-            dealAdapter.submitList(it)
-            binding.grSimilarProducts.visible()
-        }
+//        viewModel.similarDeals.observe(viewLifecycleOwner) {
+//            dealAdapter.submitList(it)
+//            binding.grSimilarProducts.visible()
+//        }
     }
 
     private fun getShopIdByName(name: String): Int {
