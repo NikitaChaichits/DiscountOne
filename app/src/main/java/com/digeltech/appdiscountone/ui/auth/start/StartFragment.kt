@@ -13,7 +13,6 @@ class StartFragment : BaseFragment(R.layout.fragment_start) {
     private val binding by viewBinding(FragmentStartBinding::bind)
     override val viewModel: StartViewModel by viewModels()
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

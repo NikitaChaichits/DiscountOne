@@ -14,12 +14,16 @@ class DealsRepositoryImpl @Inject constructor(
     private val api: ServerApi,
 ) : DealsRepository {
 
-    override suspend fun getAllDeals(): List<Deal> = withContext(Dispatchers.IO) {
-        DealsMapper().mapAllDeal(api.getAllDeals())
+    override suspend fun getAllDeals(): Result<List<Deal>> = withContext(Dispatchers.IO) {
+        runCatching {
+            DealsMapper().mapAllDeal(api.getAllDeals())
+        }
     }
 
-    override suspend fun getAllCoupons(): List<Deal> = withContext(Dispatchers.IO) {
-        DealsMapper().mapAllDeal(api.getAllCoupons())
+    override suspend fun getAllCoupons(): Result<List<Deal>> = withContext(Dispatchers.IO) {
+        runCatching {
+            DealsMapper().mapAllDeal(api.getAllCoupons())
+        }
     }
 
     override suspend fun getDealsByCategoryId(categoryId: Int): List<Deal> = withContext(Dispatchers.IO) {
@@ -34,8 +38,10 @@ class DealsRepositoryImpl @Inject constructor(
         DealsMapper().mapToDeal(api.getDeal(dealId.toString()))
     }
 
-    override suspend fun getHomepage(): Homepage = withContext(Dispatchers.IO) {
-        HomepageMapper().map(api.getHomepage())
+    override suspend fun getHomepage(): Result<Homepage> = withContext(Dispatchers.IO) {
+        runCatching {
+            HomepageMapper().map(api.getHomepage())
+        }
     }
 
     override suspend fun searchDeals(searchText: String): List<Deal> = withContext(Dispatchers.IO) {

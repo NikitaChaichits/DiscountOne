@@ -49,7 +49,7 @@
     <!-- New account -->
     <string name="new_account">New Account</string>
     <string name="send_email">We will send you an email to confirm your registration.</string>
-    <string name="your_name">Your name</string>
+    <string name="your_name">Your login</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="password_info">The password must be longer than 8 characters</string>

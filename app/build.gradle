@@ -131,6 +131,7 @@ dependencies {
     //Tests
     testImplementation appDependencies.junit
     testImplementation appDependencies.jupiter
+    testImplementation appDependencies.mock
     androidTestImplementation appDependencies.junitExt
     androidTestImplementation appDependencies.espresso
 

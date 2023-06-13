@@ -89,10 +89,10 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories), SearchVie
 
     private fun initListeners() {
         binding.ivProfile.setOnClickListener {
-            if (Firebase.auth.currentUser == null) {
-                navigate(R.id.startFragment)
-            } else {
+            if (prefs.isLogin()) {
                 navigate(R.id.profileFragment)
+            } else {
+                navigate(R.id.startFragment)
             }
         }
         binding.searchView.apply {

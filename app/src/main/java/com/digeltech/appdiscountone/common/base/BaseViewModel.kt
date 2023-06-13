@@ -3,7 +3,6 @@ package com.digeltech.appdiscountone.common.base
 import androidx.annotation.MainThread
 import androidx.collection.ArraySet
 import androidx.lifecycle.*
-import com.digeltech.appdiscountone.common.ApplicationError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
@@ -15,7 +14,8 @@ import kotlin.coroutines.EmptyCoroutineContext
 open class BaseViewModel : ViewModel() {
 
     val loading = MutableSharedFlow<Boolean>(replay = 1)
-    val error = MutableSharedFlow<ApplicationError>(replay = 1)
+    val error = MutableLiveData<String>()
+    val success = MutableLiveData<Boolean>()
 
     suspend fun MutableSharedFlow<Boolean>.start() = this.emit(true)
 

@@ -33,8 +33,9 @@ class DealsViewModel @Inject constructor(
 
     fun initDeals() {
         viewModelScope.launchWithLoading {
-            val listOfDeals = dealsRepository.getAllDeals()
-            _deals.postValue(listOfDeals.toParcelableList())
+            dealsRepository.getAllDeals()
+                .onSuccess { _deals.postValue(it.toParcelableList()) }
+                .onFailure { error.postValue(it.toString()) }
         }
     }
 

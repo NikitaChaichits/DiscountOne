@@ -13,32 +13,30 @@ import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.common.base.BaseFragment
-import com.digeltech.appdiscountone.data.source.local.SharedPreferencesDataSource
 import com.digeltech.appdiscountone.databinding.FragmentOnboardingBinding
+import com.digeltech.appdiscountone.domain.model.User
+import com.digeltech.appdiscountone.ui.common.KEY_USER
 import com.digeltech.appdiscountone.util.view.disable
 import com.digeltech.appdiscountone.util.view.enable
 import com.digeltech.appdiscountone.util.view.setCircleImage
 import com.digeltech.appdiscountone.util.view.showDatePickerDialog
 import com.github.dhaval2404.imagepicker.ImagePicker
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.ktx.Firebase
+import com.orhanobut.hawk.Hawk
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class OnboardingFragment : BaseFragment(R.layout.fragment_onboarding),
     DatePickerDialog.OnDateSetListener {
 
     private val binding by viewBinding(FragmentOnboardingBinding::bind)
     override val viewModel: OnboardingViewModel by viewModels()
 
-    private lateinit var auth: FirebaseAuth
-    private lateinit var prefs: SharedPreferencesDataSource
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        auth = Firebase.auth
-        prefs = SharedPreferencesDataSource(view.context)
         initListeners()
     }
 
@@ -81,12 +79,8 @@ class OnboardingFragment : BaseFragment(R.layout.fragment_onboarding),
     private fun updateProfile() {
         val city = binding.etCity.text.toString().trim()
         val dateOfBirth = binding.tvDateOfBirth.text.toString()
-        if (city.isNotEmpty()) {
-            prefs.setCity(city)
-        }
-        if (dateOfBirth.isNotEmpty()) {
-            prefs.setDateOfBirth(dateOfBirth)
-        }
+        val user = Hawk.get<User>(KEY_USER)
+        viewModel.updateProfile(id = user.id, city = city, birthday = dateOfBirth)
     }
 
     private fun updateFirebaseProfile(uri: Uri) {

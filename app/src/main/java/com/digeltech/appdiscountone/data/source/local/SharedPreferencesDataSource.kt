@@ -13,11 +13,11 @@ class SharedPreferencesDataSource @Inject constructor(applicationContext: Contex
     fun clear() = sharedPrefs.clear()
 
     /**
-     * Хранение даты регистрации Пользователя
+     * Хранение авторизован ли Пользователь
      */
-    fun setDateOfRegistration(date: String) = sharedPrefs.put(DATE_OF_REGISTRATION, date)
+    fun setLogin(isLogin: Boolean) = sharedPrefs.put(IS_LOGIN, isLogin)
 
-    fun getDateOfRegistration(): String = sharedPrefs.get(DATE_OF_REGISTRATION, "")
+    fun isLogin(): Boolean = sharedPrefs.get(IS_LOGIN, false)
 
     /**
      * Хранение имени Пользователя
@@ -27,23 +27,10 @@ class SharedPreferencesDataSource @Inject constructor(applicationContext: Contex
     fun isFirstLaunch(): Boolean = sharedPrefs.get(FIRST_LAUNCH, true)
 
     /**
-     * Хранение даты рождения Пользователя
-     */
-    fun setDateOfBirth(date: String) = sharedPrefs.put(DATE_OF_BIRTH, date)
-
-    fun getDateOfBirth(): String = sharedPrefs.get(DATE_OF_BIRTH, "")
-
-    /**
-     * Хранение города Пользователя
-     */
-    fun setCity(name: String) = sharedPrefs.put(CITY, name)
-
-    fun getCity(): String = sharedPrefs.get(CITY, "")
-
-    /**
      * Хранение текущей темы Пользователя
      */
     fun setTheme(isDarkTheme: Boolean) = sharedPrefs.put(THEME, isDarkTheme)
 
     fun getTheme(): Boolean = sharedPrefs.get(THEME, false)
+
 }

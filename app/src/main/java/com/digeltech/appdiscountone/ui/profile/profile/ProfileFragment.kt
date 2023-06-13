@@ -8,8 +8,9 @@ import androidx.navigation.NavOptions
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.common.base.BaseFragment
-import com.digeltech.appdiscountone.data.source.local.SharedPreferencesDataSource
 import com.digeltech.appdiscountone.databinding.FragmentProfileBinding
+import com.digeltech.appdiscountone.domain.model.User
+import com.digeltech.appdiscountone.ui.common.KEY_USER
 import com.digeltech.appdiscountone.util.view.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.ktx.auth
@@ -22,13 +23,11 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
     private val binding by viewBinding(FragmentProfileBinding::bind)
     override val viewModel: ProfileViewModel by viewModels()
 
-    private lateinit var prefs: SharedPreferencesDataSource
     private lateinit var bottomNavMenu: BottomNavigationView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        prefs = SharedPreferencesDataSource(view.context)
         bottomNavMenu = requireActivity().findViewById(R.id.bottomNavMenu)
 
         initListeners()
@@ -41,9 +40,12 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
 
     private fun initUser() {
-        Firebase.auth.currentUser?.let {
-            binding.tvProfileName.text = it.displayName
+        Hawk.get<User>(KEY_USER)?.let {
+            binding.tvProfileName.text = it.login
             binding.tvProfileEmail.text = it.email
+        }
+
+        Firebase.auth.currentUser?.let {
             it.photoUrl?.let { uri ->
                 binding.ivProfileImage.setCircleImage(uri)
             }

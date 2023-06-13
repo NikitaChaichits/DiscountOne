@@ -45,17 +45,20 @@ class HomeViewModel @Inject constructor(
     private var searchJob: Job? = null
 
     init {
-        getHomepageData()
+//        getHomepageData()
     }
 
     fun getHomepageData() {
         viewModelScope.launchWithLoading {
-            val homepage = interactor.getHomepage()
-            _soloBanner.value = homepage.soloBanner
-            _banners.value = homepage.listOfBanners
-            _categories.value = homepage.categories
-
-            Hawk.put(KEY_HOMEPAGE_DATA, homepage)
+            interactor.getHomepage().onSuccess {
+                _soloBanner.value = it.soloBanner
+                _banners.value = it.listOfBanners
+                _categories.value = it.categories
+                Hawk.put(KEY_HOMEPAGE_DATA, it)
+            }.onFailure {
+                log(it.toString())
+                error.postValue(it.toString())
+            }
         }
     }
 

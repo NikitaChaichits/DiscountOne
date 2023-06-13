@@ -32,7 +32,6 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
     private lateinit var autoScrollHelper: AutoScrollHelper
     private lateinit var cyclicScrollHelper: CyclicScrollHelper
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -65,10 +64,10 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
 
     private fun initListeners() {
         binding.ivProfile.setOnClickListener {
-            if (Firebase.auth.currentUser == null) {
-                navigate(R.id.startFragment)
-            } else {
+            if (prefs.isLogin()) {
                 navigate(R.id.profileFragment)
+            } else {
+                navigate(R.id.startFragment)
             }
         }
         binding.searchView.apply {

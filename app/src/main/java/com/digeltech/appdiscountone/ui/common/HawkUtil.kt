@@ -8,8 +8,8 @@ import com.google.firebase.ktx.Firebase
 import com.orhanobut.hawk.Hawk
 
 private const val KEY_SAVED_DEALS = "saved-deals"
-const val KEY_LOADED_ITEMS = "all-items"
 const val KEY_SHOPS = "all-shops"
+const val KEY_USER = "user"
 
 fun addToBookmark(deal: DealParcelable) {
     if (Hawk.contains(KEY_SAVED_DEALS)) {

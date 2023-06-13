@@ -5,7 +5,7 @@ import com.digeltech.appdiscountone.domain.model.Homepage
 
 interface HomeInteractor {
 
-    suspend fun getHomepage(): Homepage
+    suspend fun getHomepage(): Result<Homepage>
 
     suspend fun getDeal(dealId: Int, categoryId: Int): Deal
 

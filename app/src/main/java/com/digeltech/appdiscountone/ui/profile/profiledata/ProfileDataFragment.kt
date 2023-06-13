@@ -11,30 +11,32 @@ import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.common.base.BaseFragment
-import com.digeltech.appdiscountone.data.source.local.SharedPreferencesDataSource
 import com.digeltech.appdiscountone.databinding.FragmentProfileDataBinding
+import com.digeltech.appdiscountone.domain.model.User
+import com.digeltech.appdiscountone.ui.common.KEY_USER
 import com.digeltech.appdiscountone.util.view.setCircleImage
 import com.digeltech.appdiscountone.util.view.showDatePickerDialog
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.ktx.Firebase
+import com.orhanobut.hawk.Hawk
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePickerDialog.OnDateSetListener {
 
     private val binding by viewBinding(FragmentProfileDataBinding::bind)
     override val viewModel: ProfileDataViewModel by viewModels()
 
-    private lateinit var prefs: SharedPreferencesDataSource
     private var userPhotoUri: Uri? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        prefs = SharedPreferencesDataSource(view.context)
-
         initUser()
         initListeners()
+        observeData()
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
@@ -57,23 +59,19 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
     }
 
     private fun initUser() {
+        Hawk.get<User>(KEY_USER)?.let {
+            binding.tvProfileEmail.text = it.email
+            binding.etProfileName.setText(it.login)
+            binding.tvDateOfBirth.text = it.birthdate
+            binding.etCity.setText(it.city)
+            binding.tvDateRegistration.text = getString(R.string.date_of_registration, it.dateRegistration)
+        }
+
         Firebase.auth.currentUser?.let {
             it.photoUrl?.let { uri ->
                 binding.ivProfileImage.setCircleImage(uri)
             }
-            binding.tvProfileEmail.text = it.email
-            binding.etProfileName.setText(it.displayName)
         }
-
-        val dateOfBirth = prefs.getDateOfBirth()
-        if (dateOfBirth.isNotEmpty())
-            binding.tvDateOfBirth.text = dateOfBirth
-
-        val city = prefs.getCity()
-        if (city.isNotEmpty())
-            binding.etCity.setText(city)
-
-        binding.tvDateRegistration.text = getString(R.string.date_of_registration, prefs.getDateOfRegistration())
     }
 
     private fun initListeners() {
@@ -95,18 +93,35 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
     }
 
     private fun updateProfile() {
-        prefs.setDateOfBirth(binding.tvDateOfBirth.text.toString())
-        prefs.setCity(binding.etCity.text.toString().trim())
+        val city = binding.etCity.text.toString().trim()
+        val dateOfBirth = binding.tvDateOfBirth.text.toString()
+        val login = binding.etProfileName.text.toString()
+        val user = Hawk.get<User>(KEY_USER)
+        viewModel.updateProfile(id = user.id, city = city, birthday = dateOfBirth, login = login)
         updateFirebaseProfile()
-        navigateBack()
     }
 
     private fun updateFirebaseProfile() {
         val profileUpdates = userProfileChangeRequest {
-            displayName = binding.etProfileName.text.toString()
             photoUri = userPhotoUri
         }
         Firebase.auth.currentUser?.updateProfile(profileUpdates)
+    }
+
+    private fun observeData() {
+        viewModel.success.observe(viewLifecycleOwner) {
+            if (it) {
+                val user = Hawk.get<User>(KEY_USER)
+                Hawk.put(
+                    KEY_USER, user.copy(
+                        city = binding.etCity.text.toString().trim(),
+                        birthdate = binding.tvDateOfBirth.text.toString(),
+                        login = binding.etProfileName.text.toString()
+                    )
+                )
+                navigateBack()
+            }
+        }
     }
 
 }

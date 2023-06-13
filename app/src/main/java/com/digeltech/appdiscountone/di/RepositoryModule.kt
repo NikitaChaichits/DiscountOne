@@ -1,9 +1,12 @@
 package com.digeltech.appdiscountone.di
 
+import com.digeltech.appdiscountone.data.repository.AuthRepositoryImpl
 import com.digeltech.appdiscountone.data.repository.CategoriesRepositoryImpl
 import com.digeltech.appdiscountone.data.repository.DealsRepositoryImpl
 import com.digeltech.appdiscountone.data.repository.ShopsRepositoryImpl
+import com.digeltech.appdiscountone.data.source.remote.api.AuthApi
 import com.digeltech.appdiscountone.data.source.remote.api.ServerApi
+import com.digeltech.appdiscountone.domain.repository.AuthRepository
 import com.digeltech.appdiscountone.domain.repository.CategoriesRepository
 import com.digeltech.appdiscountone.domain.repository.DealsRepository
 import com.digeltech.appdiscountone.domain.repository.ShopsRepository
@@ -27,4 +30,8 @@ object RepositoryModule {
     @Provides
     fun provideShopsRepository(serverApi: ServerApi): ShopsRepository =
         ShopsRepositoryImpl(serverApi)
+
+    @Provides
+    fun provideAuthRepository(authApi: AuthApi): AuthRepository =
+        AuthRepositoryImpl(authApi)
 }

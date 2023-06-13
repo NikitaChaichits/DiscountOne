@@ -14,8 +14,6 @@ import com.digeltech.appdiscountone.util.view.invisible
 import com.digeltech.appdiscountone.util.view.px
 import com.digeltech.appdiscountone.util.view.recycler.GridOffsetDecoration
 import com.digeltech.appdiscountone.util.view.visible
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -82,10 +80,10 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
 
     private fun initListeners() {
         binding.ivProfile.setOnClickListener {
-            if (Firebase.auth.currentUser == null) {
-                navigate(R.id.startFragment)
-            } else {
+            if (prefs.isLogin()) {
                 navigate(R.id.profileFragment)
+            } else {
+                navigate(R.id.startFragment)
             }
         }
         binding.searchView.apply {

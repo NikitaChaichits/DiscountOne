@@ -11,3 +11,7 @@ const val DATE_OF_REGISTRATION = "DATE_OF_REGISTRATION"
 const val CITY = "CITY"
 
 const val THEME = "THEME"
+
+const val IS_LOGIN = "IS_LOGIN"
+
+const val USER = "USER"
