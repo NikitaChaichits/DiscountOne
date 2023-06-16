@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.digeltech.appdiscountone.R
+import com.digeltech.appdiscountone.data.source.local.SharedPreferencesDataSource
 import com.digeltech.appdiscountone.databinding.RvDealGridBinding
 import com.digeltech.appdiscountone.ui.common.addToBookmark
 import com.digeltech.appdiscountone.ui.common.isAddedToBookmark
@@ -17,19 +18,16 @@ import com.digeltech.appdiscountone.util.capitalizeFirstLetter
 import com.digeltech.appdiscountone.util.copyTextToClipboard
 import com.digeltech.appdiscountone.util.isNotNullAndNotEmpty
 import com.digeltech.appdiscountone.util.view.*
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 
 class GridDealAdapter(
     private val onClickListener: (deal: DealParcelable) -> Unit,
 ) : ListAdapter<DealParcelable, GridDealAdapter.ItemViewholder>(DiffCallback()) {
 
+    private lateinit var prefs: SharedPreferencesDataSource
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewholder {
-        return RvDealGridBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        ).let(::ItemViewholder)
+        return RvDealGridBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            .let(::ItemViewholder)
     }
 
     override fun onBindViewHolder(holder: ItemViewholder, position: Int) =
@@ -45,7 +43,7 @@ class GridDealAdapter(
 
         fun bind(item: DealParcelable) {
             with(binding) {
-                item.imageUrl?.let(ivDealImage::setImageWithRadius)
+                item.imageUrl.let(ivDealImage::setImageWithRadius)
 
                 if (item.sale.isNotNullAndNotEmpty()) {
                     tvPriceWithDiscount.text = item.sale
@@ -57,7 +55,7 @@ class GridDealAdapter(
 
                 tvTitle.text = item.title
 
-                item.shopImageUrl?.let { ivCouponCompanyLogo.setImageWithRadius(it, R.dimen.radius_10) }
+                item.shopImageUrl.let { ivCouponCompanyLogo.setImageWithRadius(it, R.dimen.radius_10) }
 
                 if (item.shopName.isNotEmpty()) {
                     tvCouponCompany.text = item.shopName.capitalizeFirstLetter()
@@ -93,13 +91,15 @@ class GridDealAdapter(
                     ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_bookmark_solid))
                 }
                 ivBookmark.setOnClickListener {
+                    prefs = SharedPreferencesDataSource(it.context)
+
                     if (item.isAddedToBookmark) {
                         item.isAddedToBookmark = false
                         removeFromBookmark(item.id)
                         ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_bookmark))
                         it.context.toast(it.getString(R.string.removed_from_bookmarks))
                     } else {
-                        if (Firebase.auth.currentUser == null) {
+                        if (!prefs.isLogin()) {
                             it.context.toast(R.string.toast_bookmark)
                         } else {
                             item.isAddedToBookmark = true

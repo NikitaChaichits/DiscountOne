@@ -66,4 +66,12 @@
         <item name="android:insetBottom">0dp</item>
     </style>
 
+    <!-- Spinner -->
+
+    <style name="spinnerDropDownItemStyle" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
+        <item name="android:background">@color/bgDealColor</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
 </resources>

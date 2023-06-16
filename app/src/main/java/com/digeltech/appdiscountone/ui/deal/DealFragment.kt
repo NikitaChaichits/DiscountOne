@@ -127,10 +127,14 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
                 ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_bookmark_deal))
                 it.context.toast(it.getString(R.string.removed_from_bookmarks))
             } else {
-                deal.isAddedToBookmark = true
-                addToBookmark(deal)
-                ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_bookmark_deal_solid))
-                it.context.toast(it.getString(R.string.added_to_bookmarks))
+                if (!prefs.isLogin()) {
+                    it.context.toast(R.string.toast_bookmark)
+                } else {
+                    deal.isAddedToBookmark = true
+                    addToBookmark(deal)
+                    ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_bookmark_deal_solid))
+                    it.context.toast(it.getString(R.string.added_to_bookmarks))
+                }
             }
         }
         ivCouponCompanyLogo.setOnClickListener {

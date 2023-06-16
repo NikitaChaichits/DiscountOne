@@ -4,6 +4,6 @@ import com.digeltech.appdiscountone.domain.model.Category
 
 interface CategoriesRepository {
 
-    suspend fun getAllCategories(): List<Category>
+    suspend fun getAllCategories(): Result<List<Category>>
 
 }

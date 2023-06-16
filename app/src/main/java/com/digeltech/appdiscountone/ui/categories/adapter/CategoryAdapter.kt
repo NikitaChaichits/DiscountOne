@@ -15,11 +15,8 @@ class CategoryAdapter(
 ) : ListAdapter<Category, CategoryAdapter.ItemViewholder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewholder {
-        return RvCategoryAndShopBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        ).let(::ItemViewholder)
+        return RvCategoryAndShopBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            .let(::ItemViewholder)
     }
 
     override fun onBindViewHolder(holder: ItemViewholder, position: Int) =

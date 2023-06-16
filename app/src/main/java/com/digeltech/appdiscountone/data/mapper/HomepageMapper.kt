@@ -34,7 +34,7 @@ class HomepageMapper {
             id = id,
             categoryId = categoryId,
             title = title,
-            description = description,
+            description = description.toString(),
             imageUrl = imageUrl.toString(),
             shopName = shopName.toString(),
             shopImageUrl = shopImageUrl.toString(),

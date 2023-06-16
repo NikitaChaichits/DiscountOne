@@ -4,6 +4,6 @@ import com.digeltech.appdiscountone.domain.model.Shop
 
 interface ShopsRepository {
 
-    suspend fun getAllShops(): List<Shop>
+    suspend fun getAllShops(): Result<List<Shop>>
 
 }

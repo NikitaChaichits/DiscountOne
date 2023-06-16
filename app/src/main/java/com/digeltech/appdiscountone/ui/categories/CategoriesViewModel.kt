@@ -29,8 +29,9 @@ class CategoriesViewModel @Inject constructor(
 
     fun getCategoriesList() {
         viewModelScope.launchWithLoading {
-            val list = categoriesInteractor.getCategoriesList()
-            _categories.postValue(list)
+            categoriesInteractor.getCategoriesList()
+                .onSuccess { _categories.postValue(it) }
+                .onFailure { error.postValue(it.toString()) }
         }
     }
 

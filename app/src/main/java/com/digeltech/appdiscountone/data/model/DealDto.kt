@@ -10,7 +10,7 @@ data class DealDto(
     @SerializedName("post_title")
     val title: String,
     @SerializedName("post_content")
-    val description: String,
+    val description: String?,
     @SerializedName("post_date")
     val publishedDate: String,
     @SerializedName("image_url")

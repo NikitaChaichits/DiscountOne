@@ -181,12 +181,15 @@
         <action
             android:id="@+id/toForgotPasswordFragment"
             app:destination="@id/forgotPasswordFragment" />
+        <action
+            android:id="@+id/toNewAccountFragment"
+            app:destination="@id/newAccountFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/signInFragment"
+        android:id="@+id/newAccountFragment"
         android:name="com.digeltech.appdiscountone.ui.auth.newaccount.NewAccountFragment"
-        android:label="SignInFragment"
+        android:label="NewAccountFragment"
         tools:layout="@layout/fragment_new_account">
         <action
             android:id="@+id/toOnboardingFragment"
@@ -202,8 +205,8 @@
             android:id="@+id/toLoginFragment"
             app:destination="@id/loginFragment" />
         <action
-            android:id="@+id/toSignInFragment"
-            app:destination="@id/signInFragment" />
+            android:id="@+id/toNewAccountFragment"
+            app:destination="@id/newAccountFragment" />
     </fragment>
 
     <fragment

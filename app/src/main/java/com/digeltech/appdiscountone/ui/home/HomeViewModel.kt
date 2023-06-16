@@ -45,7 +45,7 @@ class HomeViewModel @Inject constructor(
     private var searchJob: Job? = null
 
     init {
-//        getHomepageData()
+        getHomepageData()
     }
 
     fun getHomepageData() {
@@ -68,7 +68,7 @@ class HomeViewModel @Inject constructor(
                 val deal = interactor.getDeal(dealId = dealId, categoryId = categoryId).toParcelable()
                 _deal.value = deal
             } else {
-                log("Cannot load Deal: dealId or categoryId is null")
+                error.postValue("Cannot load Deal: dealId or categoryId is null")
             }
         }
     }

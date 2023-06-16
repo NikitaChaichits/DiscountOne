@@ -104,6 +104,8 @@
 
     <!-- Fragment All deals-->
     <string name="fr_deals_title">Best Deals</string>
+    <string name="fr_deals_filter_categories">Categories</string>
+    <string name="fr_deals_filter_shops">Shops</string>
 
     <!-- Fragment Shops-->
     <string name="fr_shops_title">Shops</string>

@@ -1,9 +1,6 @@
 package com.digeltech.appdiscountone.data.source.remote.api
 
-import com.digeltech.appdiscountone.data.model.CategoryDto
-import com.digeltech.appdiscountone.data.model.DealDto
-import com.digeltech.appdiscountone.data.model.HomepageDto
-import com.digeltech.appdiscountone.data.model.ShopDto
+import com.digeltech.appdiscountone.data.model.*
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -24,6 +21,9 @@ interface ServerApi {
 
     @GET("/wp-json/theme/v1/products/page=1&limit=1000")
     suspend fun getAllDeals(): List<DealDto>
+
+    @GET("/wp-json/theme/v1/best_deals")
+    suspend fun getBestDeals(): AllDealsDto
 
     @GET("/wp-json/theme/v1/products/id/{id}")
     suspend fun getDeal(@Path("id") id: String): DealDto

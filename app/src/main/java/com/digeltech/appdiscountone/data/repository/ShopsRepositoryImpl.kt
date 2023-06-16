@@ -15,9 +15,9 @@ class ShopsRepositoryImpl @Inject constructor(
     private val api: ServerApi,
 ) : ShopsRepository {
 
-    override suspend fun getAllShops(): List<Shop> = withContext(Dispatchers.IO) {
-        with(api.getAllShops()) {
-            ShopMapper().map(this).also {
+    override suspend fun getAllShops(): Result<List<Shop>> = withContext(Dispatchers.IO) {
+        runCatching {
+            ShopMapper().map(api.getAllShops()).also {
                 Hawk.put(KEY_SHOPS, it)
             }
         }

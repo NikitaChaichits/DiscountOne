@@ -24,7 +24,7 @@ object ApiModule {
     fun provideRetrofit(): Retrofit {
         val httpClient = OkHttpClient.Builder()
             .connectTimeout(5, TimeUnit.SECONDS) // connection timeout to 5 seconds
-            .readTimeout(5, TimeUnit.SECONDS) // read timeout to 10 seconds
+            .readTimeout(20, TimeUnit.SECONDS) // read timeout to 20 seconds
             .build()
         val gson = GsonBuilder()
             .setLenient()

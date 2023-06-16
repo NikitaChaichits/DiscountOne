@@ -39,6 +39,9 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
         binding.btnLogin.setOnClickListener {
             viewModel.login(binding.etEmail.text.toString().trim(), binding.etPassword.text.toString().trim())
         }
+        binding.btnCreateAccount.setOnClickListener {
+            navigate(R.id.newAccountFragment)
+        }
         binding.tvForgotPassword.setOnClickListener {
 //            navigate(R.id.forgotPasswordFragment)
             binding.webView.openWebView("https://discount.one/wp-login.php?action=lostpassword")

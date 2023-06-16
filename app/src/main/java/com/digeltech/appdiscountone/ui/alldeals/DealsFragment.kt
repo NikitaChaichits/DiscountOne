@@ -2,12 +2,15 @@ package com.digeltech.appdiscountone.ui.alldeals
 
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.common.base.BaseFragment
 import com.digeltech.appdiscountone.databinding.FragmentDealsBinding
+import com.digeltech.appdiscountone.domain.model.Item
 import com.digeltech.appdiscountone.ui.common.adapter.GridDealAdapter
 import com.digeltech.appdiscountone.ui.common.logSearch
 import com.digeltech.appdiscountone.ui.coupons.CouponsFragmentDirections
@@ -30,9 +33,8 @@ class DealsFragment : BaseFragment(R.layout.fragment_deals), SearchView.OnQueryT
         super.onViewCreated(view, savedInstanceState)
 
         initAdapters()
-        initListeners()
-
         observeData()
+        initListeners()
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean = false
@@ -40,14 +42,28 @@ class DealsFragment : BaseFragment(R.layout.fragment_deals), SearchView.OnQueryT
     override fun onQueryTextChange(newText: String?): Boolean {
         if (newText.isNullOrEmpty()) {
             binding.rvSearchDeals.invisible()
-            binding.rvDeals.visible()
             binding.tvSearchResultEmpty.invisible()
             binding.tvTitle.visible()
+            binding.grContent.visible()
         } else {
             logSearch(newText.toString())
             viewModel.searchDeals(newText.toString())
         }
         return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getCategoriesFilterPosition().let {
+            if (it > 0) {
+                binding.spinnerCategories.setSelection(it)
+            }
+        }
+        viewModel.getShopFilterPosition().let {
+            if (it > 0) {
+                binding.spinnerShops.setSelection(it)
+            }
+        }
     }
 
     private fun initAdapters() {
@@ -92,21 +108,61 @@ class DealsFragment : BaseFragment(R.layout.fragment_deals), SearchView.OnQueryT
             setOnQueryTextListener(this@DealsFragment)
             queryHint = getString(R.string.search_by_deals)
         }
+        binding.spinnerCategories.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (position == viewModel.getCategoriesFilterPosition()) {
+                    return
+                }
+                viewModel.loadCategoryDeals(position)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) = Unit
+        }
+        binding.spinnerShops.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (position == viewModel.getShopFilterPosition()) {
+                    return
+                }
+                viewModel.loadShopDeals(position)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) = Unit
+        }
     }
 
     private fun observeData() {
         viewModel.deals.observe(viewLifecycleOwner, dealAdapter::submitList)
+        viewModel.shops.observe(viewLifecycleOwner) {
+            val adapterShops = ArrayAdapter(requireContext(), R.layout.spinner_item, getFilteredNames(it))
+            adapterShops.setDropDownViewResource(R.layout.spinner_item_dropdown)
+            binding.spinnerShops.adapter = adapterShops
+
+        }
+        viewModel.categories.observe(viewLifecycleOwner) {
+            val adapterCategories = ArrayAdapter(requireContext(), R.layout.spinner_item, getFilteredNames(it))
+            adapterCategories.setDropDownViewResource(R.layout.spinner_item_dropdown)
+            binding.spinnerCategories.adapter = adapterCategories
+
+        }
         viewModel.searchResult.observe(viewLifecycleOwner) {
             if (it.isEmpty() && !binding.searchView.query.isNullOrEmpty()) {
                 binding.tvSearchResultEmpty.visible()
                 binding.tvTitle.invisible()
+                binding.grContent.invisible()
             } else {
                 binding.tvSearchResultEmpty.invisible()
                 binding.tvTitle.visible()
             }
             searchAdapter.submitList(it)
             binding.rvSearchDeals.visible()
-            binding.rvDeals.invisible()
+            binding.grContent.invisible()
         }
+    }
+
+    private fun getFilteredNames(data: List<Item>): List<String> {
+        val names: List<String> = data.map(Item::name)
+        val mutableList = mutableListOf("All")
+        mutableList.addAll(names)
+        return mutableList
     }
 }

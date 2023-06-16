@@ -29,12 +29,15 @@ class ShopsViewModel @Inject constructor(
 
     fun getShopsList() {
         viewModelScope.launchWithLoading {
-            val list = shopsInteractor.getShopsList()
-            _shops.postValue(
-                list
-                    .filter { it.popular }
-                    .sortedBy { it.name.lowercase() }
-            )
+            shopsInteractor.getShopsList()
+                .onSuccess { shops ->
+                    _shops.postValue(
+                        shops
+                            .filter { it.popular }
+                            .sortedBy { it.name.lowercase() }
+                    )
+                }
+                .onFailure { error.postValue(it.toString()) }
         }
     }
 

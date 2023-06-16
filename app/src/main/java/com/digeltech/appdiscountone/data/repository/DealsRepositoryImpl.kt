@@ -3,6 +3,7 @@ package com.digeltech.appdiscountone.data.repository
 import com.digeltech.appdiscountone.data.mapper.DealsMapper
 import com.digeltech.appdiscountone.data.mapper.HomepageMapper
 import com.digeltech.appdiscountone.data.source.remote.api.ServerApi
+import com.digeltech.appdiscountone.domain.model.AllDeals
 import com.digeltech.appdiscountone.domain.model.Deal
 import com.digeltech.appdiscountone.domain.model.Homepage
 import com.digeltech.appdiscountone.domain.repository.DealsRepository
@@ -14,24 +15,24 @@ class DealsRepositoryImpl @Inject constructor(
     private val api: ServerApi,
 ) : DealsRepository {
 
-    override suspend fun getAllDeals(): Result<List<Deal>> = withContext(Dispatchers.IO) {
+    override suspend fun getAllDeals(): Result<AllDeals> = withContext(Dispatchers.IO) {
         runCatching {
-            DealsMapper().mapAllDeal(api.getAllDeals())
+            DealsMapper().mapAllDeals(api.getBestDeals())
         }
     }
 
     override suspend fun getAllCoupons(): Result<List<Deal>> = withContext(Dispatchers.IO) {
         runCatching {
-            DealsMapper().mapAllDeal(api.getAllCoupons())
+            DealsMapper().mapDeals(api.getAllCoupons())
         }
     }
 
     override suspend fun getDealsByCategoryId(categoryId: Int): List<Deal> = withContext(Dispatchers.IO) {
-        DealsMapper().mapAllDeal(api.getCategoryDeals(categoryId.toString()))
+        DealsMapper().mapDeals(api.getCategoryDeals(categoryId.toString()))
     }
 
     override suspend fun getDealsByShopId(shopId: Int): List<Deal> = withContext(Dispatchers.IO) {
-        DealsMapper().mapAllDeal(api.getShopDeals(shopId.toString()))
+        DealsMapper().mapDeals(api.getShopDeals(shopId.toString()))
     }
 
     override suspend fun getDealById(dealId: Int, categoryId: Int): Deal = withContext(Dispatchers.IO) {
@@ -45,7 +46,7 @@ class DealsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun searchDeals(searchText: String): List<Deal> = withContext(Dispatchers.IO) {
-        DealsMapper().mapAllDeal(api.searchDeals(searchText))
+        DealsMapper().mapDeals(api.searchDeals(searchText))
     }
 
     override suspend fun updateDealViewsClick(id: String) = withContext(Dispatchers.IO) {
