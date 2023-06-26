@@ -21,9 +21,9 @@
         android:icon="@drawable/ic_shops"
         android:title="@string/nav_shops" />
 
-    <item
-        android:id="@id/couponsFragment"
-        android:icon="@drawable/ic_coupons"
-        android:title="@string/nav_coupons" />
+    <!--    <item-->
+    <!--        android:id="@id/couponsFragment"-->
+    <!--        android:icon="@drawable/ic_coupons"-->
+    <!--        android:title="@string/nav_coupons" />-->
 
 </menu>

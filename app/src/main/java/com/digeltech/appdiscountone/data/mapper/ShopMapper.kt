@@ -10,6 +10,7 @@ class ShopMapper {
     private fun ShopDto.mapToShop() = Shop(
         id = id,
         name = name,
+        slug = slug,
         countOfItems = countOfItems,
         icon = icon,
         popular = popular == "1"

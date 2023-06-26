@@ -10,6 +10,7 @@ class CategoryMapper {
     private fun CategoryDto.mapToCategory() = Category(
         id = id,
         name = name,
+        slug = slug,
         countOfItems = countOfItems,
         icon = icon,
     )

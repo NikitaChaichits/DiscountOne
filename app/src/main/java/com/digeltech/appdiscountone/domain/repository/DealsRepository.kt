@@ -20,4 +20,8 @@ interface DealsRepository {
     suspend fun searchDeals(searchText: String): List<Deal>
 
     suspend fun updateDealViewsClick(id: String)
+
+    suspend fun getSimilarDealsByCategory(categoryName: String): List<Deal>
+
+    suspend fun getSimilarDealsByShop(shopName: String): List<Deal>
 }

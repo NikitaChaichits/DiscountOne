@@ -277,48 +277,94 @@ Magnificent Sound, engineered to perfection with the new Integrated Processor V1
                 app:layout_constraintTop_toBottomOf="@id/separator" />
 
             <TextView
-                android:id="@+id/tvSimilarProducts"
+                android:id="@+id/tvSimilarCategoryDeals"
                 style="@style/TextRegular.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="0dp"
                 android:layout_marginTop="@dimen/common_offset_40dp"
                 android:layout_marginBottom="@dimen/common_offset_24dp"
+                android:textSize="@dimen/common_textSize_20sp"
                 android:paddingHorizontal="@dimen/common_offset_16dp"
-                android:text="@string/fr_deal_similar_products"
+                android:text="@string/fr_deal_similar_deals"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvDisclosure" />
 
             <TextView
-                android:id="@+id/tvMoreDeals"
+                android:id="@+id/tvMoreCategoryDeals"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/common_offset_32dp"
                 android:text="@string/fr_deal_similar_more_deals"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@id/tvSimilarProducts"
+                app:layout_constraintBottom_toBottomOf="@id/tvSimilarCategoryDeals"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/tvSimilarProducts" />
+                app:layout_constraintTop_toTopOf="@id/tvSimilarCategoryDeals" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvDeals"
+                android:id="@+id/rvSimilarCategoryDeals"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/common_offset_16dp"
                 android:layout_marginTop="@dimen/common_offset_24dp"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintTop_toBottomOf="@id/tvSimilarProducts"
+                app:layout_constraintTop_toBottomOf="@id/tvSimilarCategoryDeals"
+                tools:itemCount="3"
+                tools:listitem="@layout/rv_deal_linear" />
+
+            <TextView
+                android:id="@+id/tvSimilarShopDeals"
+                style="@style/TextRegular.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="0dp"
+                android:layout_marginTop="@dimen/common_offset_16dp"
+                android:textSize="@dimen/common_textSize_20sp"
+                android:layout_marginBottom="@dimen/common_offset_24dp"
+                android:paddingHorizontal="@dimen/common_offset_16dp"
+                android:text="@string/fr_deal_similar_deals"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rvSimilarCategoryDeals" />
+
+            <TextView
+                android:id="@+id/tvMoreShopDeals"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/common_offset_32dp"
+                android:text="@string/fr_deal_similar_more_deals"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/tvSimilarShopDeals"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tvSimilarShopDeals" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvSimilarShopDeals"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/common_offset_16dp"
+                android:layout_marginTop="@dimen/common_offset_24dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/tvSimilarShopDeals"
                 tools:itemCount="3"
                 tools:listitem="@layout/rv_deal_linear" />
 
             <androidx.constraintlayout.widget.Group
-                android:id="@+id/grSimilarProducts"
+                android:id="@+id/grSimilarCategoryDeals"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                app:constraint_referenced_ids="tvSimilarProducts, tvMoreDeals, rvDeals" />
+                app:constraint_referenced_ids="tvSimilarCategoryDeals, tvMoreCategoryDeals, rvSimilarCategoryDeals" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/grSimilarShopDeals"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:constraint_referenced_ids="tvSimilarShopDeals, tvMoreShopDeals, rvSimilarShopDeals" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

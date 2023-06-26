@@ -1,6 +1,8 @@
 package com.digeltech.appdiscountone.ui.common
 
 import android.os.Bundle
+import com.digeltech.appdiscountone.domain.model.Category
+import com.digeltech.appdiscountone.domain.model.Shop
 import com.digeltech.appdiscountone.ui.common.model.DealParcelable
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
@@ -52,4 +54,20 @@ fun isAddedToBookmark(id: Int): Boolean {
         }
     }
     return false
+}
+
+fun getCategoryNameById(id: Int): String {
+    if (Hawk.contains(KEY_CATEGORIES)) {
+        return Hawk.get<List<Category>>(KEY_CATEGORIES).find {
+            it.id == id
+        }?.name ?: "Unknown category name"
+    }
+    return "Unknown category name"
+}
+
+fun getShopIdByName(name: String): Int {
+    val listOfShops: List<Shop> = Hawk.get(KEY_SHOPS)
+    return listOfShops.find {
+        it.name.equals(name, true)
+    }?.id ?: 0
 }

@@ -9,7 +9,6 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.common.base.BaseFragment
 import com.digeltech.appdiscountone.databinding.FragmentDealBinding
-import com.digeltech.appdiscountone.domain.model.Shop
 import com.digeltech.appdiscountone.ui.common.*
 import com.digeltech.appdiscountone.ui.common.adapter.LinearDealAdapter
 import com.digeltech.appdiscountone.ui.common.model.DealParcelable
@@ -17,7 +16,6 @@ import com.digeltech.appdiscountone.util.capitalizeFirstLetter
 import com.digeltech.appdiscountone.util.copyTextToClipboard
 import com.digeltech.appdiscountone.util.isNotNullAndNotEmpty
 import com.digeltech.appdiscountone.util.view.*
-import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -28,39 +26,47 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
 
     private val args: DealFragmentArgs by navArgs()
 
-    private lateinit var dealAdapter: LinearDealAdapter
+    private lateinit var categoryDealsAdapter: LinearDealAdapter
+    private lateinit var shopDealsAdapter: LinearDealAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         initCoupon(args.deal)
-        initAdapter()
+        initAdapters()
         observeData()
 
-        binding.scrollView.setOnTouchListener(object : OnSwipeTouchListener(requireContext()) {
-            override fun onSwipeLeft() {
-                navigateBack()
-            }
-
-            override fun onSwipeRight() {
-                navigateBack()
-            }
-        })
+//        binding.scrollView.setOnTouchListener(object : OnSwipeTouchListener(requireContext()) {
+//            override fun onSwipeLeft() {
+//                navigateBack()
+//            }
+//
+//            override fun onSwipeRight() {
+//                navigateBack()
+//            }
+//        })
     }
 
-    private fun initAdapter() {
-        dealAdapter = LinearDealAdapter {
+    private fun initAdapters() {
+        categoryDealsAdapter = LinearDealAdapter {
             initCoupon(it)
             binding.scrollView.scrollTo(0, 0)
         }
-        binding.rvDeals.adapter = dealAdapter
+        binding.rvSimilarCategoryDeals.adapter = categoryDealsAdapter
+
+        shopDealsAdapter = LinearDealAdapter {
+            initCoupon(it)
+            binding.scrollView.scrollTo(0, 0)
+        }
+        binding.rvSimilarShopDeals.adapter = shopDealsAdapter
     }
 
     private fun initCoupon(deal: DealParcelable) {
         with(binding) {
             logOpenDeal(deal.title)
             initListeners(deal)
-//            viewModel.getSimilarDeals(deal.categoryId, deal.id)
+            viewModel.getSimilarDealsByCategory(deal.categoryId, deal.id)
+            viewModel.getSimilarDealsByShop(deal.shopName, deal.id)
 
             deal.imageUrl.let(ivDealImage::loadImage)
 
@@ -161,22 +167,34 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
             copyTextToClipboard(it.context, deal.title)
             it.context.toast(it.getString(R.string.copied))
         }
-        tvMoreDeals.setOnClickListener {
-            navigate(R.id.categoriesFragment)
-        }
+
     }
 
     private fun observeData() {
-//        viewModel.similarDeals.observe(viewLifecycleOwner) {
-//            dealAdapter.submitList(it)
-//            binding.grSimilarProducts.visible()
-//        }
-    }
-
-    private fun getShopIdByName(name: String): Int {
-        val listOfShops: List<Shop> = Hawk.get(KEY_SHOPS)
-        return listOfShops.find {
-            it.name.equals(name, true)
-        }?.id ?: 0
+        viewModel.similarCategoryDeals.observe(viewLifecycleOwner) {
+            val categoryName = getCategoryNameById(args.deal.categoryId)
+            binding.tvSimilarCategoryDeals.text = getString(R.string.fr_deal_similar_deals, categoryName)
+            categoryDealsAdapter.submitList(it)
+            binding.grSimilarCategoryDeals.visible()
+            binding.tvMoreCategoryDeals.setOnClickListener {
+                navigate(
+                    DealFragmentDirections.toCategoryFragment(
+                        id = args.deal.categoryId, title = categoryName, isFromCategory = true
+                    )
+                )
+            }
+        }
+        viewModel.similarShopDeals.observe(viewLifecycleOwner) {
+            binding.tvSimilarShopDeals.text = getString(R.string.fr_deal_similar_deals, args.deal.shopName)
+            shopDealsAdapter.submitList(it)
+            binding.grSimilarShopDeals.visible()
+            binding.tvMoreShopDeals.setOnClickListener {
+                navigate(
+                    DealFragmentDirections.toShopFragment(
+                        id = getShopIdByName(args.deal.shopName), title = args.deal.shopName, isFromCategory = false
+                    )
+                )
+            }
+        }
     }
 }

@@ -40,4 +40,10 @@ interface ServerApi {
     @GET("/wp-json/theme/v1/views")
     suspend fun updateViewsClick(@Query("id") id: String)
 
+    @GET("/wp-json/theme/v1/top_deals")
+    suspend fun getTopDeals(@Query("cat") categorySlugName: String): OtherDealsDto
+
+    @GET("/wp-json/theme/v1/other_deals")
+    suspend fun getOtherDeals(@Query("shop") shopSlugName: String): OtherDealsDto
+
 }

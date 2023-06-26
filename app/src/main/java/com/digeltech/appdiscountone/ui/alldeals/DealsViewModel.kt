@@ -49,7 +49,13 @@ class DealsViewModel @Inject constructor(
                     allDeals = it.posts.toParcelableList()
                     _deals.postValue(it.posts.toParcelableList())
                     _shops.postValue(it.shops)
-                    _categories.postValue(it.categories)
+
+                    val categories = mutableListOf<Item>()
+                    it.categories.forEach { category ->
+                        categories.add(Item(category.id, category.name))
+                        categories.addAll(category.child)
+                    }
+                    _categories.postValue(categories)
                 }
                 .onFailure { error.postValue(it.toString()) }
         }

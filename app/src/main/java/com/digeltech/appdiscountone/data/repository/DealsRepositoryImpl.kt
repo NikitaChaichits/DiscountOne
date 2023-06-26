@@ -53,4 +53,12 @@ class DealsRepositoryImpl @Inject constructor(
         api.updateViewsClick(id)
     }
 
+    override suspend fun getSimilarDealsByCategory(categoryName: String): List<Deal> = withContext(Dispatchers.IO) {
+        DealsMapper().mapOtherDeals(api.getTopDeals(categoryName))
+    }
+
+    override suspend fun getSimilarDealsByShop(shopName: String): List<Deal> = withContext(Dispatchers.IO) {
+        DealsMapper().mapOtherDeals(api.getOtherDeals(shopName))
+    }
+
 }

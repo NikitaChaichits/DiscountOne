@@ -1,11 +1,10 @@
 package com.digeltech.appdiscountone.data.mapper
 
-import com.digeltech.appdiscountone.data.model.AllDealsDto
-import com.digeltech.appdiscountone.data.model.DealDto
-import com.digeltech.appdiscountone.data.model.ItemDto
+import com.digeltech.appdiscountone.data.model.*
 import com.digeltech.appdiscountone.domain.model.AllDeals
 import com.digeltech.appdiscountone.domain.model.Deal
 import com.digeltech.appdiscountone.domain.model.Item
+import com.digeltech.appdiscountone.domain.model.ItemWithChild
 
 class DealsMapper {
 
@@ -14,7 +13,7 @@ class DealsMapper {
     }
 
     fun mapAllDeals(data: AllDealsDto): AllDeals = AllDeals(
-        categories = data.categories.mapItems(),
+        categories = data.categories.mapChildItems(),
         shops = data.shops.mapItems(),
         posts = data.posts.map(::mapToDeal)
     )
@@ -40,6 +39,12 @@ class DealsMapper {
             viewsClick = data.viewsClick,
             webLink = data.webLink,
         )
+    }
+
+    fun mapOtherDeals(data: OtherDealsDto): List<Deal> = data.posts.map(::mapToDeal)
+
+    private fun List<ItemWithChildDto>.mapChildItems(): List<ItemWithChild> {
+        return map { ItemWithChild(it.id, it.name, it.child.mapItems()) }
     }
 
     private fun List<ItemDto>.mapItems(): List<Item> {

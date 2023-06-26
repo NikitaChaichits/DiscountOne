@@ -7,6 +7,8 @@ data class ShopDto(
     val id: Int,
     @SerializedName("name")
     val name: String,
+    @SerializedName("slug")
+    val slug: String,
     @SerializedName("count")
     val countOfItems: Int,
     @SerializedName("image_url")

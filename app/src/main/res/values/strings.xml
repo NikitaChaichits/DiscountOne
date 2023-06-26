@@ -115,9 +115,9 @@
 
     <!-- Fragment Deal-->
     <string name="fr_deal_published">Published %s</string>
-    <string name="fr_deal_more_about_discount">More about the discount</string>
+    <string name="fr_deal_more_about_discount">Product Information</string>
     <string name="fr_deal_disclosure">Disclosure: If you follow a link or buy an item from a post, Discount One may receive a commission from the store, but this does not affect what discounts are posted on the site. \n<u>Affiliate Disclosure</u></string>
-    <string name="fr_deal_similar_products">Similar Products</string>
+    <string name="fr_deal_similar_deals">Other deals from %s</string>
     <string name="fr_deal_similar_more_deals">More deals</string>
     <string name="shop_now">Shop now</string>
 

@@ -124,6 +124,16 @@
                 app:argType="boolean"
                 android:defaultValue="false" />
         </action>
+        <action
+            android:id="@+id/toCategoryFragment"
+            app:destination="@id/categoryAndShopFragment">
+            <argument
+                android:name="id"
+                app:argType="integer" />
+            <argument
+                android:name="title"
+                app:argType="string" />
+        </action>
     </fragment>
 
     <fragment
