@@ -7,6 +7,6 @@ interface ShopsInteractor {
 
     suspend fun getShopsList(): Result<List<Shop>>
 
-    suspend fun getShopDealsList(shopId: Int): List<Deal>
+    suspend fun getShopDealsList(shopId: Int): Result<List<Deal>>
 
 }

@@ -9,9 +9,9 @@ interface DealsRepository {
 
     suspend fun getAllCoupons(): Result<List<Deal>>
 
-    suspend fun getDealsByCategoryId(categoryId: Int): List<Deal>
+    suspend fun getDealsByCategoryId(categoryId: Int): Result<List<Deal>>
 
-    suspend fun getDealsByShopId(shopId: Int): List<Deal>
+    suspend fun getDealsByShopId(shopId: Int): Result<List<Deal>>
 
     suspend fun getDealById(dealId: Int, categoryId: Int): Deal
 

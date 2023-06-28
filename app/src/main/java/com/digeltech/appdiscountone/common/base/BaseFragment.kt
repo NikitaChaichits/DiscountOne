@@ -13,6 +13,7 @@ import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.data.source.local.SharedPreferencesDataSource
@@ -64,6 +65,7 @@ abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
             .message(text = text)
             .cornerRadius(res = R.dimen.radius_12)
             .cancelOnTouchOutside(cancelable = true)
+            .onDismiss { navigateBack() }
             .show()
     }
 

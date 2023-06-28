@@ -136,13 +136,11 @@ class DealsFragment : BaseFragment(R.layout.fragment_deals), SearchView.OnQueryT
             val adapterShops = ArrayAdapter(requireContext(), R.layout.spinner_item, getFilteredNames(it))
             adapterShops.setDropDownViewResource(R.layout.spinner_item_dropdown)
             binding.spinnerShops.adapter = adapterShops
-
         }
         viewModel.categories.observe(viewLifecycleOwner) {
             val adapterCategories = ArrayAdapter(requireContext(), R.layout.spinner_item, getFilteredNames(it))
             adapterCategories.setDropDownViewResource(R.layout.spinner_item_dropdown)
             binding.spinnerCategories.adapter = adapterCategories
-
         }
         viewModel.searchResult.observe(viewLifecycleOwner) {
             if (it.isEmpty() && !binding.searchView.query.isNullOrEmpty()) {

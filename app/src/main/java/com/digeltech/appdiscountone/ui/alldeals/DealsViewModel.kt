@@ -9,6 +9,7 @@ import com.digeltech.appdiscountone.domain.repository.DealsRepository
 import com.digeltech.appdiscountone.ui.common.SEARCH_DELAY
 import com.digeltech.appdiscountone.ui.common.model.DealParcelable
 import com.digeltech.appdiscountone.ui.common.model.toParcelableList
+import com.digeltech.appdiscountone.util.log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -90,16 +91,22 @@ class DealsViewModel @Inject constructor(
             } else {
                 viewModelScope.launchWithLoading {
                     _categories.value?.get(spinnerPosition - 1)?.id?.let {
-                        val categoryDeals = dealsRepository.getDealsByCategoryId(it)
-                        if (shopSpinnerPosition == 0) {
-                            _deals.postValue(categoryDeals.toParcelableList())
-                        } else {
-                            val selectedShopName = _shops.value?.get(shopSpinnerPosition - 1)?.name
-                            _deals.postValue(
-                                categoryDeals.toParcelableList().filter { deal ->
-                                    deal.shopName.equals(selectedShopName, true)
-                                })
-                        }
+                        dealsRepository.getDealsByCategoryId(it)
+                            .onSuccess { deals ->
+                                if (shopSpinnerPosition == 0) {
+                                    _deals.postValue(deals.toParcelableList())
+                                } else {
+                                    val selectedShopName = _shops.value?.get(shopSpinnerPosition - 1)?.name
+                                    _deals.postValue(
+                                        deals.toParcelableList().filter { deal ->
+                                            deal.shopName.equals(selectedShopName, true)
+                                        })
+                                }
+                            }
+                            .onFailure { e ->
+                                log(e.toString())
+                                error.postValue(e.toString())
+                            }
                     }
                 }
             }
@@ -118,16 +125,22 @@ class DealsViewModel @Inject constructor(
             } else {
                 viewModelScope.launchWithLoading {
                     _shops.value?.get(spinnerPosition - 1)?.id?.let {
-                        val shopDeals = dealsRepository.getDealsByShopId(it)
-                        if (categorySpinnerPosition == 0) {
-                            _deals.postValue(shopDeals.toParcelableList())
-                        } else {
-                            val selectedCategoryId = _categories.value?.get(categorySpinnerPosition - 1)?.id
-                            _deals.postValue(
-                                shopDeals.toParcelableList().filter { deal ->
-                                    deal.categoryId == selectedCategoryId
-                                })
-                        }
+                        dealsRepository.getDealsByShopId(it)
+                            .onSuccess { deals ->
+                                if (categorySpinnerPosition == 0) {
+                                    _deals.postValue(deals.toParcelableList())
+                                } else {
+                                    val selectedCategoryId = _categories.value?.get(categorySpinnerPosition - 1)?.id
+                                    _deals.postValue(
+                                        deals.toParcelableList().filter { deal ->
+                                            deal.categoryId == selectedCategoryId
+                                        })
+                                }
+                            }
+                            .onFailure { e ->
+                                log(e.toString())
+                                error.postValue(e.toString())
+                            }
                     }
                 }
             }

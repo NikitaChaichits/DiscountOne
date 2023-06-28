@@ -13,6 +13,6 @@ internal class CategoriesInteractorImpl @Inject constructor(
 
     override suspend fun getCategoriesList(): Result<List<Category>> = categoriesRepository.getAllCategories()
 
-    override suspend fun getCategoryDealsList(categoryId: Int): List<Deal> =
+    override suspend fun getCategoryDealsList(categoryId: Int): Result<List<Deal>> =
         dealsRepository.getDealsByCategoryId(categoryId)
 }

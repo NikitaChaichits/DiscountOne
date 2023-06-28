@@ -27,12 +27,16 @@ class DealsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getDealsByCategoryId(categoryId: Int): List<Deal> = withContext(Dispatchers.IO) {
-        DealsMapper().mapDeals(api.getCategoryDeals(categoryId.toString()))
+    override suspend fun getDealsByCategoryId(categoryId: Int): Result<List<Deal>> = withContext(Dispatchers.IO) {
+        runCatching {
+            DealsMapper().mapDeals(api.getCategoryDeals(categoryId.toString()))
+        }
     }
 
-    override suspend fun getDealsByShopId(shopId: Int): List<Deal> = withContext(Dispatchers.IO) {
-        DealsMapper().mapDeals(api.getShopDeals(shopId.toString()))
+    override suspend fun getDealsByShopId(shopId: Int): Result<List<Deal>> = withContext(Dispatchers.IO) {
+        runCatching {
+            DealsMapper().mapDeals(api.getShopDeals(shopId.toString()))
+        }
     }
 
     override suspend fun getDealById(dealId: Int, categoryId: Int): Deal = withContext(Dispatchers.IO) {

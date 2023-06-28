@@ -8,6 +8,7 @@ import com.digeltech.appdiscountone.domain.repository.DealsRepository
 import com.digeltech.appdiscountone.ui.common.SEARCH_DELAY
 import com.digeltech.appdiscountone.ui.common.model.DealParcelable
 import com.digeltech.appdiscountone.ui.common.model.toParcelableList
+import com.digeltech.appdiscountone.util.log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -29,12 +30,26 @@ class CategoryAndShopViewModel @Inject constructor(
 
     fun initDeals(id: Int, isFromCategory: Boolean) {
         viewModelScope.launchWithLoading {
-            val listOfDeals = if (isFromCategory) {
+            if (isFromCategory) {
                 dealsRepository.getDealsByCategoryId(id)
+                    .onSuccess { deals ->
+                        _deals.postValue(deals.toParcelableList().sortedByDescending { it.id })
+                    }
+                    .onFailure {
+                        log(it.toString())
+                        error.postValue(it.toString())
+                    }
             } else {
                 dealsRepository.getDealsByShopId(id)
+                    .onSuccess { deals ->
+                        _deals.postValue(deals.toParcelableList().sortedByDescending { it.id })
+                    }
+                    .onFailure {
+                        log(it.toString())
+                        error.postValue(it.toString())
+                    }
             }
-            _deals.postValue(listOfDeals.toParcelableList().sortedByDescending { it.id })
+
         }
     }
 
