@@ -36,7 +36,7 @@ class DealsMapper {
             expirationDate = data.expirationDate,
             sale = data.sale,
             saleSize = data.saleSize ?: 0,
-            viewsClick = data.viewsClick,
+            viewsClick = data.viewsClick ?: 0,
             webLink = data.webLink,
         )
     }

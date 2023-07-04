@@ -49,7 +49,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         if (newText.isNullOrEmpty()) {
             binding.homeGroup.visible()
             binding.tvSearchResultEmpty.invisible()
-            binding.rvDeals.invisible()
+            binding.rvSearchDeals.invisible()
         } else {
             logSearch(newText.toString())
             viewModel.searchDeals(newText.toString())
@@ -89,6 +89,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         autoScrollHelper.startAutoScroll()
 
         categoriesAdapter = CategoriesAdapter(
+            { navigate(R.id.dealsFragment) },
             { navigate(HomeFragmentDirections.toCategoryFragment(id = it.id, title = it.name)) },
             {
                 viewModel.updateDealViewsClick(it.id.toString())
@@ -100,14 +101,14 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         searchDealAdapter = GridDealAdapter {
             navigate(HomeFragmentDirections.toDealFragment(it))
         }
-        binding.rvDeals.addItemDecoration(
+        binding.rvSearchDeals.addItemDecoration(
             GridOffsetDecoration(
                 edgesOffset = 16.px,
                 horizontalOffset = 16.px,
                 verticalOffset = 16.px
             )
         )
-        binding.rvDeals.adapter = searchDealAdapter
+        binding.rvSearchDeals.adapter = searchDealAdapter
     }
 
     private fun loadProfileImage() {
@@ -118,18 +119,18 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
 
     private fun observeData() {
         viewModel.banners.observe(viewLifecycleOwner, bannerAdapter::submitList)
-        viewModel.soloBanner.observe(viewLifecycleOwner) { banner ->
-            banner?.let {
-                binding.ivBannerSale.apply {
-                    setImageWithRadius(banner.urlImage, R.dimen.radius_16)
-                    setOnClickListener {
-                        viewModel.getDeal(dealId = banner.dealId, categoryId = banner.categoryId)
-                    }
-                    visible()
-                }
-
-            }
-        }
+//        viewModel.soloBanner.observe(viewLifecycleOwner) { banner ->
+//            banner?.let {
+//                binding.ivBannerSale.apply {
+//                    setImageWithRadius(banner.urlImage, R.dimen.radius_16)
+//                    setOnClickListener {
+//                        viewModel.getDeal(dealId = banner.dealId, categoryId = banner.categoryId)
+//                    }
+//                    visible()
+//                }
+//
+//            }
+//        }
         viewModel.categories.observe(viewLifecycleOwner, categoriesAdapter::submitList)
         viewModel.deal.observe(viewLifecycleOwner) { deal ->
             deal?.let {
@@ -142,15 +143,15 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
             if (binding.searchView.query.isNullOrEmpty()) {
                 binding.homeGroup.visible()
                 binding.tvSearchResultEmpty.invisible()
-                binding.rvDeals.invisible()
+                binding.rvSearchDeals.invisible()
             } else if (it.isEmpty() && !binding.searchView.query.isNullOrEmpty()) {
                 binding.tvSearchResultEmpty.visible()
                 binding.homeGroup.invisible()
-                binding.rvDeals.invisible()
+                binding.rvSearchDeals.invisible()
             } else {
                 binding.tvSearchResultEmpty.invisible()
-                binding.rvDeals.visible()
-                binding.homeGroup.invisible()
+                binding.homeGroup.gone()
+                binding.rvSearchDeals.visible()
             }
             searchDealAdapter.submitList(it)
         }

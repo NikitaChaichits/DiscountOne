@@ -16,6 +16,7 @@ import com.digeltech.appdiscountone.ui.common.model.DealParcelable
 import com.digeltech.appdiscountone.ui.common.removeFromBookmark
 import com.digeltech.appdiscountone.util.capitalizeFirstLetter
 import com.digeltech.appdiscountone.util.copyTextToClipboard
+import com.digeltech.appdiscountone.util.getDiscountText
 import com.digeltech.appdiscountone.util.isNotNullAndNotEmpty
 import com.digeltech.appdiscountone.util.view.*
 
@@ -43,19 +44,20 @@ class LinearDealAdapter(
 
         fun bind(item: DealParcelable) {
             with(binding) {
-                item.imageUrl?.let(ivDealImage::setImageWithRadius)
+                item.imageUrl.let(ivDealImage::setImageWithRadius)
 
-                if (item.sale.isNotNullAndNotEmpty()) {
+                if (item.sale.isNotNullAndNotEmpty() && item.sale != "0") {
                     tvPriceWithDiscount.text = item.sale
                     tvPrice.gone()
                 } else {
                     tvPrice.setStrikethrough(item.priceCurrency + item.oldPrice)
-                    tvPriceWithDiscount.text = item.priceCurrency + item.price
+                    tvPriceWithDiscount.text =
+                        getDiscountText(item.oldPrice?.toDouble() ?: 0.0, item.price?.toDouble() ?: 0.0)
                 }
 
                 tvTitle.text = item.title
 
-                item.shopImageUrl?.let { ivCouponCompanyLogo.setImageWithRadius(it, R.dimen.radius_10) }
+                item.shopImageUrl.let { ivCouponCompanyLogo.setImageWithRadius(it, R.dimen.radius_10) }
 
                 if (item.shopName.isNotEmpty()) {
                     tvCouponCompany.text = item.shopName.capitalizeFirstLetter()

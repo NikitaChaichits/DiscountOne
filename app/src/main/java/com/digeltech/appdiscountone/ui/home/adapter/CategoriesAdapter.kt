@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.databinding.RvHomeCategoriesBinding
 import com.digeltech.appdiscountone.domain.model.CategoryWithDeals
 import com.digeltech.appdiscountone.ui.common.adapter.LinearDealAdapter
@@ -14,6 +15,7 @@ import com.digeltech.appdiscountone.ui.common.model.DealParcelable
 import com.digeltech.appdiscountone.ui.common.model.toParcelableList
 
 class CategoriesAdapter(
+    private val onBestDealsClick: () -> Unit,
     private val onMoreDealsClick: (category: CategoryWithDealsParcelable) -> Unit,
     private val onDealClick: (deal: DealParcelable) -> Unit,
 ) : ListAdapter<CategoryWithDeals, CategoriesAdapter.ItemViewholder>(DiffCallback()) {
@@ -37,7 +39,12 @@ class CategoriesAdapter(
         fun bind(item: CategoryWithDeals) {
             with(binding) {
                 tvCategoryTitle.text = item.name
-                tvMoreDeals.setOnClickListener { onMoreDealsClick(item.toParcelableList()) }
+                tvMoreDeals.setOnClickListener {
+                    if (item.name.equals(it.context.getString(R.string.nav_deals), true))
+                        onBestDealsClick()
+                    else
+                        onMoreDealsClick(item.toParcelableList())
+                }
 
                 val dealsAdapter = LinearDealAdapter { onDealClick(it) }
 

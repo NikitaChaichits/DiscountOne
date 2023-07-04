@@ -14,6 +14,7 @@ import com.digeltech.appdiscountone.ui.common.adapter.LinearDealAdapter
 import com.digeltech.appdiscountone.ui.common.model.DealParcelable
 import com.digeltech.appdiscountone.util.capitalizeFirstLetter
 import com.digeltech.appdiscountone.util.copyTextToClipboard
+import com.digeltech.appdiscountone.util.getDiscountText
 import com.digeltech.appdiscountone.util.isNotNullAndNotEmpty
 import com.digeltech.appdiscountone.util.view.*
 import dagger.hilt.android.AndroidEntryPoint
@@ -83,7 +84,8 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
                 tvPriceWithDiscount.gone()
             } else {
                 tvPrice.setStrikethrough(deal.priceCurrency + deal.oldPrice)
-                tvPriceWithDiscount.text = deal.priceCurrency + deal.price
+                tvPriceWithDiscount.text =
+                    getDiscountText(deal.oldPrice?.toDouble() ?: 0.0, deal.price?.toDouble() ?: 0.0)
             }
             tvPublishedDate.text = getString(R.string.fr_deal_published, deal.publishedDate)
             tvDealName.text = deal.title
@@ -172,23 +174,21 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
 
     private fun observeData() {
         viewModel.similarCategoryDeals.observe(viewLifecycleOwner) {
-            val categoryName = getCategoryNameById(args.deal.categoryId)
-            binding.tvSimilarCategoryDeals.text = getString(R.string.fr_deal_similar_deals, categoryName)
             categoryDealsAdapter.submitList(it)
             binding.grSimilarCategoryDeals.visible()
-            binding.tvMoreCategoryDeals.setOnClickListener {
-                navigate(
-                    DealFragmentDirections.toCategoryFragment(
-                        id = args.deal.categoryId, title = categoryName, isFromCategory = true
-                    )
-                )
-            }
+//            binding.tvMoreCategoryDeals.setOnClickListener {
+//                navigate(
+//                    DealFragmentDirections.toCategoryFragment(
+//                        id = args.deal.categoryId, title = categoryName, isFromCategory = true
+//                    )
+//                )
+//            }
         }
         viewModel.similarShopDeals.observe(viewLifecycleOwner) {
-            binding.tvSimilarShopDeals.text = getString(R.string.fr_deal_similar_deals, args.deal.shopName)
             shopDealsAdapter.submitList(it)
             binding.grSimilarShopDeals.visible()
-            binding.tvMoreShopDeals.setOnClickListener {
+            binding.tvSimilarShopName.text = args.deal.shopName
+            binding.tvSimilarShopName.setOnClickListener {
                 navigate(
                     DealFragmentDirections.toShopFragment(
                         id = getShopIdByName(args.deal.shopName), title = args.deal.shopName, isFromCategory = false

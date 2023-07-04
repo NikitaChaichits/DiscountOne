@@ -36,7 +36,7 @@ data class DealDto(
     @SerializedName("expiration_date")
     val expirationDate: String?,
     @SerializedName("views_click")
-    val viewsClick: Int,
+    val viewsClick: Int?,
     @SerializedName("guid")
     val webLink: String?,
 )

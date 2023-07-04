@@ -54,7 +54,10 @@ class DealsViewModel @Inject constructor(
                     val categories = mutableListOf<Item>()
                     it.categories.forEach { category ->
                         categories.add(Item(category.id, category.name))
-                        categories.addAll(category.child)
+                        category.child.forEach { childItem ->
+                            // yes, hardcode, but for child items customer need padding
+                            categories.add(Item(childItem.id, "      ${childItem.name}"))
+                        }
                     }
                     _categories.postValue(categories)
                 }

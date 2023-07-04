@@ -7,7 +7,7 @@
     <string name="nav_home">Home</string>
     <string name="nav_categories">Categories</string>
     <string name="nav_deals">Best Deals</string>
-    <string name="nav_shops">Shops</string>
+    <string name="nav_shops">Stores</string>
     <string name="nav_coupons">Coupons</string>
 
     <string name="error_restore">Cann\'t restore your purchase</string>
@@ -23,13 +23,14 @@
     <string name="search_by_deals">Search by deals</string>
     <string name="search_by_coupons">Search by coupons</string>
     <string name="search_by_categories">Search by categories</string>
-    <string name="search_by_shops">Search by shops</string>
+    <string name="search_by_shops">Search by stores</string>
     <string name="empty_search_result"><b>Nothing found</b>\nTry different phrasing</string>
     <string name="toast_bookmark">You must be logged in to add bookmark</string>
     <string name="share_text">Look what I found in DiscouneOne %s</string>
 
     <!-- Wildcard strings -->
     <string name="price_wildcard">₹ %d</string>
+    <string name="price_wildcard_with_discount_vallue">₹ %s (%d%%)</string>
 
     <!-- Permission -->
 
@@ -105,10 +106,10 @@
     <!-- Fragment All deals-->
     <string name="fr_deals_title">Best Deals</string>
     <string name="fr_deals_filter_categories">Categories</string>
-    <string name="fr_deals_filter_shops">Shops</string>
+    <string name="fr_deals_filter_shops">Stores</string>
 
     <!-- Fragment Shops-->
-    <string name="fr_shops_title">Shops</string>
+    <string name="fr_shops_title">Stores</string>
 
     <!-- Fragment Coupons-->
     <string name="fr_coupons_title">Coupons</string>
@@ -117,7 +118,7 @@
     <string name="fr_deal_published">Published %s</string>
     <string name="fr_deal_more_about_discount">Product Information</string>
     <string name="fr_deal_disclosure">Disclosure: If you follow a link or buy an item from a post, Discount One may receive a commission from the store, but this does not affect what discounts are posted on the site. \n<u>Affiliate Disclosure</u></string>
-    <string name="fr_deal_similar_deals">Other deals from %s</string>
+    <string name="fr_deal_similar_deals">Other deals from</string>
     <string name="fr_deal_daily_top">Daily Top</string>
     <string name="fr_deal_similar_more_deals">More deals</string>
     <string name="shop_now">Shop now</string>

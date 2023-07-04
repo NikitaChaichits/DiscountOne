@@ -3,6 +3,7 @@ package com.digeltech.appdiscountone.util.numbers
 import android.content.Context
 import android.icu.text.NumberFormat
 import com.digeltech.appdiscountone.util.locale.currentDeviceLocale
+import kotlin.math.roundToInt
 
 fun Double.toPriceString(context: Context): String {
     val locale = context.currentDeviceLocale()
@@ -16,6 +17,11 @@ fun Double.toPriceString(context: Context): String {
 fun Int.getPercent(divideTo: Int): Int {
     return if (divideTo == 0) 0
     else (this * 100 / divideTo)
+}
+
+fun Double.getPercent(divideTo: Double): Int {
+    return if (divideTo == 0.0) 0
+    else (this.roundToInt() * 100 / divideTo.roundToInt())
 }
 
 

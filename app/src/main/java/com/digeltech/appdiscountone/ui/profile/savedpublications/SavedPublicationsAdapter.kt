@@ -14,6 +14,7 @@ import com.digeltech.appdiscountone.ui.common.model.DealParcelable
 import com.digeltech.appdiscountone.ui.common.removeFromBookmark
 import com.digeltech.appdiscountone.util.capitalizeFirstLetter
 import com.digeltech.appdiscountone.util.copyTextToClipboard
+import com.digeltech.appdiscountone.util.getDiscountText
 import com.digeltech.appdiscountone.util.isNotNullAndNotEmpty
 import com.digeltech.appdiscountone.util.view.*
 
@@ -41,12 +42,13 @@ class SavedPublicationsAdapter(
             with(binding) {
                 item.imageUrl.let(ivDealImage::setImageWithRadius)
 
-                if (item.sale.isNotNullAndNotEmpty()) {
+                if (item.sale.isNotNullAndNotEmpty() && item.sale != "0") {
                     tvPriceWithDiscount.text = item.sale
                     tvPrice.gone()
                 } else {
                     tvPrice.setStrikethrough(item.priceCurrency + item.oldPrice)
-                    tvPriceWithDiscount.text = item.priceCurrency + item.price
+                    tvPriceWithDiscount.text =
+                        getDiscountText(item.oldPrice?.toDouble() ?: 0.0, item.price?.toDouble() ?: 0.0)
                 }
 
                 tvTitle.text = item.title

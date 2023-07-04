@@ -46,7 +46,7 @@ class HomepageMapper {
             publishedDate = publishedDate,
             expirationDate = expirationDate,
             sale = sale,
-            viewsClick = viewsClick,
+            viewsClick = viewsClick ?: 0,
             webLink = webLink
         )
     }
