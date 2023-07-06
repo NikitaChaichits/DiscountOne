@@ -3,6 +3,7 @@ package com.digeltech.appdiscountone.common.base
 import androidx.annotation.MainThread
 import androidx.collection.ArraySet
 import androidx.lifecycle.*
+import com.digeltech.appdiscountone.ui.common.model.DealParcelable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
@@ -16,6 +17,9 @@ open class BaseViewModel : ViewModel() {
     val loading = MutableSharedFlow<Boolean>(replay = 1)
     val error = MutableLiveData<String>()
     val success = MutableLiveData<Boolean>()
+
+    val searchResult = MutableLiveData<List<DealParcelable>>()
+    var searchJob: Job? = null
 
     suspend fun MutableSharedFlow<Boolean>.start() = this.emit(true)
 

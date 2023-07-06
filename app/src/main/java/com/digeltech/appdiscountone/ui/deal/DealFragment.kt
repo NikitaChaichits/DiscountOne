@@ -79,7 +79,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
                 ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_bookmark_deal))
             }
 
-            if (deal.sale.isNotNullAndNotEmpty()) {
+            if (deal.sale.isNotNullAndNotEmpty() && deal.sale != "0") {
                 tvPrice.text = deal.sale
                 tvPriceWithDiscount.gone()
             } else {

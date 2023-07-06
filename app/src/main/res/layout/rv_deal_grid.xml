@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="308dp"
-    android:minWidth="170dp"
+    android:minWidth="154dp"
     android:background="@drawable/shape_deal"
     android:padding="@dimen/common_offset_8dp"
     tools:ignore="ContentDescription">
@@ -24,8 +24,8 @@
         android:background="@drawable/shape_ic_bookmark"
         android:padding="@dimen/common_offset_8dp"
         android:src="@drawable/ic_bookmark"
-        app:layout_constraintEnd_toEndOf="@id/ivDealImage"
-        app:layout_constraintTop_toTopOf="@id/ivDealImage" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvPrice"
@@ -124,7 +124,6 @@
         android:textAllCaps="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/btnCopy"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView

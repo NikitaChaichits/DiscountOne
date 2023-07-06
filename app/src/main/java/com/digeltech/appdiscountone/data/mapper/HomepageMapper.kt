@@ -12,7 +12,7 @@ import com.digeltech.appdiscountone.ui.home.adapter.Banner
 class HomepageMapper {
 
     fun map(data: HomepageDto) = Homepage(
-        listOfBanners = data.listOfBanners.map { it.mapBanner() },
+        listOfBanners = DealsMapper().mapDeals(data.listOfBanners),
         soloBanner = data.soloBanner.first().mapBanner(),
         categories = data.homeCategories.map { it.mapHomeCategories() }
     )

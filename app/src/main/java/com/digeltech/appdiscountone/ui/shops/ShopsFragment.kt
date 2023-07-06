@@ -8,7 +8,9 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.common.base.BaseFragment
 import com.digeltech.appdiscountone.databinding.FragmentShopsBinding
+import com.digeltech.appdiscountone.ui.common.adapter.GridDealAdapter
 import com.digeltech.appdiscountone.ui.common.logOpenShopDeals
+import com.digeltech.appdiscountone.ui.home.HomeFragmentDirections
 import com.digeltech.appdiscountone.ui.shops.adapter.ShopAdapter
 import com.digeltech.appdiscountone.util.view.*
 import com.digeltech.appdiscountone.util.view.recycler.GridOffsetDecoration
@@ -24,7 +26,7 @@ class ShopsFragment : BaseFragment(R.layout.fragment_shops), SearchView.OnQueryT
     override val viewModel: ShopsViewModel by viewModels()
 
     private lateinit var shopAdapter: ShopAdapter
-    private lateinit var searchAdapter: ShopAdapter
+    private lateinit var searchDealAdapter: GridDealAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -42,12 +44,12 @@ class ShopsFragment : BaseFragment(R.layout.fragment_shops), SearchView.OnQueryT
 
     override fun onQueryTextChange(newText: String?): Boolean {
         if (newText.isNullOrEmpty()) {
-            binding.rvSearchShops.invisible()
+            binding.rvSearchDeals.invisible()
             binding.rvShops.visible()
             binding.tvSearchResultEmpty.invisible()
             binding.tvTitle.visible()
         } else {
-            viewModel.searchShops(newText.toString())
+            viewModel.searchDeals(newText.toString())
         }
         return true
     }
@@ -66,19 +68,17 @@ class ShopsFragment : BaseFragment(R.layout.fragment_shops), SearchView.OnQueryT
             )
         )
 
-        searchAdapter = ShopAdapter {
-            navigate(ShopsFragmentDirections.toShopFragment(id = it.first, title = it.second))
-            logOpenShopDeals(it.second)
-            binding.searchView.setQuery("", false)
+        searchDealAdapter = GridDealAdapter {
+            navigate(HomeFragmentDirections.toDealFragment(it))
         }
-        binding.rvSearchShops.adapter = searchAdapter
-        binding.rvSearchShops.addItemDecoration(
+        binding.rvSearchDeals.addItemDecoration(
             GridOffsetDecoration(
                 edgesOffset = 16.px,
                 horizontalOffset = 16.px,
                 verticalOffset = 16.px
             )
         )
+        binding.rvSearchDeals.adapter = searchDealAdapter
     }
 
     private fun initListeners() {
@@ -92,7 +92,7 @@ class ShopsFragment : BaseFragment(R.layout.fragment_shops), SearchView.OnQueryT
         binding.searchView.apply {
             setOnClickListener { onActionViewExpanded() }
             setOnQueryTextListener(this@ShopsFragment)
-            queryHint = getString(R.string.search_by_shops)
+            queryHint = getString(R.string.search_by_deals)
         }
     }
 
@@ -107,13 +107,12 @@ class ShopsFragment : BaseFragment(R.layout.fragment_shops), SearchView.OnQueryT
         viewModel.searchResult.observe(viewLifecycleOwner) {
             if (it.isEmpty() && !binding.searchView.query.isNullOrEmpty()) {
                 binding.tvSearchResultEmpty.visible()
-                binding.tvTitle.invisible()
             } else {
                 binding.tvSearchResultEmpty.invisible()
-                binding.tvTitle.visible()
             }
-            searchAdapter.submitList(it)
-            binding.rvSearchShops.visible()
+            searchDealAdapter.submitList(it)
+            binding.rvSearchDeals.visible()
+            binding.tvTitle.invisible()
             binding.rvShops.invisible()
         }
     }

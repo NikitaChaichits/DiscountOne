@@ -15,6 +15,8 @@ data class DealDto(
     val publishedDate: String,
     @SerializedName("image_url")
     val imageUrl: String?,
+    @SerializedName("image_link")
+    val bannerImageUrl: String?,
     @SerializedName("shop_name")
     val shopName: String?,
     @SerializedName("shop_image_url")

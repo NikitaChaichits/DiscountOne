@@ -5,16 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.digeltech.appdiscountone.common.base.BaseViewModel
 import com.digeltech.appdiscountone.domain.model.CategoryWithDeals
+import com.digeltech.appdiscountone.domain.model.Deal
 import com.digeltech.appdiscountone.ui.common.SEARCH_DELAY
 import com.digeltech.appdiscountone.ui.common.model.DealParcelable
-import com.digeltech.appdiscountone.ui.common.model.toParcelable
 import com.digeltech.appdiscountone.ui.common.model.toParcelableList
 import com.digeltech.appdiscountone.ui.home.adapter.Banner
 import com.digeltech.appdiscountone.ui.home.interactor.HomeInteractor
 import com.digeltech.appdiscountone.util.log
 import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,8 +26,8 @@ class HomeViewModel @Inject constructor(
     private val interactor: HomeInteractor,
 ) : BaseViewModel() {
 
-    private val _banners: MutableLiveData<List<Banner>> = MutableLiveData()
-    val banners: LiveData<List<Banner>> = _banners
+    private val _banners: MutableLiveData<List<Deal>> = MutableLiveData()
+    val banners: LiveData<List<Deal>> = _banners
 
     private val _soloBanner: MutableLiveData<Banner> = MutableLiveData()
     val soloBanner: LiveData<Banner?> = _soloBanner
@@ -38,11 +37,6 @@ class HomeViewModel @Inject constructor(
 
     private val _deal: MutableLiveData<DealParcelable?> = MutableLiveData()
     val deal: LiveData<DealParcelable?> = _deal
-
-    private val _searchResult: MutableLiveData<List<DealParcelable>> = MutableLiveData()
-    val searchResult: LiveData<List<DealParcelable>> = _searchResult
-
-    private var searchJob: Job? = null
 
     init {
         getHomepageData()
@@ -62,20 +56,17 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getDeal(dealId: Int?, categoryId: Int?) {
-        viewModelScope.launchWithLoading {
-            if (dealId != null && categoryId != null) {
-                val deal = interactor.getDeal(dealId = dealId, categoryId = categoryId).toParcelable()
-                _deal.value = deal
-            } else {
-                error.postValue("Cannot load Deal: dealId or categoryId is null")
-            }
-        }
-    }
+//    fun getDeal(dealId: Int?, categoryId: Int?) {
+//        viewModelScope.launchWithLoading {
+//            if (dealId != null && categoryId != null) {
+//                val deal = interactor.getDeal(dealId = dealId, categoryId = categoryId).toParcelable()
+//                _deal.value = deal
+//            } else {
+//                error.postValue("Cannot load Deal: dealId or categoryId is null")
+//            }
+//        }
+//    }
 
-    fun deleteDeal() {
-        _deal.value = null
-    }
 
     fun searchDeals(searchText: String) {
         if (searchJob?.isActive == true) searchJob?.cancel()
@@ -84,7 +75,7 @@ class HomeViewModel @Inject constructor(
             delay(SEARCH_DELAY)
 
             val deals = interactor.searchDeals(searchText)
-            _searchResult.value = deals.toParcelableList()
+            searchResult.value = deals.toParcelableList()
         }
     }
 

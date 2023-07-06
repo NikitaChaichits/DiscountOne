@@ -15,9 +15,15 @@ class DealsRepositoryImpl @Inject constructor(
     private val api: ServerApi,
 ) : DealsRepository {
 
-    override suspend fun getAllDeals(): Result<AllDeals> = withContext(Dispatchers.IO) {
+    override suspend fun getBestDeals(): Result<AllDeals> = withContext(Dispatchers.IO) {
         runCatching {
             DealsMapper().mapAllDeals(api.getBestDeals())
+        }
+    }
+
+    override suspend fun getAllDeals(): Result<List<Deal>> = withContext(Dispatchers.IO) {
+        runCatching {
+            DealsMapper().mapDeals(api.getAllDeals())
         }
     }
 

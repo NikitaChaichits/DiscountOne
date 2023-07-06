@@ -22,9 +22,9 @@ ext {
      * Configuration for app module
      */
 
-    def appVersionMajor = 1
+    def appVersionMajor = 2
     def appVersionPatch = 0
-    def appVersionBuild = 0
+    def appVersionBuild = 2
 
     appConfig = [
 

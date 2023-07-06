@@ -11,7 +11,6 @@ import com.digeltech.appdiscountone.ui.common.model.DealParcelable
 import com.digeltech.appdiscountone.ui.common.model.toParcelableList
 import com.digeltech.appdiscountone.util.log
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,12 +29,8 @@ class DealsViewModel @Inject constructor(
     private val _shops: MutableLiveData<List<Item>> = MutableLiveData()
     val shops: LiveData<List<Item>> = _shops
 
-    private val _searchResult: MutableLiveData<List<DealParcelable>> = MutableLiveData()
-    val searchResult: LiveData<List<DealParcelable>> = _searchResult
-
     private lateinit var allDeals: List<DealParcelable>
 
-    private var searchJob: Job? = null
     private var categorySpinnerPosition = 0
     private var shopSpinnerPosition = 0
 
@@ -45,7 +40,7 @@ class DealsViewModel @Inject constructor(
 
     fun initDeals() {
         viewModelScope.launchWithLoading {
-            dealsRepository.getAllDeals()
+            dealsRepository.getBestDeals()
                 .onSuccess {
                     allDeals = it.posts.toParcelableList()
                     _deals.postValue(it.posts.toParcelableList())
@@ -56,12 +51,24 @@ class DealsViewModel @Inject constructor(
                         categories.add(Item(category.id, category.name))
                         category.child.forEach { childItem ->
                             // yes, hardcode, but for child items customer need padding
-                            categories.add(Item(childItem.id, "      ${childItem.name}"))
+                            categories.add(Item(childItem.id, "• ${childItem.name}"))
                         }
                     }
                     _categories.postValue(categories)
                 }
                 .onFailure { error.postValue(it.toString()) }
+        }
+    }
+
+    fun loadMoreDeals() {
+        viewModelScope.launch {
+            dealsRepository.getAllDeals()
+                .onSuccess {
+                    _deals.postValue(it.toParcelableList())
+                }
+                .onFailure {
+                    dealsRepository.getAllDeals()
+                }
         }
     }
 
@@ -72,7 +79,7 @@ class DealsViewModel @Inject constructor(
             delay(SEARCH_DELAY)
 
             val deals = dealsRepository.searchDeals(searchText)
-            _searchResult.value = deals.toParcelableList()
+            searchResult.value = deals.toParcelableList()
         }
     }
 

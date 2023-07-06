@@ -15,4 +15,6 @@ internal class CategoriesInteractorImpl @Inject constructor(
 
     override suspend fun getCategoryDealsList(categoryId: Int): Result<List<Deal>> =
         dealsRepository.getDealsByCategoryId(categoryId)
+
+    override suspend fun searchDeals(searchText: String): List<Deal> = dealsRepository.searchDeals(searchText)
 }

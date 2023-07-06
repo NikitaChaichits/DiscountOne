@@ -9,8 +9,10 @@ import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.common.base.BaseFragment
 import com.digeltech.appdiscountone.databinding.FragmentCategoriesBinding
 import com.digeltech.appdiscountone.ui.categories.adapter.CategoryAdapter
+import com.digeltech.appdiscountone.ui.common.adapter.GridDealAdapter
 import com.digeltech.appdiscountone.ui.common.logOpenCategoryDeals
 import com.digeltech.appdiscountone.ui.common.logSearch
+import com.digeltech.appdiscountone.ui.home.HomeFragmentDirections
 import com.digeltech.appdiscountone.util.view.invisible
 import com.digeltech.appdiscountone.util.view.px
 import com.digeltech.appdiscountone.util.view.recycler.GridOffsetDecoration
@@ -29,7 +31,8 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories), SearchVie
     override val viewModel: CategoriesViewModel by viewModels()
 
     private lateinit var categoryAdapter: CategoryAdapter
-    private lateinit var searchAdapter: CategoryAdapter
+
+    private lateinit var searchDealAdapter: GridDealAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,13 +50,13 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories), SearchVie
 
     override fun onQueryTextChange(newText: String?): Boolean {
         if (newText.isNullOrEmpty()) {
-            binding.rvSearchCategories.invisible()
+            binding.rvSearchDeals.invisible()
             binding.rvCategories.visible()
             binding.tvSearchResultEmpty.invisible()
             binding.tvTitle.visible()
         } else {
             logSearch(newText.toString())
-            viewModel.searchCategories(newText.toString())
+            viewModel.searchDeals(newText.toString())
         }
         return true
     }
@@ -72,19 +75,17 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories), SearchVie
             )
         )
 
-        searchAdapter = CategoryAdapter {
-            navigate(CategoriesFragmentDirections.toCategoryFragment(id = it.first, title = it.second))
-            logOpenCategoryDeals(it.second)
-            binding.searchView.setQuery("", false)
+        searchDealAdapter = GridDealAdapter {
+            navigate(HomeFragmentDirections.toDealFragment(it))
         }
-        binding.rvSearchCategories.adapter = searchAdapter
-        binding.rvSearchCategories.addItemDecoration(
+        binding.rvSearchDeals.addItemDecoration(
             GridOffsetDecoration(
                 edgesOffset = 16.px,
                 horizontalOffset = 16.px,
                 verticalOffset = 16.px
             )
         )
+        binding.rvSearchDeals.adapter = searchDealAdapter
     }
 
     private fun initListeners() {
@@ -98,7 +99,7 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories), SearchVie
         binding.searchView.apply {
             setOnClickListener { onActionViewExpanded() }
             setOnQueryTextListener(this@CategoriesFragment)
-            queryHint = getString(R.string.search_by_categories)
+            queryHint = getString(R.string.search_by_deals)
         }
     }
 
@@ -111,13 +112,12 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories), SearchVie
         viewModel.searchResult.observe(viewLifecycleOwner) {
             if (it.isEmpty() && !binding.searchView.query.isNullOrEmpty()) {
                 binding.tvSearchResultEmpty.visible()
-                binding.tvTitle.invisible()
             } else {
                 binding.tvSearchResultEmpty.invisible()
-                binding.tvTitle.visible()
             }
-            searchAdapter.submitList(it)
-            binding.rvSearchCategories.visible()
+            searchDealAdapter.submitList(it)
+            binding.rvSearchDeals.visible()
+            binding.tvTitle.invisible()
             binding.rvCategories.invisible()
         }
     }

@@ -9,7 +9,6 @@ import com.digeltech.appdiscountone.ui.common.getListOfBookmarks
 import com.digeltech.appdiscountone.ui.common.model.DealParcelable
 import com.digeltech.appdiscountone.util.log
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,11 +18,6 @@ class SavedPublicationsViewModel @Inject constructor() : BaseViewModel() {
 
     private val _deals: MutableLiveData<List<DealParcelable>> = MutableLiveData()
     val deals: LiveData<List<DealParcelable>> = _deals
-
-    private val _searchResult: MutableLiveData<List<DealParcelable>> = MutableLiveData()
-    val searchResult: LiveData<List<DealParcelable>> = _searchResult
-
-    private var searchJob: Job? = null
 
     fun getSavedPublications() {
         viewModelScope.launch {
@@ -43,7 +37,7 @@ class SavedPublicationsViewModel @Inject constructor() : BaseViewModel() {
                     log("Find this deal ${it.title}")
                 }
             }
-            _searchResult.value = searchResults
+            searchResult.value = searchResults
         }
     }
 }

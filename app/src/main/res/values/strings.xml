@@ -20,7 +20,7 @@
     <string name="added_to_bookmarks">Added to bookmarks</string>
     <string name="removed_from_bookmarks">Removed from bookmarks</string>
     <string name="incorrect_link_message">An error occurred opening the link. Please try again later or report the problem to the Helpdesk.</string>
-    <string name="search_by_deals">Search by deals</string>
+    <string name="search_by_deals">Search deals</string>
     <string name="search_by_coupons">Search by coupons</string>
     <string name="search_by_categories">Search by categories</string>
     <string name="search_by_shops">Search by stores</string>

@@ -6,6 +6,8 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.common.base.BaseFragment
@@ -79,6 +81,19 @@ class DealsFragment : BaseFragment(R.layout.fragment_deals), SearchView.OnQueryT
             )
         )
         binding.rvDeals.adapter = dealAdapter
+
+        val layoutManager = binding.rvDeals.layoutManager as GridLayoutManager
+        binding.rvDeals.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val totalItemCount = layoutManager.itemCount
+                val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
+                if (totalItemCount <= lastVisibleItem + 50) {
+                    viewModel.loadMoreDeals()
+                }
+            }
+        })
 
         searchAdapter = GridDealAdapter {
             viewModel.updateDealViewsClick(it.id.toString())

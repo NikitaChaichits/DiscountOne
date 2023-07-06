@@ -8,12 +8,15 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.digeltech.appdiscountone.R
 import com.digeltech.appdiscountone.databinding.RvBannerBinding
+import com.digeltech.appdiscountone.domain.model.Deal
+import com.digeltech.appdiscountone.ui.common.model.DealParcelable
+import com.digeltech.appdiscountone.ui.common.model.toParcelable
 import com.digeltech.appdiscountone.util.view.setImageWithRadius
 
 
 class BannerAdapter(
-    private val onClickListener: (Pair<Int?, Int?>) -> Unit,
-) : ListAdapter<Banner, BannerAdapter.ItemViewholder>(DiffCallback()) {
+    private val onClickListener: (DealParcelable) -> Unit,
+) : ListAdapter<Deal, BannerAdapter.ItemViewholder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewholder {
         return RvBannerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -31,10 +34,12 @@ class BannerAdapter(
     inner class ItemViewholder(val binding: RvBannerBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Banner) {
+        fun bind(item: Deal) {
             binding.ivBannerImage.apply {
-                setImageWithRadius(item.urlImage, R.dimen.radius_16)
-                setOnClickListener { onClickListener(Pair(item.dealId, item.categoryId)) }
+                item.bannerImageUrl?.let {
+                    setImageWithRadius(item.bannerImageUrl, R.dimen.radius_16)
+                    setOnClickListener { onClickListener(item.toParcelable()) }
+                }
             }
         }
 
@@ -43,10 +48,10 @@ class BannerAdapter(
         }
     }
 
-    class DiffCallback : DiffUtil.ItemCallback<Banner>() {
-        override fun areItemsTheSame(oldItem: Banner, newItem: Banner): Boolean = oldItem.dealId == newItem.dealId
+    class DiffCallback : DiffUtil.ItemCallback<Deal>() {
+        override fun areItemsTheSame(oldItem: Deal, newItem: Deal): Boolean = oldItem.id == newItem.id
 
         @SuppressLint("DiffUtilEquals")
-        override fun areContentsTheSame(oldItem: Banner, newItem: Banner): Boolean = oldItem == newItem
+        override fun areContentsTheSame(oldItem: Deal, newItem: Deal): Boolean = oldItem == newItem
     }
 }

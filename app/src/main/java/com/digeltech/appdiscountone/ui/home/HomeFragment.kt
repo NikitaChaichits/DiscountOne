@@ -79,7 +79,8 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
 
     private fun initAdapters() {
         bannerAdapter = BannerAdapter {
-            viewModel.getDeal(dealId = it.first, categoryId = it.second)
+            viewModel.updateDealViewsClick(it.id.toString())
+            navigate(HomeFragmentDirections.toDealFragment(it))
         }
         binding.rvBanners.adapter = bannerAdapter
 
@@ -132,13 +133,6 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
 //            }
 //        }
         viewModel.categories.observe(viewLifecycleOwner, categoriesAdapter::submitList)
-        viewModel.deal.observe(viewLifecycleOwner) { deal ->
-            deal?.let {
-                viewModel.deleteDeal()
-                viewModel.updateDealViewsClick(it.id.toString())
-                navigate(HomeFragmentDirections.toDealFragment(deal))
-            }
-        }
         viewModel.searchResult.observe(viewLifecycleOwner) {
             if (binding.searchView.query.isNullOrEmpty()) {
                 binding.homeGroup.visible()

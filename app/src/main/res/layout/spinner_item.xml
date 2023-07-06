@@ -5,4 +5,6 @@
     android:background="@drawable/shape_deal"
     android:textSize="@dimen/common_textSize_16sp"
     android:padding="8dip"
+    android:maxLines="1"
+    android:ellipsize="end"
     android:gravity="start" />

@@ -5,7 +5,9 @@ import com.digeltech.appdiscountone.domain.model.Deal
 import com.digeltech.appdiscountone.domain.model.Homepage
 
 interface DealsRepository {
-    suspend fun getAllDeals(): Result<AllDeals>
+    suspend fun getBestDeals(): Result<AllDeals>
+
+    suspend fun getAllDeals(): Result<List<Deal>>
 
     suspend fun getAllCoupons(): Result<List<Deal>>
 

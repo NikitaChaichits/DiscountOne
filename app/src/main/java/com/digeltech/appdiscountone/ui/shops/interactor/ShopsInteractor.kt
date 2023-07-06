@@ -9,4 +9,5 @@ interface ShopsInteractor {
 
     suspend fun getShopDealsList(shopId: Int): Result<List<Deal>>
 
+    suspend fun searchDeals(searchText: String): List<Deal>
 }
