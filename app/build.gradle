@@ -94,20 +94,16 @@ dependencies {
     // Gson
     api appDependencies.gson
 
-    // Retrofit2
+    // Retrofit2 + OkHttp3
     api appDependencies.retrofit
     api appDependencies.retrofitConverterGson
     api appDependencies.retrofitConverterString
-
-    // OkHttp3
     api appDependencies.okHttp
     api appDependencies.okHttpLoggingInterceptor
 
     // Kotlin Coroutines
     api appDependencies.coroutinesCore
     api appDependencies.coroutinesAndroid
-
-    // WorkManager with coroutines
     api appDependencies.coroutineWorkManager
 
     // Paging
@@ -128,16 +124,18 @@ dependencies {
 
     //Tests
     testImplementation appDependencies.junit
-    testImplementation appDependencies.jupiter
     testImplementation appDependencies.mock
     androidTestImplementation appDependencies.junitExt
-    androidTestImplementation appDependencies.espresso
 
     //ImagePicker for Camera
     implementation 'com.github.dhaval2404:imagepicker:2.1'
 
     //Cache
     implementation 'com.orhanobut:hawk:2.0.1'
+
+    //In-App Updates
+//    implementation appDependencies.googlePlayCore
+    implementation appDependencies.googlePlayAppUpdate
 }
 
 android.applicationVariants.all { variant ->

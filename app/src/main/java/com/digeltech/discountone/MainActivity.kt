@@ -8,18 +8,27 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.digeltech.discountone.data.source.local.SharedPreferencesDataSource
 import com.digeltech.discountone.databinding.ActivityMainBinding
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.InstallStateUpdatedListener
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.InstallStatus
+import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
 
+private const val UPDATE_CODE = 100
+
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
     private lateinit var prefs: SharedPreferencesDataSource
+    private lateinit var appUpdateManager: AppUpdateManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +42,59 @@ class MainActivity : AppCompatActivity() {
             prefs.setFirstLaunch(false)
         }
 
+        appUpdateManager = AppUpdateManagerFactory.create(baseContext)
+
+        checkForUpdates()
+        setupNavigation()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        appUpdateManager
+            .appUpdateInfo
+            .addOnSuccessListener { appUpdateInfo ->
+                if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
+                    popupSnackbarForCompleteUpdate()
+                }
+            }
+    }
+
+    private fun checkForUpdates() {
+        val listener = InstallStateUpdatedListener { installState ->
+            if (installState.installStatus() == InstallStatus.DOWNLOADED) {
+                popupSnackbarForCompleteUpdate()
+            }
+        }
+
+        appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
+            ) {
+                appUpdateManager.registerListener(listener)
+                appUpdateManager.startUpdateFlowForResult(
+                    appUpdateInfo,
+                    AppUpdateType.FLEXIBLE,
+                    this,
+                    UPDATE_CODE
+                )
+            }
+        }
+    }
+
+    private fun popupSnackbarForCompleteUpdate() {
+        Snackbar.make(
+            findViewById(R.id.navigationHost),
+            "An update has just been downloaded.",
+            Snackbar.LENGTH_INDEFINITE
+        ).apply {
+            setAction("RESTART") { appUpdateManager.completeUpdate() }
+            setActionTextColor(resources.getColor(R.color.black))
+            show()
+        }
+    }
+
+    private fun setupNavigation() {
         val navFragment =
             supportFragmentManager.findFragmentById(R.id.navigationHost) as NavHostFragment
         val navController = navFragment.navController
