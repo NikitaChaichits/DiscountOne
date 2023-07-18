@@ -41,6 +41,7 @@ android {
 
     buildTypes {
         release {
+            debuggable false
             minifyEnabled false
             shrinkResources false
             signingConfig signingConfigs.release
@@ -67,9 +68,6 @@ android {
 }
 
 dependencies {
-    // libs
-    implementation files('libs/mysql-connector-java-5.1.38.jar')
-
     // Common
     api globalDependencies.coreKtx
     api appDependencies.constraintLayout

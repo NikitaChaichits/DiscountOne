@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/splashFragment">
+    app:startDestination="@id/categoriesFragment">
 
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.digeltech.appdiscountone.ui.splash.SplashFragment"
+        android:name="com.digeltech.discountone.ui.splash.SplashFragment"
         android:label="Splash"
         tools:layout="@layout/fragment_splash">
         <action
@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.digeltech.appdiscountone.ui.home.HomeFragment"
+        android:name="com.digeltech.discountone.ui.home.HomeFragment"
         android:label="@string/nav_home"
         tools:layout="@layout/fragment_home">
         <action
@@ -45,7 +45,7 @@
 
     <fragment
         android:id="@+id/categoriesFragment"
-        android:name="com.digeltech.appdiscountone.ui.categories.CategoriesFragment"
+        android:name="com.digeltech.discountone.ui.categories.CategoriesFragment"
         android:label="@string/nav_categories"
         tools:layout="@layout/fragment_categories">
         <action
@@ -68,7 +68,7 @@
 
     <fragment
         android:id="@+id/categoryAndShopFragment"
-        android:name="com.digeltech.appdiscountone.ui.categories.categoryandshop.CategoryAndShopFragment"
+        android:name="com.digeltech.discountone.ui.categories.categoryandshop.CategoryAndShopFragment"
         android:label="@string/nav_categories"
         tools:layout="@layout/fragment_category_and_shop">
         <argument
@@ -87,13 +87,13 @@
             app:destination="@id/dealFragment">
             <argument
                 android:name="deal"
-                app:argType="com.digeltech.appdiscountone.ui.common.model.DealParcelable" />
+                app:argType="com.digeltech.discountone.ui.common.model.DealParcelable" />
         </action>
     </fragment>
 
     <fragment
         android:id="@+id/dealsFragment"
-        android:name="com.digeltech.appdiscountone.ui.alldeals.DealsFragment"
+        android:name="com.digeltech.discountone.ui.alldeals.DealsFragment"
         android:label="@string/nav_deals"
         tools:layout="@layout/fragment_deals">
         <action
@@ -104,7 +104,7 @@
             app:destination="@id/dealFragment">
             <argument
                 android:name="deal"
-                app:argType="com.digeltech.appdiscountone.ui.common.model.DealParcelable" />
+                app:argType="com.digeltech.discountone.ui.common.model.DealParcelable" />
         </action>
         <action
             android:id="@+id/toStartFragment"
@@ -113,12 +113,12 @@
 
     <fragment
         android:id="@+id/dealFragment"
-        android:name="com.digeltech.appdiscountone.ui.deal.DealFragment"
+        android:name="com.digeltech.discountone.ui.deal.DealFragment"
         android:label="Deals"
         tools:layout="@layout/fragment_deal">
         <argument
             android:name="deal"
-            app:argType="com.digeltech.appdiscountone.ui.common.model.DealParcelable" />
+            app:argType="com.digeltech.discountone.ui.common.model.DealParcelable" />
         <action
             android:id="@+id/toCategoriesFragment"
             app:destination="@id/categoriesFragment" />
@@ -150,7 +150,7 @@
 
     <fragment
         android:id="@+id/shopsFragment"
-        android:name="com.digeltech.appdiscountone.ui.shops.ShopsFragment"
+        android:name="com.digeltech.discountone.ui.shops.ShopsFragment"
         android:label="@string/nav_shops"
         tools:layout="@layout/fragment_shops">
         <action
@@ -177,7 +177,7 @@
 
     <fragment
         android:id="@+id/couponsFragment"
-        android:name="com.digeltech.appdiscountone.ui.coupons.CouponsFragment"
+        android:name="com.digeltech.discountone.ui.coupons.CouponsFragment"
         android:label="@string/nav_coupons"
         tools:layout="@layout/fragment_coupons">
         <action
@@ -188,7 +188,7 @@
             app:destination="@id/dealFragment">
             <argument
                 android:name="deal"
-                app:argType="com.digeltech.appdiscountone.ui.common.model.DealParcelable" />
+                app:argType="com.digeltech.discountone.ui.common.model.DealParcelable" />
         </action>
         <action
             android:id="@+id/toStartFragment"
@@ -197,7 +197,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.digeltech.appdiscountone.ui.auth.login.LoginFragment"
+        android:name="com.digeltech.discountone.ui.auth.login.LoginFragment"
         android:label="LoginFragment"
         tools:layout="@layout/fragment_login">
         <action
@@ -210,7 +210,7 @@
 
     <fragment
         android:id="@+id/newAccountFragment"
-        android:name="com.digeltech.appdiscountone.ui.auth.newaccount.NewAccountFragment"
+        android:name="com.digeltech.discountone.ui.auth.newaccount.NewAccountFragment"
         android:label="NewAccountFragment"
         tools:layout="@layout/fragment_new_account">
         <action
@@ -220,7 +220,7 @@
 
     <fragment
         android:id="@+id/startFragment"
-        android:name="com.digeltech.appdiscountone.ui.auth.start.StartFragment"
+        android:name="com.digeltech.discountone.ui.auth.start.StartFragment"
         android:label="StartFragment"
         tools:layout="@layout/fragment_start">
         <action
@@ -233,7 +233,7 @@
 
     <fragment
         android:id="@+id/forgotPasswordFragment"
-        android:name="com.digeltech.appdiscountone.ui.auth.forgot.ForgotPasswordFragment"
+        android:name="com.digeltech.discountone.ui.auth.forgot.ForgotPasswordFragment"
         android:label="ForgotPasswordFragment"
         tools:layout="@layout/fragment_forgot_password">
         <action
@@ -247,7 +247,7 @@
 
     <fragment
         android:id="@+id/recoveryPasswordFragment"
-        android:name="com.digeltech.appdiscountone.ui.auth.recovery.RecoveryPasswordFragment"
+        android:name="com.digeltech.discountone.ui.auth.recovery.RecoveryPasswordFragment"
         android:label="RecoveryPasswordFragment"
         tools:layout="@layout/fragment_recovery_password">
         <action
@@ -260,7 +260,7 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.digeltech.appdiscountone.ui.profile.profile.ProfileFragment"
+        android:name="com.digeltech.discountone.ui.profile.profile.ProfileFragment"
         android:label="ProfileFragment"
         tools:layout="@layout/fragment_profile">
         <action
@@ -276,7 +276,7 @@
 
     <fragment
         android:id="@+id/onboardingFragment"
-        android:name="com.digeltech.appdiscountone.ui.auth.onboarding.OnboardingFragment"
+        android:name="com.digeltech.discountone.ui.auth.onboarding.OnboardingFragment"
         android:label="OnboardingFragment"
         tools:layout="@layout/fragment_onboarding">
         <action
@@ -286,13 +286,13 @@
 
     <fragment
         android:id="@+id/profileDataFragment"
-        android:name="com.digeltech.appdiscountone.ui.profile.profiledata.ProfileDataFragment"
+        android:name="com.digeltech.discountone.ui.profile.profiledata.ProfileDataFragment"
         android:label="ProfileDataFragment"
         tools:layout="@layout/fragment_profile_data" />
 
     <fragment
         android:id="@+id/savedPublicationsFragment"
-        android:name="com.digeltech.appdiscountone.ui.profile.savedpublications.SavedPublicationsFragment"
+        android:name="com.digeltech.discountone.ui.profile.savedpublications.SavedPublicationsFragment"
         android:label="SavedPublicationsFragment"
         tools:layout="@layout/fragment_saved_publications">
         <action
@@ -300,7 +300,7 @@
             app:destination="@id/dealFragment">
             <argument
                 android:name="deal"
-                app:argType="com.digeltech.appdiscountone.ui.common.model.DealParcelable" />
+                app:argType="com.digeltech.discountone.ui.common.model.DealParcelable" />
         </action>
     </fragment>
 

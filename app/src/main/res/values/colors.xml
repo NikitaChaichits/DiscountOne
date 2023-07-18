@@ -22,5 +22,7 @@
     <color name="defaultColor">#000</color>
     <color name="statusBarColor">#FFF</color>
     <color name="bgDealColor">#F7F8FA</color>
+    <color name="bgCategories">#ECEDEF</color>
+    <color name="bgSubcategories">#F3F4F6</color>
     <color name="bgBookmark">#FFF</color>
 </resources>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="66dp"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/ivIcon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginVertical="@dimen/common_offset_8dp"
+        android:layout_marginStart="@dimen/common_offset_24dp"
+        tools:src="@drawable/ic_profile" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginHorizontal="@dimen/common_offset_8dp"
+        android:textColor="@color/defaultColor"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="Card title" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

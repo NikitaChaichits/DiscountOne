@@ -2,4 +2,4 @@
     public *;
 }
 
--keep class com.digeltech.appdiscountone.domain.model.** { *; }
+-keep class com.digeltech.discountone.domain.model.** { *; }

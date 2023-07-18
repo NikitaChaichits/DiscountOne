@@ -1,15 +1,13 @@
 /**
  * This file defines all project dependencies
  */
-
-
 ext {
 
     def libraryVersions = [
 
-            androidGradlePluginVersion : '7.3.0',
+            androidGradlePluginVersion : '7.3.1',
             kotlinGradlePluginVersion  : '1.8.0',
-            googleServices             : '4.3.10',
+            googleServices             : '4.3.14',
 
             coreKtxVersion             : '1.9.0',
             constraintLayoutVersion    : '2.2.0-alpha07',
