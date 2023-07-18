@@ -13,31 +13,17 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/common_offset_16dp"
         android:layout_marginTop="@dimen/common_offset_24dp"
-        tools:text="@string/fr_home_title"
+        tools:text="Category Title"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tvMoreDeals"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/common_offset_16dp"
-        android:text="@string/fr_deal_similar_more_deals"
-        android:textColor="@color/colorPrimary"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/tvCategoryTitle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvCategoryTitle" />
-
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvDeals"
+        android:id="@+id/rvSubcategories"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_offset_24dp"
-        android:layout_marginStart="@dimen/common_offset_16dp"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="1"
         app:layout_constraintTop_toBottomOf="@id/tvCategoryTitle"
         tools:itemCount="3"
-        tools:listitem="@layout/rv_deal_linear" />
+        tools:listitem="@layout/rv_home_subcategories" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

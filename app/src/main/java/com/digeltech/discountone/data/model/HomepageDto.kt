@@ -7,6 +7,8 @@ data class HomepageDto(
     val listOfBanners: List<DealDto>,
     @SerializedName("slider_3")
     val soloBanner: List<BannerDto>,
+    @SerializedName("best-deals")
+    val bestDeals: List<CategoryWithItemsDto>,
     @SerializedName("cat_with_posts")
-    val homeCategories: List<CategoryWithItemsDto>,
+    val categories: List<CategoryWithSubcategoriesDto>,
 )

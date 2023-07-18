@@ -1,10 +1,8 @@
 package com.digeltech.discountone.data.mapper
 
-import com.digeltech.discountone.data.model.BannerDto
-import com.digeltech.discountone.data.model.CategoryWithItemsDto
-import com.digeltech.discountone.data.model.DealDto
-import com.digeltech.discountone.data.model.HomepageDto
+import com.digeltech.discountone.data.model.*
 import com.digeltech.discountone.domain.model.CategoryWithDeals
+import com.digeltech.discountone.domain.model.CategoryWithSubcategories
 import com.digeltech.discountone.domain.model.Deal
 import com.digeltech.discountone.domain.model.Homepage
 import com.digeltech.discountone.ui.home.adapter.Banner
@@ -14,7 +12,8 @@ class HomepageMapper {
     fun map(data: HomepageDto) = Homepage(
         listOfBanners = DealsMapper().mapDeals(data.listOfBanners),
         soloBanner = data.soloBanner.first().mapBanner(),
-        categories = data.homeCategories.map { it.mapHomeCategories() }
+        bestDeals = data.bestDeals.first().mapCategories(),
+        categories = data.categories.map { it.mapCategories() }
     )
 
     private fun BannerDto.mapBanner() = Banner(
@@ -23,10 +22,16 @@ class HomepageMapper {
         categoryId = categoryId
     )
 
-    private fun CategoryWithItemsDto.mapHomeCategories() = CategoryWithDeals(
+    private fun CategoryWithItemsDto.mapCategories() = CategoryWithDeals(
         id = id,
         name = name,
         items = items.map { it.mapToDeal(id) }
+    )
+
+    private fun CategoryWithSubcategoriesDto.mapCategories() = CategoryWithSubcategories(
+        id = id,
+        name = name,
+        subcategories = subcategories.map { it.mapCategories() }
     )
 
     private fun DealDto.mapToDeal(categoryId: Int): Deal {

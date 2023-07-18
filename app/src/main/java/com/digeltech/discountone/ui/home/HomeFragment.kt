@@ -9,6 +9,7 @@ import com.digeltech.discountone.R
 import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentHomeBinding
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
+import com.digeltech.discountone.ui.common.adapter.LinearDealAdapter
 import com.digeltech.discountone.ui.common.logSearch
 import com.digeltech.discountone.ui.home.adapter.BannerAdapter
 import com.digeltech.discountone.ui.home.adapter.CategoriesAdapter
@@ -27,6 +28,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
     override val viewModel: HomeViewModel by viewModels()
 
     private lateinit var bannerAdapter: BannerAdapter
+    private lateinit var bestDealsAdapter: LinearDealAdapter
     private lateinit var categoriesAdapter: CategoriesAdapter
     private lateinit var searchDealAdapter: GridDealAdapter
     private lateinit var autoScrollHelper: AutoScrollHelper
@@ -76,6 +78,9 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
             setOnQueryTextListener(this@HomeFragment)
             queryHint = getString(R.string.search_by_deals)
         }
+        binding.tvMoreBestDeals.setOnClickListener {
+            navigate(R.id.dealsFragment)
+        }
     }
 
     private fun initAdapters() {
@@ -90,8 +95,13 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         cyclicScrollHelper.enableCyclicScroll(binding.rvBanners)
         autoScrollHelper.startAutoScroll()
 
+        bestDealsAdapter = LinearDealAdapter {
+            viewModel.updateDealViewsClick(it.id.toString())
+            navigate(HomeFragmentDirections.toDealFragment(it))
+        }
+        binding.rvBestDeals.adapter = bestDealsAdapter
+
         categoriesAdapter = CategoriesAdapter(
-            { navigate(R.id.dealsFragment) },
             { navigate(HomeFragmentDirections.toCategoryFragment(id = it.id, title = it.name)) },
             {
                 viewModel.updateDealViewsClick(it.id.toString())
@@ -139,6 +149,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
 //
 //            }
 //        }
+        viewModel.bestDeals.observe(viewLifecycleOwner, bestDealsAdapter::submitList)
         viewModel.categories.observe(viewLifecycleOwner, categoriesAdapter::submitList)
         viewModel.searchResult.observe(viewLifecycleOwner) {
             if (binding.searchView.query.isNullOrEmpty()) {

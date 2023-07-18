@@ -6,19 +6,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.digeltech.discountone.R
 import com.digeltech.discountone.databinding.RvHomeCategoriesBinding
-import com.digeltech.discountone.domain.model.CategoryWithDeals
-import com.digeltech.discountone.ui.common.adapter.LinearDealAdapter
+import com.digeltech.discountone.domain.model.CategoryWithSubcategories
 import com.digeltech.discountone.ui.common.model.CategoryWithDealsParcelable
 import com.digeltech.discountone.ui.common.model.DealParcelable
-import com.digeltech.discountone.ui.common.model.toParcelableList
 
 class CategoriesAdapter(
-    private val onBestDealsClick: () -> Unit,
     private val onMoreDealsClick: (category: CategoryWithDealsParcelable) -> Unit,
     private val onDealClick: (deal: DealParcelable) -> Unit,
-) : ListAdapter<CategoryWithDeals, CategoriesAdapter.ItemViewholder>(DiffCallback()) {
+) : ListAdapter<CategoryWithSubcategories, CategoriesAdapter.ItemViewholder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewholder {
         return RvHomeCategoriesBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -36,32 +32,34 @@ class CategoriesAdapter(
     inner class ItemViewholder(val binding: RvHomeCategoriesBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: CategoryWithDeals) {
+        fun bind(item: CategoryWithSubcategories) {
             with(binding) {
-                tvCategoryTitle.text = item.name
-                tvMoreDeals.setOnClickListener {
-                    if (item.name.equals(it.context.getString(R.string.nav_deals), true))
-                        onBestDealsClick()
-                    else
-                        onMoreDealsClick(item.toParcelableList())
-                }
+                tvCategoryTitle.text = "${item.name}:"
 
-                val dealsAdapter = LinearDealAdapter { onDealClick(it) }
+                val subcategoriesAdapter = SubcategoriesAdapter(
+                    onMoreDealsClick = {
+                        onMoreDealsClick(it)
+                    },
+                    onDealClick = {
+                        onDealClick(it)
+                    })
 
-                dealsAdapter.submitList(item.items.toParcelableList())
-                rvDeals.adapter = dealsAdapter
+                subcategoriesAdapter.submitList(item.subcategories)
+                rvSubcategories.adapter = subcategoriesAdapter
             }
         }
 
         fun unbind() = Unit
     }
 
-    class DiffCallback : DiffUtil.ItemCallback<CategoryWithDeals>() {
-        override fun areItemsTheSame(oldItem: CategoryWithDeals, newItem: CategoryWithDeals): Boolean =
+    class DiffCallback : DiffUtil.ItemCallback<CategoryWithSubcategories>() {
+        override fun areItemsTheSame(oldItem: CategoryWithSubcategories, newItem: CategoryWithSubcategories): Boolean =
             oldItem.id == newItem.id
 
         @SuppressLint("DiffUtilEquals")
-        override fun areContentsTheSame(oldItem: CategoryWithDeals, newItem: CategoryWithDeals): Boolean =
-            oldItem == newItem
+        override fun areContentsTheSame(
+            oldItem: CategoryWithSubcategories,
+            newItem: CategoryWithSubcategories
+        ): Boolean = oldItem == newItem
     }
 }

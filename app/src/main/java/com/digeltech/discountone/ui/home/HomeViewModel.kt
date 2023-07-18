@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.digeltech.discountone.common.base.BaseViewModel
-import com.digeltech.discountone.domain.model.CategoryWithDeals
+import com.digeltech.discountone.domain.model.CategoryWithSubcategories
 import com.digeltech.discountone.domain.model.Deal
 import com.digeltech.discountone.ui.common.SEARCH_DELAY
 import com.digeltech.discountone.ui.common.model.DealParcelable
@@ -32,22 +32,23 @@ class HomeViewModel @Inject constructor(
     private val _soloBanner: MutableLiveData<Banner> = MutableLiveData()
     val soloBanner: LiveData<Banner?> = _soloBanner
 
-    private val _categories: MutableLiveData<List<CategoryWithDeals>> = MutableLiveData()
-    val categories: LiveData<List<CategoryWithDeals>> = _categories
+    private val _bestDeals: MutableLiveData<List<DealParcelable>> = MutableLiveData()
+    val bestDeals: LiveData<List<DealParcelable>> = _bestDeals
 
-    private val _deal: MutableLiveData<DealParcelable?> = MutableLiveData()
-    val deal: LiveData<DealParcelable?> = _deal
+    private val _categories: MutableLiveData<List<CategoryWithSubcategories>> = MutableLiveData()
+    val categories: LiveData<List<CategoryWithSubcategories>> = _categories
 
     init {
         getHomepageData()
     }
 
-    fun getHomepageData() {
+    private fun getHomepageData() {
         viewModelScope.launch {
             loadingGifVisibility.value = true
             interactor.getHomepage().onSuccess {
                 _soloBanner.value = it.soloBanner
                 _banners.value = it.listOfBanners
+                _bestDeals.value = it.bestDeals.items.toParcelableList()
                 _categories.value = it.categories
                 Hawk.put(KEY_HOMEPAGE_DATA, it)
             }.onFailure {
@@ -57,18 +58,6 @@ class HomeViewModel @Inject constructor(
             loadingGifVisibility.value = false
         }
     }
-
-//    fun getDeal(dealId: Int?, categoryId: Int?) {
-//        viewModelScope.launchWithLoading {
-//            if (dealId != null && categoryId != null) {
-//                val deal = interactor.getDeal(dealId = dealId, categoryId = categoryId).toParcelable()
-//                _deal.value = deal
-//            } else {
-//                error.postValue("Cannot load Deal: dealId or categoryId is null")
-//            }
-//        }
-//    }
-
 
     fun searchDeals(searchText: String) {
         if (searchJob?.isActive == true) searchJob?.cancel()

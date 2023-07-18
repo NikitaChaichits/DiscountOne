@@ -38,3 +38,12 @@ data class CategoryWithItemsDto(
     @SerializedName("post")
     val items: List<DealDto>,
 )
+
+data class CategoryWithSubcategoriesDto(
+    @SerializedName("category_id")
+    val id: Int,
+    @SerializedName("category_name")
+    val name: String,
+    @SerializedName("subcategories")
+    val subcategories: List<CategoryWithItemsDto>,
+)

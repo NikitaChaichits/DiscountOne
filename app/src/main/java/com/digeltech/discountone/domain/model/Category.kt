@@ -22,3 +22,9 @@ data class CategoryWithDeals(
     val name: String,
     val items: List<Deal>
 )
+
+data class CategoryWithSubcategories(
+    val id: Int,
+    val name: String,
+    val subcategories: List<CategoryWithDeals>,
+)
