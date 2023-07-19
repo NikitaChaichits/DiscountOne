@@ -21,7 +21,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginHorizontal="@dimen/common_offset_8dp"
         android:textColor="@color/defaultColor"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:textStyle="bold"
         tools:text="Card title" />
 

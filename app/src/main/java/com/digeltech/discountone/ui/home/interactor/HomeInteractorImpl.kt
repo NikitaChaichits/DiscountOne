@@ -9,9 +9,7 @@ internal class HomeInteractorImpl @Inject constructor(
     private val dealsRepository: DealsRepository,
 ) : HomeInteractor {
 
-    override suspend fun getHomepage(): Result<Homepage> {
-        return dealsRepository.getHomepage()
-    }
+    override suspend fun getHomepage(): Result<Homepage> = dealsRepository.getHomepage()
 
     override suspend fun getDeal(dealId: Int, categoryId: Int): Deal =
         dealsRepository.getDealById(dealId = dealId, categoryId = categoryId)

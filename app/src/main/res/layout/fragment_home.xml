@@ -81,6 +81,7 @@
             android:layout_marginHorizontal="@dimen/common_offset_16dp"
             android:layout_marginTop="@dimen/common_offset_16dp"
             android:text="@string/fr_home_title"
+            android:visibility="invisible"
             app:layout_constraintTop_toBottomOf="@id/rvBanners" />
 
         <TextView
@@ -91,6 +92,7 @@
             android:text="@string/fr_deal_similar_more_deals"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@id/tvBestDealsTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tvBestDealsTitle" />

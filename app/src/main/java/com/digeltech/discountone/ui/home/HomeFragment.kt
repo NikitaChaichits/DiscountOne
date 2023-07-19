@@ -149,7 +149,11 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
 //
 //            }
 //        }
-        viewModel.bestDeals.observe(viewLifecycleOwner, bestDealsAdapter::submitList)
+        viewModel.bestDeals.observe(viewLifecycleOwner) {
+            binding.tvMoreBestDeals.visible()
+            binding.tvBestDealsTitle.visible()
+            bestDealsAdapter.submitList(it)
+        }
         viewModel.categories.observe(viewLifecycleOwner, categoriesAdapter::submitList)
         viewModel.searchResult.observe(viewLifecycleOwner) {
             if (binding.searchView.query.isNullOrEmpty()) {

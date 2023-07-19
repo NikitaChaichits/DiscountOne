@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvSubcategories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/common_offset_4dp"
+        android:layout_marginTop="85dp"
+        android:layout_marginBottom="13dp"
+        android:background="@drawable/bg_subcategory"
+        android:paddingVertical="@dimen/common_offset_16dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:spanCount="2"
+        tools:itemCount="6"
+        tools:listitem="@layout/rv_subcategory" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/categoryFirst"
+        android:layout_width="0dp"
+        android:layout_height="95dp"
+        android:background="@drawable/bg_category"
+        android:layout_marginEnd="@dimen/common_offset_8dp"
+        app:layout_constraintEnd_toStartOf="@id/categorySecond"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvTitleOdd"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/common_offset_8dp"
+            android:layout_marginTop="@dimen/common_offset_8dp"
+            android:maxLines="2"
+            android:textColor="@color/defaultColor"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Card title" />
+
+        <TextView
+            android:id="@+id/tvSubtitleOdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/common_offset_8dp"
+            android:textSize="@dimen/common_textSize_8sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvTitleOdd"
+            tools:text="10 publications" />
+
+        <ImageView
+            android:id="@+id/ivIconOdd"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="@dimen/common_offset_8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/categorySecond"
+        android:layout_width="0dp"
+        android:layout_height="95dp"
+        android:background="@drawable/bg_category"
+        android:layout_marginStart="@dimen/common_offset_8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@id/categoryFirst"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvTitleEven"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/common_offset_8dp"
+            android:layout_marginTop="@dimen/common_offset_8dp"
+            android:maxLines="2"
+            android:textColor="@color/defaultColor"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Card title" />
+
+        <TextView
+            android:id="@+id/tvSubtitleEven"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/common_offset_8dp"
+            android:textSize="@dimen/common_textSize_8sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvTitleEven"
+            tools:text="10 publications" />
+
+        <ImageView
+            android:id="@+id/ivIconEven"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="@dimen/common_offset_8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/ivArrow"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+        android:layout_marginHorizontal="@dimen/common_offset_4dp"
+        android:background="@drawable/bg_subcategory_arrow"
+        android:src="@drawable/ic_arrow_up_subcategory"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/grSubcategories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="rvSubcategories, ivArrow" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

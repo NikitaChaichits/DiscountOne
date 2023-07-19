@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.digeltech.discountone.databinding.RvCategoryBinding
+import com.digeltech.discountone.databinding.RvCategoryOldBinding
 import com.digeltech.discountone.domain.model.Category
 import com.digeltech.discountone.util.createFadeTransition
 import com.digeltech.discountone.util.view.gone
@@ -19,7 +19,7 @@ class CategoryAdapter(
 ) : ListAdapter<Pair<Category, Category?>, CategoryAdapter.ItemViewholder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewholder {
-        return RvCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return RvCategoryOldBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             .let(::ItemViewholder)
     }
 
@@ -31,30 +31,32 @@ class CategoryAdapter(
         holder.unbind()
     }
 
-    inner class ItemViewholder(val binding: RvCategoryBinding) :
+    inner class ItemViewholder(val binding: RvCategoryOldBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Pair<Category, Category?>) {
             with(binding) {
                 tvTitleOdd.text = item.first.name
+                tvSubtitleOdd.text = "${item.first.countOfItems} publications"
                 item.first.icon?.let(ivIconOdd::loadImage)
                 if (item.second != null) {
                     tvTitleEven.text = item.second?.name
+                    tvSubtitleEven.text = "${item.first.countOfItems} publications"
                     item.second?.icon?.let(ivIconEven::loadImage)
-                    subcategorySecond.visible()
+                    categorySecond.visible()
                 } else {
-                    subcategorySecond.invisible()
+                    categorySecond.invisible()
                 }
                 val subcategoryAdapter = SubcategoryAdapter {
                     onSubcategoryClickListener(Pair(it.first, it.second))
                 }
                 rvSubcategories.adapter = subcategoryAdapter
 
-                subcategoryFirst.setOnClickListener {
+                categoryFirst.setOnClickListener {
                     subcategoryAdapter.submitList(item.first.subcategory)
                     createFadeTransition(root, grSubcategories)
                 }
-                subcategorySecond.setOnClickListener {
+                categorySecond.setOnClickListener {
                     subcategoryAdapter.submitList(item.second?.subcategory)
                     createFadeTransition(root, grSubcategories)
                 }
