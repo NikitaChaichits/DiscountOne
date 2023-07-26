@@ -8,6 +8,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.digeltech.discountone.data.source.local.SharedPreferencesDataSource
 import com.digeltech.discountone.databinding.ActivityMainBinding
+import com.digeltech.discountone.ui.home.KEY_HOMEPAGE_DATA
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
@@ -41,6 +42,7 @@ class MainActivity : AppCompatActivity() {
             Hawk.deleteAll()
             prefs.setFirstLaunch(false)
         }
+        Hawk.delete(KEY_HOMEPAGE_DATA)
 
         appUpdateManager = AppUpdateManagerFactory.create(baseContext)
 

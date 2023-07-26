@@ -43,7 +43,7 @@ class SubcategoriesAdapter(
 
                 val dealsAdapter = LinearDealAdapter { onDealClick(it) }
 
-                dealsAdapter.submitList(item.items.toParcelableList())
+                dealsAdapter.submitList(item.items.take(5).toParcelableList())
                 rvDeals.adapter = dealsAdapter
             }
         }

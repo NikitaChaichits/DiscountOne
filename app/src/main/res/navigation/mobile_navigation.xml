@@ -37,6 +37,10 @@
             <argument
                 android:name="title"
                 app:argType="string" />
+            <argument
+                android:name="isFromCategory"
+                app:argType="boolean"
+                android:defaultValue="true" />
         </action>
         <action
             android:id="@+id/toStartFragment"

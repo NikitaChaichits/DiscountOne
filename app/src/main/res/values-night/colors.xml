@@ -14,7 +14,6 @@
     <color name="grey">#A5ABB8</color>
     <color name="light_description">#7B818C</color>
     <color name="grey_border">#DFE1E5</color>
-    <color name="bg_card">#F7F8FA</color>
 
     <color name="red">#EF4444</color>
     <color name="green">#22C55E</color>
@@ -23,5 +22,7 @@
     <color name="defaultColor">#FFF</color>
     <color name="statusBarColor">#000</color>
     <color name="bgDealColor">#282B30</color>
+    <color name="bgCategories">#282B30</color>
+    <color name="bgSubcategories">#45454A</color>
     <color name="bgBookmark">#141619</color>
 </resources>

@@ -4,15 +4,19 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.discountone.R
 import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentHomeBinding
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
 import com.digeltech.discountone.ui.common.adapter.LinearDealAdapter
+import com.digeltech.discountone.ui.common.getShopIdByName
 import com.digeltech.discountone.ui.common.logSearch
 import com.digeltech.discountone.ui.home.adapter.BannerAdapter
 import com.digeltech.discountone.ui.home.adapter.CategoriesAdapter
+import com.digeltech.discountone.ui.home.adapter.CategoryPaginator
 import com.digeltech.discountone.util.view.*
 import com.digeltech.discountone.util.view.recycler.AutoScrollHelper
 import com.digeltech.discountone.util.view.recycler.CyclicScrollHelper
@@ -20,6 +24,7 @@ import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTextListener {
@@ -34,16 +39,19 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
     private lateinit var autoScrollHelper: AutoScrollHelper
     private lateinit var cyclicScrollHelper: CyclicScrollHelper
 
+    private lateinit var categoryPaginator: CategoryPaginator
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.getHomepageData()
         loadProfileImage()
 
         initAdapters()
         initListeners()
+        observeData()
 
         binding.ivLoading.loadGif()
-        observeData()
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean = false
@@ -84,9 +92,16 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
     }
 
     private fun initAdapters() {
+        // scrolling horizontal RV for banners
         bannerAdapter = BannerAdapter {
             viewModel.updateDealViewsClick(it.id.toString())
-            navigate(HomeFragmentDirections.toDealFragment(it))
+            navigate(
+                HomeFragmentDirections.toCategoryFragment(
+                    id = getShopIdByName(it.shopName),
+                    title = it.shopName,
+                    isFromCategory = false
+                )
+            )
         }
         binding.rvBanners.adapter = bannerAdapter
 
@@ -95,12 +110,15 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         cyclicScrollHelper.enableCyclicScroll(binding.rvBanners)
         autoScrollHelper.startAutoScroll()
 
+        // Linear horizontal RV for best deals
         bestDealsAdapter = LinearDealAdapter {
             viewModel.updateDealViewsClick(it.id.toString())
             navigate(HomeFragmentDirections.toDealFragment(it))
         }
         binding.rvBestDeals.adapter = bestDealsAdapter
 
+        // Linear vertical RV for Categories with subcategories with Linear horizontal RV for deals
+        val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         categoriesAdapter = CategoriesAdapter(
             { navigate(HomeFragmentDirections.toCategoryFragment(id = it.id, title = it.name)) },
             {
@@ -108,8 +126,28 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
                 navigate(HomeFragmentDirections.toDealFragment(it))
             }
         )
-        binding.rvCategories.adapter = categoriesAdapter
+        binding.rvCategories.apply {
+            adapter = categoriesAdapter
+            this.layoutManager = layoutManager
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+                        val totalItemCount = layoutManager.itemCount
 
+                        if (lastVisibleItemPosition == totalItemCount && categoryPaginator.hasNextPage()) {
+                            // Загрузите следующую порцию данных и добавьте их в адаптер
+                            binding.ivLoading.visible()
+                            val nextPage = categoryPaginator.getNextPage()
+                            categoriesAdapter.submitList(categoriesAdapter.currentList + nextPage)
+                        }
+                    }
+                }
+            })
+        }
+
+        //Grid RV for searching results
         searchDealAdapter = GridDealAdapter {
             navigate(HomeFragmentDirections.toDealFragment(it))
         }
@@ -154,7 +192,10 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
             binding.tvBestDealsTitle.visible()
             bestDealsAdapter.submitList(it)
         }
-        viewModel.categories.observe(viewLifecycleOwner, categoriesAdapter::submitList)
+        viewModel.categories.observe(viewLifecycleOwner) {
+            categoryPaginator = CategoryPaginator(it)
+            categoriesAdapter.submitList(categoryPaginator.getNextPage())
+        }
         viewModel.searchResult.observe(viewLifecycleOwner) {
             if (binding.searchView.query.isNullOrEmpty()) {
                 binding.homeGroup.visible()

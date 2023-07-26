@@ -7,6 +7,8 @@ import com.digeltech.discountone.domain.model.AllDeals
 import com.digeltech.discountone.domain.model.Deal
 import com.digeltech.discountone.domain.model.Homepage
 import com.digeltech.discountone.domain.repository.DealsRepository
+import com.digeltech.discountone.ui.home.KEY_HOMEPAGE_DATA
+import com.orhanobut.hawk.Hawk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -51,7 +53,13 @@ class DealsRepositoryImpl @Inject constructor(
 
     override suspend fun getHomepage(): Result<Homepage> = withContext(Dispatchers.IO) {
         runCatching {
-            HomepageMapper().map(api.getHomepage())
+            if (Hawk.contains(KEY_HOMEPAGE_DATA)) {
+                Hawk.get(KEY_HOMEPAGE_DATA)
+            } else {
+                HomepageMapper().map(api.getHomepage()).also {
+                    Hawk.put(KEY_HOMEPAGE_DATA, it)
+                }
+            }
         }
     }
 

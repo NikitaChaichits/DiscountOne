@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/shape_deal"
     android:textSize="@dimen/common_textSize_16sp"
+    android:textColor="@color/defaultColor"
     android:padding="8dip"
     android:maxLines="1"
     android:ellipsize="end"

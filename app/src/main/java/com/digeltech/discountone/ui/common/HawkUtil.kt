@@ -66,8 +66,11 @@ fun getCategoryNameById(id: Int): String {
 }
 
 fun getShopIdByName(name: String): Int {
-    val listOfShops: List<Shop> = Hawk.get(KEY_SHOPS)
-    return listOfShops.find {
-        it.name.equals(name, true)
-    }?.id ?: 0
+    if (Hawk.contains(KEY_SHOPS)) {
+        val listOfShops: List<Shop> = Hawk.get(KEY_SHOPS)
+        return listOfShops.find {
+            it.name.equals(name, true)
+        }?.id ?: 0
+    }
+    return 0
 }

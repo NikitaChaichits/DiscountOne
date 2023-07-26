@@ -11,7 +11,7 @@
         android:layout_height="50dp"
         android:layout_gravity="center_vertical"
         android:layout_marginVertical="@dimen/common_offset_8dp"
-        android:layout_marginStart="@dimen/common_offset_24dp"
+        android:layout_marginStart="@dimen/common_offset_16dp"
         tools:src="@drawable/ic_profile" />
 
     <TextView

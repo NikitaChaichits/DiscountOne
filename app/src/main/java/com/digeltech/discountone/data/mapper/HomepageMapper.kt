@@ -11,7 +11,7 @@ class HomepageMapper {
 
     fun map(data: HomepageDto) = Homepage(
         listOfBanners = DealsMapper().mapDeals(data.listOfBanners),
-        soloBanner = data.soloBanner.first().mapBanner(),
+//        soloBanner = data.soloBanner.first().mapBanner(),
         bestDeals = data.bestDeals.first().mapCategories(),
         categories = data.categories.map { it.mapCategories() }
     )

@@ -9,10 +9,8 @@ import com.digeltech.discountone.domain.model.Deal
 import com.digeltech.discountone.ui.common.SEARCH_DELAY
 import com.digeltech.discountone.ui.common.model.DealParcelable
 import com.digeltech.discountone.ui.common.model.toParcelableList
-import com.digeltech.discountone.ui.home.adapter.Banner
 import com.digeltech.discountone.ui.home.interactor.HomeInteractor
 import com.digeltech.discountone.util.log
-import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -29,8 +27,8 @@ class HomeViewModel @Inject constructor(
     private val _banners: MutableLiveData<List<Deal>> = MutableLiveData()
     val banners: LiveData<List<Deal>> = _banners
 
-    private val _soloBanner: MutableLiveData<Banner> = MutableLiveData()
-    val soloBanner: LiveData<Banner?> = _soloBanner
+//    private val _soloBanner: MutableLiveData<Banner> = MutableLiveData()
+//    val soloBanner: LiveData<Banner?> = _soloBanner
 
     private val _bestDeals: MutableLiveData<List<DealParcelable>> = MutableLiveData()
     val bestDeals: LiveData<List<DealParcelable>> = _bestDeals
@@ -38,19 +36,13 @@ class HomeViewModel @Inject constructor(
     private val _categories: MutableLiveData<List<CategoryWithSubcategories>> = MutableLiveData()
     val categories: LiveData<List<CategoryWithSubcategories>> = _categories
 
-    init {
-        getHomepageData()
-    }
-
-    private fun getHomepageData() {
+    fun getHomepageData() {
         viewModelScope.launch {
             loadingGifVisibility.value = true
             interactor.getHomepage().onSuccess {
-                _soloBanner.value = it.soloBanner
                 _banners.value = it.listOfBanners
                 _bestDeals.value = it.bestDeals.items.toParcelableList()
                 _categories.value = it.categories
-                Hawk.put(KEY_HOMEPAGE_DATA, it)
             }.onFailure {
                 log(it.toString())
                 error.postValue(it.toString())
@@ -58,6 +50,15 @@ class HomeViewModel @Inject constructor(
             loadingGifVisibility.value = false
         }
     }
+
+//    fun getAllCategories() {
+//        if (allCategories.isNotEmpty()) {
+//            viewModelScope.launchWithLoading {
+//                _categories.value = allCategories
+//                allCategories = emptyList()
+//            }
+//        }
+//    }
 
     fun searchDeals(searchText: String) {
         if (searchJob?.isActive == true) searchJob?.cancel()
