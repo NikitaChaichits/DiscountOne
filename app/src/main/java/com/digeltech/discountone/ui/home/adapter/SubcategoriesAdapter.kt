@@ -12,6 +12,8 @@ import com.digeltech.discountone.ui.common.adapter.LinearDealAdapter
 import com.digeltech.discountone.ui.common.model.CategoryWithDealsParcelable
 import com.digeltech.discountone.ui.common.model.DealParcelable
 import com.digeltech.discountone.ui.common.model.toParcelableList
+import com.digeltech.discountone.util.view.gone
+import com.digeltech.discountone.util.view.visible
 
 class SubcategoriesAdapter(
     private val onMoreDealsClick: (category: CategoryWithDealsParcelable) -> Unit,
@@ -36,6 +38,11 @@ class SubcategoriesAdapter(
 
         fun bind(item: CategoryWithDeals) {
             with(binding) {
+                if (item.showParentName) {
+                    tvCategoryTitle.text = item.parentName
+                    tvCategoryTitle.visible()
+                }
+
                 tvSubcategoryTitle.text = item.name
                 tvMoreDeals.setOnClickListener {
                     onMoreDealsClick(item.toParcelableList())
@@ -48,7 +55,9 @@ class SubcategoriesAdapter(
             }
         }
 
-        fun unbind() = Unit
+        fun unbind() {
+            binding.tvCategoryTitle.gone()
+        }
     }
 
     class DiffCallback : DiffUtil.ItemCallback<CategoryWithDeals>() {

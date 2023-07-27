@@ -12,7 +12,7 @@ class HomepageMapper {
     fun map(data: HomepageDto) = Homepage(
         listOfBanners = DealsMapper().mapDeals(data.listOfBanners),
 //        soloBanner = data.soloBanner.first().mapBanner(),
-        bestDeals = data.bestDeals.first().mapCategories(),
+        bestDeals = data.bestDeals.first().mapCategories("Best Deals"),
         categories = data.categories.map { it.mapCategories() }
     )
 
@@ -22,16 +22,17 @@ class HomepageMapper {
         categoryId = categoryId
     )
 
-    private fun CategoryWithItemsDto.mapCategories() = CategoryWithDeals(
+    private fun CategoryWithItemsDto.mapCategories(categoryName: String) = CategoryWithDeals(
         id = id,
         name = name,
+        parentName = categoryName,
         items = items.map { it.mapToDeal(id) }
     )
 
     private fun CategoryWithSubcategoriesDto.mapCategories() = CategoryWithSubcategories(
         id = id,
         name = name,
-        subcategories = subcategories.map { it.mapCategories() }
+        subcategories = subcategories.map { it.mapCategories(name) }
     )
 
     private fun DealDto.mapToDeal(categoryId: Int): Deal {
@@ -41,6 +42,7 @@ class HomepageMapper {
             title = title,
             description = description.toString(),
             imageUrl = imageUrl.toString(),
+            imagesUrl = imagesUrl,
             shopName = shopName.toString(),
             shopImageUrl = shopImageUrl.toString(),
             oldPrice = oldPrice,

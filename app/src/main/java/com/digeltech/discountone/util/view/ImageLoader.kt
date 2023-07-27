@@ -43,7 +43,6 @@ fun ImageView.setImageWithRadius(
     Glide.with(context)
         .load(url)
         .transform(FitCenter(), RoundedCorners(radius))
-//        .transform(RoundedCorners(radius))
         .transition(glideTransitionOption)
         .into(this)
 }

@@ -6,6 +6,7 @@ data class Deal(
     val title: String,
     val description: String,
     val imageUrl: String,
+    var imagesUrl: List<String>?,
     val bannerImageUrl: String? = "",
     val shopName: String,
     val shopImageUrl: String,

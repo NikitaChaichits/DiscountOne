@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.digeltech.discountone.common.base.BaseViewModel
-import com.digeltech.discountone.domain.model.CategoryWithSubcategories
+import com.digeltech.discountone.domain.model.CategoryWithDeals
 import com.digeltech.discountone.domain.model.Deal
 import com.digeltech.discountone.ui.common.SEARCH_DELAY
 import com.digeltech.discountone.ui.common.model.DealParcelable
@@ -33,8 +33,8 @@ class HomeViewModel @Inject constructor(
     private val _bestDeals: MutableLiveData<List<DealParcelable>> = MutableLiveData()
     val bestDeals: LiveData<List<DealParcelable>> = _bestDeals
 
-    private val _categories: MutableLiveData<List<CategoryWithSubcategories>> = MutableLiveData()
-    val categories: LiveData<List<CategoryWithSubcategories>> = _categories
+    private val _categories: MutableLiveData<List<CategoryWithDeals>> = MutableLiveData()
+    val categories: LiveData<List<CategoryWithDeals>> = _categories
 
     fun getHomepageData() {
         viewModelScope.launch {
@@ -42,7 +42,17 @@ class HomeViewModel @Inject constructor(
             interactor.getHomepage().onSuccess {
                 _banners.value = it.listOfBanners
                 _bestDeals.value = it.bestDeals.items.toParcelableList()
-                _categories.value = it.categories
+                val list: MutableList<CategoryWithDeals> = mutableListOf()
+                it.categories.forEach { category ->
+                    category.subcategories.forEachIndexed { index, subcategory ->
+                        if (index == 0) {
+                            list.add(subcategory.copy(showParentName = true))
+                        } else {
+                            list.add(subcategory)
+                        }
+                    }
+                }
+                _categories.value = list.take(70)
             }.onFailure {
                 log(it.toString())
                 error.postValue(it.toString())
@@ -50,15 +60,6 @@ class HomeViewModel @Inject constructor(
             loadingGifVisibility.value = false
         }
     }
-
-//    fun getAllCategories() {
-//        if (allCategories.isNotEmpty()) {
-//            viewModelScope.launchWithLoading {
-//                _categories.value = allCategories
-//                allCategories = emptyList()
-//            }
-//        }
-//    }
 
     fun searchDeals(searchText: String) {
         if (searchJob?.isActive == true) searchJob?.cancel()

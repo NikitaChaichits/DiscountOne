@@ -69,7 +69,20 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
             viewModel.getSimilarDealsByCategory(deal.categoryId, deal.id)
             viewModel.getSimilarDealsByShop(deal.shopName, deal.id)
 
-            deal.imageUrl.let(ivDealImage::loadImage)
+            if (!deal.imagesUrl.isNullOrEmpty()) {
+                val listOfDealImages = mutableListOf<String>()
+                listOfDealImages.add(deal.imageUrl)
+                listOfDealImages.addAll(deal.imagesUrl!!)
+
+                val adapter = ImageSliderAdapter(requireContext(), listOfDealImages)
+                vpImages.adapter = adapter
+                dots.setupWithViewPager(vpImages)
+            } else {
+                deal.imageUrl.let(ivDealImage::loadImage)
+                ivDealImage.visible()
+                vpImages.invisible()
+                dots.gone()
+            }
 
             deal.isAddedToBookmark = isAddedToBookmark(deal.id)
 
