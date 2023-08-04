@@ -33,7 +33,7 @@ class ShopAdapter(
         fun bind(item: Shop) {
             with(binding) {
                 tvTitle.text = item.name
-                tvSubtitle.text = "${item.countOfItems} publications"
+                tvSubtitle.text = "${item.countOfItems} deals"
 
                 item.icon?.let { ivIcon.loadImage(it) }
 

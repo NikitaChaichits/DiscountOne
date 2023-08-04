@@ -37,11 +37,11 @@ class CategoryAdapter(
         fun bind(item: Pair<Category, Category?>) {
             with(binding) {
                 tvTitleOdd.text = item.first.name
-                tvSubtitleOdd.text = "${item.first.countOfItems} publications"
+                tvSubtitleOdd.text = "${item.first.countOfItems} deals"
                 item.first.icon?.let(ivIconOdd::loadImage)
                 if (item.second != null) {
                     tvTitleEven.text = item.second?.name
-                    tvSubtitleEven.text = "${item.first.countOfItems} publications"
+                    tvSubtitleEven.text = "${item.first.countOfItems} deals"
                     item.second?.icon?.let(ivIconEven::loadImage)
                     categorySecond.visible()
                 } else {
