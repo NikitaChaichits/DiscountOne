@@ -25,6 +25,7 @@ class HomepageMapper {
     private fun CategoryWithItemsDto.mapCategories(categoryName: String) = CategoryWithDeals(
         id = id,
         name = name,
+        slug = slug.toString(),
         parentName = categoryName,
         items = items.map { it.mapToDeal(id) }
     )
@@ -44,6 +45,7 @@ class HomepageMapper {
             imageUrl = imageUrl.toString(),
             imagesUrl = imagesUrl,
             shopName = shopName.toString(),
+            shopSlug = shopSlug.toString(),
             shopImageUrl = shopImageUrl.toString(),
             oldPrice = oldPrice,
             price = price,

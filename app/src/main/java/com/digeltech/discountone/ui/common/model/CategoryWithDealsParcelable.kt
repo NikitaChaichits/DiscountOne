@@ -9,6 +9,7 @@ import kotlinx.android.parcel.Parcelize
 data class CategoryWithDealsParcelable(
     val id: Int,
     val name: String,
+    val slug: String,
     val items: List<DealParcelable>
 ) : Parcelable
 
@@ -16,6 +17,7 @@ fun CategoryWithDeals.toParcelableList(): CategoryWithDealsParcelable {
     return CategoryWithDealsParcelable(
         id = id,
         name = name,
+        slug = slug,
         items = items.toParcelableList()
     )
 

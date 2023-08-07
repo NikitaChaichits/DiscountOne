@@ -38,6 +38,9 @@
                 android:name="title"
                 app:argType="string" />
             <argument
+                android:name="slug"
+                app:argType="string" />
+            <argument
                 android:name="isFromCategory"
                 app:argType="boolean"
                 android:defaultValue="true" />
@@ -64,6 +67,9 @@
             <argument
                 android:name="title"
                 app:argType="string" />
+            <argument
+                android:name="slug"
+                app:argType="string" />
         </action>
         <action
             android:id="@+id/toStartFragment"
@@ -82,6 +88,9 @@
             android:name="title"
             app:argType="string" />
         <argument
+            android:name="slug"
+            app:argType="string" />
+        <argument
             android:name="isFromCategory"
             app:argType="boolean"
             android:defaultValue="true" />
@@ -97,9 +106,9 @@
 
     <fragment
         android:id="@+id/dealsFragment"
-        android:name="com.digeltech.discountone.ui.alldeals.DealsFragment"
+        android:name="com.digeltech.discountone.ui.bestdeals.DealsFragment"
         android:label="@string/nav_deals"
-        tools:layout="@layout/fragment_deals">
+        tools:layout="@layout/fragment_best_deals">
         <action
             android:id="@+id/toProfileFragment"
             app:destination="@id/profileFragment" />
@@ -149,6 +158,9 @@
             <argument
                 android:name="title"
                 app:argType="string" />
+            <argument
+                android:name="slug"
+                app:argType="string" />
         </action>
     </fragment>
 
@@ -168,6 +180,9 @@
                 app:argType="integer" />
             <argument
                 android:name="title"
+                app:argType="string" />
+            <argument
+                android:name="slug"
                 app:argType="string" />
             <argument
                 android:name="isFromCategory"

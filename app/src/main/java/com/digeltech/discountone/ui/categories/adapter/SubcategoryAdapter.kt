@@ -11,7 +11,7 @@ import com.digeltech.discountone.domain.model.Subcategory
 import com.digeltech.discountone.util.view.loadImage
 
 class SubcategoryAdapter(
-    private val onSubcategoryClickListener: (Pair<Int, String>) -> Unit,
+    private val onSubcategoryClickListener: (Subcategory) -> Unit,
 ) : ListAdapter<Subcategory, SubcategoryAdapter.ItemViewholder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewholder {
@@ -33,7 +33,7 @@ class SubcategoryAdapter(
         fun bind(item: Subcategory) {
             with(binding) {
                 root.setOnClickListener {
-                    onSubcategoryClickListener(Pair(item.id, item.name))
+                    onSubcategoryClickListener(item)
                 }
                 tvTitle.text = item.name
                 item.icon?.let(ivIcon::loadImage)

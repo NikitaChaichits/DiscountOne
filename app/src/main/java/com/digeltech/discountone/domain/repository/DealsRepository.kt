@@ -3,6 +3,9 @@ package com.digeltech.discountone.domain.repository
 import com.digeltech.discountone.domain.model.AllDeals
 import com.digeltech.discountone.domain.model.Deal
 import com.digeltech.discountone.domain.model.Homepage
+import com.digeltech.discountone.ui.common.model.CategoryType
+import com.digeltech.discountone.ui.common.model.SortBy
+import com.digeltech.discountone.ui.common.model.Sorting
 
 interface DealsRepository {
     suspend fun getBestDeals(): Result<AllDeals>
@@ -26,4 +29,16 @@ interface DealsRepository {
     suspend fun getSimilarDealsByCategory(categoryName: String): List<Deal>
 
     suspend fun getSimilarDealsByShop(shopName: String): List<Deal>
+
+    suspend fun getSortingDeals(
+        page: String,
+        categoryType: CategoryType,
+        taxSlug: String,
+        sorting: Sorting,
+        sortBy: SortBy,
+        priceFrom: Int?,
+        priceTo: Int?,
+        discountFrom: Int?,
+        discountTo: Int?,
+    ): Result<List<Deal>>
 }

@@ -1,4 +1,4 @@
-package com.digeltech.discountone.ui.alldeals
+package com.digeltech.discountone.ui.bestdeals
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

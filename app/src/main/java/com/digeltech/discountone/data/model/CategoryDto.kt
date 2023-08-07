@@ -35,6 +35,8 @@ data class CategoryWithItemsDto(
     val id: Int,
     @SerializedName("category_name")
     val name: String,
+    @SerializedName("category_slug")
+    val slug: String?,
     @SerializedName("post")
     val items: List<DealDto>,
 )

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:theme="@style/Theme.DiscountOne"
+    android:background="@color/bgDealColor">
+
+    <ImageView
+        android:id="@+id/ivClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_offset_32dp"
+        android:layout_marginTop="@dimen/common_offset_16dp"
+        android:src="@drawable/ic_close"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/TextRegular.Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/common_offset_16dp"
+        android:text="@string/fr_price_title"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@id/ivClose"
+        app:layout_constraintTop_toTopOf="@id/ivClose" />
+
+    <TextView
+        android:id="@+id/tvTrowOff"
+        style="@style/TextRegular.Description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/common_offset_16dp"
+        android:text="@string/trow_off"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@id/ivClose"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ivClose" />
+
+    <EditText
+        android:id="@+id/etPriceFrom"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="@dimen/common_offset_16dp"
+        android:layout_marginTop="@dimen/common_offset_32dp"
+        android:layout_marginEnd="@dimen/common_offset_8dp"
+        android:background="@drawable/bg_sorting_edit_text"
+        android:hint="@string/from_price"
+        android:inputType="number"
+        android:paddingStart="@dimen/common_offset_12dp"
+        app:layout_constraintEnd_toStartOf="@id/etPriceTo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+    <EditText
+        android:id="@+id/etPriceTo"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="@dimen/common_offset_8dp"
+        android:layout_marginTop="@dimen/common_offset_32dp"
+        android:layout_marginEnd="@dimen/common_offset_16dp"
+        android:background="@drawable/bg_sorting_edit_text"
+        android:hint="@string/to_price"
+        android:inputType="number"
+        android:paddingStart="@dimen/common_offset_12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/etPriceFrom"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSubmit"
+        style="@style/ButtonColored.Coupon"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:text="@string/apply"
+        android:layout_marginTop="@dimen/common_offset_12dp"
+        android:layout_marginHorizontal="@dimen/common_offset_16dp"
+        android:layout_marginBottom="@dimen/common_offset_24dp"
+        app:cornerRadius="@dimen/common_offset_32dp"
+        app:layout_constraintTop_toBottomOf="@id/etPriceFrom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

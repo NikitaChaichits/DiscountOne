@@ -23,6 +23,8 @@ data class DealDto(
     val shopId: String?,
     @SerializedName("shop_name")
     val shopName: String?,
+    @SerializedName("shop_slug")
+    val shopSlug: String?,
     @SerializedName("shop_image_url")
     val shopImageUrl: String?,
     @SerializedName("shop_link")

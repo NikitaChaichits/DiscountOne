@@ -1,4 +1,4 @@
-package com.digeltech.discountone.ui.alldeals
+package com.digeltech.discountone.ui.bestdeals
 
 import android.os.Bundle
 import android.view.View
@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.discountone.R
 import com.digeltech.discountone.common.base.BaseFragment
-import com.digeltech.discountone.databinding.FragmentDealsBinding
+import com.digeltech.discountone.databinding.FragmentBestDealsBinding
 import com.digeltech.discountone.domain.model.Item
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
 import com.digeltech.discountone.ui.common.logSearch
@@ -24,9 +24,9 @@ import com.digeltech.discountone.util.view.visible
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DealsFragment : BaseFragment(R.layout.fragment_deals), SearchView.OnQueryTextListener {
+class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQueryTextListener {
 
-    private val binding by viewBinding(FragmentDealsBinding::bind)
+    private val binding by viewBinding(FragmentBestDealsBinding::bind)
     override val viewModel: DealsViewModel by viewModels()
 
     private lateinit var dealAdapter: GridDealAdapter

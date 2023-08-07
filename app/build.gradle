@@ -134,8 +134,9 @@ dependencies {
     implementation 'com.orhanobut:hawk:2.0.1'
 
     //In-App Updates
-//    implementation appDependencies.googlePlayCore
     implementation appDependencies.googlePlayAppUpdate
+
+    implementation 'com.facebook.android:facebook-android-sdk:16.0.0'
 }
 
 android.applicationVariants.all { variant ->

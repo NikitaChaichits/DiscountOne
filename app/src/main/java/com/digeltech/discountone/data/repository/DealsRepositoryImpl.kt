@@ -7,6 +7,9 @@ import com.digeltech.discountone.domain.model.AllDeals
 import com.digeltech.discountone.domain.model.Deal
 import com.digeltech.discountone.domain.model.Homepage
 import com.digeltech.discountone.domain.repository.DealsRepository
+import com.digeltech.discountone.ui.common.model.CategoryType
+import com.digeltech.discountone.ui.common.model.SortBy
+import com.digeltech.discountone.ui.common.model.Sorting
 import com.digeltech.discountone.ui.home.KEY_HOMEPAGE_DATA
 import com.orhanobut.hawk.Hawk
 import kotlinx.coroutines.Dispatchers
@@ -77,6 +80,34 @@ class DealsRepositoryImpl @Inject constructor(
 
     override suspend fun getSimilarDealsByShop(shopName: String): List<Deal> = withContext(Dispatchers.IO) {
         DealsMapper().mapOtherDeals(api.getOtherDeals(shopName))
+    }
+
+    override suspend fun getSortingDeals(
+        page: String,
+        categoryType: CategoryType,
+        taxSlug: String,
+        sorting: Sorting,
+        sortBy: SortBy,
+        priceFrom: Int?,
+        priceTo: Int?,
+        discountFrom: Int?,
+        discountTo: Int?
+    ): Result<List<Deal>> = withContext(Dispatchers.IO) {
+        runCatching {
+            DealsMapper().mapDeals(
+                api.getSortingDeals(
+                    page = page,
+                    categoryType = categoryType.type,
+                    taxSlug = taxSlug,
+                    sorting = sorting.name,
+                    sortBy = sortBy.type,
+                    priceFrom = priceFrom,
+                    priceTo = priceTo,
+                    discountFrom = discountFrom,
+                    discountTo = discountTo
+                )
+            )
+        }
     }
 
 }

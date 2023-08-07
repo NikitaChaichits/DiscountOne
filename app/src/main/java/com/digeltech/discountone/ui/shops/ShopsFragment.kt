@@ -56,8 +56,14 @@ class ShopsFragment : BaseFragment(R.layout.fragment_shops), SearchView.OnQueryT
 
     private fun initAdapter() {
         shopAdapter = ShopAdapter {
-            navigate(ShopsFragmentDirections.toShopFragment(id = it.first, title = it.second))
-            logOpenShopDeals(it.second)
+            navigate(
+                ShopsFragmentDirections.toShopFragment(
+                    id = it.id,
+                    title = it.name,
+                    slug = it.slug
+                )
+            )
+            logOpenShopDeals(it.name)
         }
         binding.rvShops.adapter = shopAdapter
         binding.rvShops.addItemDecoration(

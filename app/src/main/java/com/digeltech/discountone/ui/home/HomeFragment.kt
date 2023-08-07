@@ -98,6 +98,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
                 HomeFragmentDirections.toCategoryFragment(
                     id = getShopIdByName(it.shopName),
                     title = it.shopName,
+                    slug = it.shopSlug,
                     isFromCategory = false
                 )
             )
@@ -119,7 +120,15 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         // Linear vertical RV for Categories with subcategories with Linear horizontal RV for deals
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         categoriesAdapter = SubcategoriesAdapter(
-            { navigate(HomeFragmentDirections.toCategoryFragment(id = it.id, title = it.name)) },
+            {
+                navigate(
+                    HomeFragmentDirections.toCategoryFragment(
+                        id = it.id,
+                        title = it.name,
+                        slug = it.slug,
+                    )
+                )
+            },
             {
                 viewModel.updateDealViewsClick(it.id.toString())
                 navigate(HomeFragmentDirections.toDealFragment(it))

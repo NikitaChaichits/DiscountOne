@@ -9,6 +9,7 @@ data class Deal(
     var imagesUrl: List<String>?,
     val bannerImageUrl: String? = "",
     val shopName: String,
+    val shopSlug: String,
     val shopImageUrl: String,
     val shopLink: String,
     val oldPrice: String? = null,

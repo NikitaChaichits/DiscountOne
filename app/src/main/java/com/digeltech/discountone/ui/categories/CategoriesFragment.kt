@@ -63,8 +63,14 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories), SearchVie
 
     private fun initAdapters() {
         categoryAdapter = CategoryAdapter {
-            navigate(CategoriesFragmentDirections.toCategoryFragment(id = it.first, title = it.second))
-            logOpenCategoryDeals(it.second)
+            navigate(
+                CategoriesFragmentDirections.toCategoryFragment(
+                    id = it.id,
+                    title = it.name,
+                    slug = it.slug
+                )
+            )
+            logOpenCategoryDeals(it.name)
         }
         binding.rvCategories.adapter = categoryAdapter
         binding.rvCategories.addItemDecoration(

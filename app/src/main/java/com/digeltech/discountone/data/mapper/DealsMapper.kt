@@ -28,6 +28,7 @@ class DealsMapper {
             imagesUrl = data.imagesUrl,
             bannerImageUrl = data.bannerImageUrl,
             shopName = data.shopName.toString(),
+            shopSlug = data.shopSlug.toString(),
             shopImageUrl = data.shopImageUrl.toString(),
             oldPrice = data.oldPrice,
             price = data.price,

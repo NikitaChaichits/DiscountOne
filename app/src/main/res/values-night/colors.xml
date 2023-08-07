@@ -20,7 +20,7 @@
 
     <!-- Theme colors -->
     <color name="defaultColor">#FFF</color>
-    <color name="statusBarColor">#000</color>
+    <color name="defaultColorReverse">#000</color>
     <color name="bgDealColor">#282B30</color>
     <color name="bgCategories">#282B30</color>
     <color name="bgSubcategories">#45454A</color>

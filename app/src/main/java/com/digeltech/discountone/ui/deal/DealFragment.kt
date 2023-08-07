@@ -71,7 +71,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
 
             if (!deal.imagesUrl.isNullOrEmpty()) {
                 val listOfDealImages = mutableListOf<String>()
-                listOfDealImages.add(deal.imageUrl)
+//                listOfDealImages.add(deal.imageUrl)
                 listOfDealImages.addAll(deal.imagesUrl!!)
 
                 val adapter = ImageSliderAdapter(requireContext(), listOfDealImages)
@@ -159,10 +159,22 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
             }
         }
         ivCouponCompanyLogo.setOnClickListener {
-            navigate(DealFragmentDirections.toShopFragment(getShopIdByName(deal.shopName), deal.shopName))
+            navigate(
+                DealFragmentDirections.toShopFragment(
+                    id = getShopIdByName(deal.shopName),
+                    title = deal.shopName,
+                    slug = deal.shopSlug,
+                )
+            )
         }
         tvCouponCompany.setOnClickListener {
-            navigate(DealFragmentDirections.toShopFragment(getShopIdByName(deal.shopName), deal.shopName))
+            navigate(
+                DealFragmentDirections.toShopFragment(
+                    id = getShopIdByName(deal.shopName),
+                    title = deal.shopName,
+                    slug = deal.shopSlug,
+                )
+            )
         }
         ivRateArrowUp.setOnClickListener {
             ivRateArrowUp.setColorFilter(it.getColorValue(R.color.green))
@@ -204,7 +216,10 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
             binding.tvSimilarShopName.setOnClickListener {
                 navigate(
                     DealFragmentDirections.toShopFragment(
-                        id = getShopIdByName(args.deal.shopName), title = args.deal.shopName, isFromCategory = false
+                        id = getShopIdByName(args.deal.shopName),
+                        title = args.deal.shopName,
+                        slug = args.deal.shopSlug,
+                        isFromCategory = false
                     )
                 )
             }

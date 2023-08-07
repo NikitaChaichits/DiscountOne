@@ -11,7 +11,7 @@ import com.digeltech.discountone.domain.model.Shop
 import com.digeltech.discountone.util.view.loadImage
 
 class ShopAdapter(
-    private val onClickListener: (Pair<Int, String>) -> Unit,
+    private val onClickListener: (Shop) -> Unit,
 ) : ListAdapter<Shop, ShopAdapter.ItemViewholder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewholder {
@@ -38,7 +38,7 @@ class ShopAdapter(
                 item.icon?.let { ivIcon.loadImage(it) }
 
                 root.setOnClickListener {
-                    onClickListener(Pair(item.id, item.name))
+                    onClickListener(item)
                 }
             }
         }

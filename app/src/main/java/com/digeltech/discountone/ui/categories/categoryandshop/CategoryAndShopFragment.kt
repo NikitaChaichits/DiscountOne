@@ -2,6 +2,8 @@ package com.digeltech.discountone.ui.categories.categoryandshop
 
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -39,7 +41,7 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
         /**
          * isFromCategory default value = true, false value setup as default for 2 cases in mobile_navigation.xml
          */
-        viewModel.initDeals(args.id, args.isFromCategory)
+        viewModel.initDeals(args.id, args.slug, args.isFromCategory)
 
         observeData()
     }
@@ -86,6 +88,11 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
             )
         )
         binding.rvSearchDeals.adapter = searchAdapter
+
+        val stringArray = resources.getStringArray(R.array.fr_deals_sorting_type)
+        val spinnerAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, stringArray)
+        spinnerAdapter.setDropDownViewResource(R.layout.spinner_item_dropdown)
+        binding.spinnerSortingType.adapter = spinnerAdapter
     }
 
     private fun initListeners() {
@@ -96,6 +103,32 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
             setOnClickListener { onActionViewExpanded() }
             setOnQueryTextListener(this@CategoryAndShopFragment)
             queryHint = getString(R.string.search_by_deals)
+        }
+        binding.spinnerSortingType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                viewModel.sortingByType(position)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) = Unit
+        }
+        binding.tvSortingDiscount.setOnClickListener {
+            val bottomSheetFragment =
+                BottomSheetDiscountFragment(viewModel.getDiscountFrom(), viewModel.getDiscountTo())
+            bottomSheetFragment.setBottomSheetListener(object : BottomSheetDiscountFragment.BottomSheetListener {
+                override fun onSubmitClicked(input1: Int, input2: Int) {
+                    viewModel.sortingByDiscount(input1, input2)
+                }
+            })
+            bottomSheetFragment.show(requireActivity().supportFragmentManager, bottomSheetFragment.tag)
+        }
+        binding.tvSortingPrice.setOnClickListener {
+            val bottomSheetFragment = BottomSheetPriceFragment(viewModel.getPriceFrom(), viewModel.getPriceTo())
+            bottomSheetFragment.setBottomSheetListener(object : BottomSheetPriceFragment.BottomSheetListener {
+                override fun onSubmitClicked(input1: Int, input2: Int) {
+                    viewModel.sortingByPrice(input1, input2)
+                }
+            })
+            bottomSheetFragment.show(requireActivity().supportFragmentManager, bottomSheetFragment.tag)
         }
     }
 

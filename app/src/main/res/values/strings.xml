@@ -3,6 +3,8 @@
     <string name="privacy_policy_link">https://discount.one/privacy-policy</string>
     <string name="terms_of_use_link">https://discount.one/terms-of-use</string>
     <string name="affiliate_disclosure_link">https://discount.one/affiliate-disclosure</string>
+    <string name="facebook_app_id">1234</string>
+    <string name="facebook_client_token">56789</string>
 
     <string name="nav_home">Home</string>
     <string name="nav_categories">Categories</string>
@@ -27,6 +29,8 @@
     <string name="empty_search_result"><b>Nothing found</b>\nTry different phrasing</string>
     <string name="toast_bookmark">You must be logged in to add bookmark</string>
     <string name="share_text">Look what I found in DiscouneOne %s</string>
+    <string name="trow_off">Trow off</string>
+    <string name="apply">Apply</string>
 
     <!-- Wildcard strings -->
     <string name="price_wildcard">₹ %d</string>
@@ -103,10 +107,29 @@
     <string name="fr_cat_title">Categories</string>
     <string name="fr_cat_publications">%d publications</string>
 
-    <!-- Fragment All deals-->
+    <!-- Fragment Best deals-->
     <string name="fr_deals_title">Best Deals</string>
     <string name="fr_deals_filter_categories">Categories</string>
     <string name="fr_deals_filter_shops">Stores</string>
+    <string name="fr_deals_sorting_price">Price</string>
+    <string name="fr_deals_sorting_discount">Discount</string>
+    <string-array name="fr_deals_sorting_type">
+        <item>New deals</item>
+        <item>Most popular</item>
+        <item>High discount</item>
+        <item>Price (low-high)</item>
+        <item>Price (high-low)</item>
+    </string-array>
+
+    <!-- Bottom Sheet Fragment Discount-->
+    <string name="from_percent">From, %</string>
+    <string name="to_percent">To, %</string>
+    <string name="fr_discount_title">Discount</string>
+
+    <!-- Bottom Sheet Fragment Price-->
+    <string name="from_price">From, ₹</string>
+    <string name="to_price">To, ₹</string>
+    <string name="fr_price_title">Price</string>
 
     <!-- Fragment Shops-->
     <string name="fr_shops_title">Stores</string>

@@ -10,11 +10,15 @@
         <item name="colorSecondaryVariant">@color/black</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">@color/statusBarColor</item>
+        <item name="android:statusBarColor">@color/defaultColorReverse</item>
     </style>
 
     <style name="Theme.DiscountOne.TranslucentStatus">
         <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
+    <style name="BottomSheetFragmentTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
 </resources>

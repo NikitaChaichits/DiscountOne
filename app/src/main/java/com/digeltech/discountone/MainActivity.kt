@@ -22,6 +22,7 @@ import com.google.firebase.ktx.Firebase
 import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
 
+
 private const val UPDATE_CODE = 100
 
 @AndroidEntryPoint
@@ -158,4 +159,5 @@ class MainActivity : AppCompatActivity() {
         params.putString(FirebaseAnalytics.Param.SCREEN_CLASS, screenClass)
         Firebase.analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, params)
     }
+
 }

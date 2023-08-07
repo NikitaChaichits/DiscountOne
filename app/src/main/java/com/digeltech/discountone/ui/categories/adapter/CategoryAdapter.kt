@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.digeltech.discountone.databinding.RvCategoryOldBinding
 import com.digeltech.discountone.domain.model.Category
+import com.digeltech.discountone.domain.model.Subcategory
 import com.digeltech.discountone.util.createFadeTransition
 import com.digeltech.discountone.util.view.gone
 import com.digeltech.discountone.util.view.invisible
@@ -15,7 +16,7 @@ import com.digeltech.discountone.util.view.loadImage
 import com.digeltech.discountone.util.view.visible
 
 class CategoryAdapter(
-    private val onSubcategoryClickListener: (Pair<Int, String>) -> Unit,
+    private val onSubcategoryClickListener: (Subcategory) -> Unit,
 ) : ListAdapter<Pair<Category, Category?>, CategoryAdapter.ItemViewholder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewholder {
@@ -47,9 +48,7 @@ class CategoryAdapter(
                 } else {
                     categorySecond.invisible()
                 }
-                val subcategoryAdapter = SubcategoryAdapter {
-                    onSubcategoryClickListener(Pair(it.first, it.second))
-                }
+                val subcategoryAdapter = SubcategoryAdapter { onSubcategoryClickListener(it) }
                 rvSubcategories.adapter = subcategoryAdapter
 
                 categoryFirst.setOnClickListener {

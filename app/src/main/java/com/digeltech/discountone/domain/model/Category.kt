@@ -20,6 +20,7 @@ data class Subcategory(
 data class CategoryWithDeals(
     val id: Int,
     val name: String,
+    val slug: String,
     val items: List<Deal>,
     val parentName: String = "",
     val showParentName: Boolean = false

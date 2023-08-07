@@ -46,4 +46,17 @@ interface ServerApi {
     @GET("/wp-json/theme/v1/other_deals")
     suspend fun getOtherDeals(@Query("shop") shopSlugName: String): OtherDealsDto
 
+    @GET("/wp-json/theme/v1/filter_cat")
+    suspend fun getSortingDeals(
+        @Query("page") page: String,
+        @Query("cat") categoryType: String,
+        @Query("tax_slug") taxSlug: String,
+        @Query("sort") sorting: String,
+        @Query("sortBy") sortBy: String,
+        @Query("priceFrom") priceFrom: Int?,
+        @Query("priceTo") priceTo: Int?,
+        @Query("discountFrom") discountFrom: Int?,
+        @Query("discountTo") discountTo: Int?
+    ): List<DealDto>
+
 }
