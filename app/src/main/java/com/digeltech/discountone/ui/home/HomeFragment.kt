@@ -20,9 +20,11 @@ import com.digeltech.discountone.util.view.*
 import com.digeltech.discountone.util.view.recycler.AutoScrollHelper
 import com.digeltech.discountone.util.view.recycler.CyclicScrollHelper
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
+import com.facebook.appevents.AppEventsLogger
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -30,6 +32,9 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
 
     private val binding by viewBinding(FragmentHomeBinding::bind)
     override val viewModel: HomeViewModel by viewModels()
+
+    @Inject
+    lateinit var logger: AppEventsLogger
 
     private lateinit var bannerAdapter: BannerAdapter
     private lateinit var bestDealsAdapter: LinearDealAdapter
@@ -61,7 +66,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
             binding.tvSearchResultEmpty.invisible()
             binding.rvSearchDeals.invisible()
         } else {
-            logSearch(newText.toString())
+            logSearch(newText.toString(), requireContext(), logger)
             viewModel.searchDeals(newText.toString())
         }
         return true

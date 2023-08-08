@@ -154,7 +154,7 @@
             android:id="@+id/homeGroup"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:constraint_referenced_ids="rvBanners, ivBannerSale, rvCategories" />
+            app:constraint_referenced_ids="rvBanners, ivBannerSale, tvBestDealsTitle, tvMoreBestDeals, rvBestDeals, rvCategories" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.core.widget.NestedScrollView>

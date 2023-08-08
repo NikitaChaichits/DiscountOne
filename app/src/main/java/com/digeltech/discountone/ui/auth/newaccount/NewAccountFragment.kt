@@ -19,14 +19,19 @@ import com.digeltech.discountone.util.view.disable
 import com.digeltech.discountone.util.view.enable
 import com.digeltech.discountone.util.view.invisible
 import com.digeltech.discountone.util.view.visible
+import com.facebook.appevents.AppEventsLogger
 import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class NewAccountFragment : BaseFragment(R.layout.fragment_new_account) {
 
     private val binding by viewBinding(FragmentNewAccountBinding::bind)
     override val viewModel: NewAccountViewModel by viewModels()
+
+    @Inject
+    lateinit var logger: AppEventsLogger
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -70,7 +75,7 @@ class NewAccountFragment : BaseFragment(R.layout.fragment_new_account) {
     private fun observeData() {
         viewModel.success.observe(viewLifecycleOwner) {
             if (it) {
-                logSignUp(binding.etEmail.text.toString().trim())
+                logSignUp(binding.etEmail.text.toString().trim(), requireContext(), logger)
                 prefs.setLogin(true)
                 val user = User(
                     id = "100",

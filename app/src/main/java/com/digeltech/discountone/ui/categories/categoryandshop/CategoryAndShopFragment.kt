@@ -17,7 +17,9 @@ import com.digeltech.discountone.util.view.invisible
 import com.digeltech.discountone.util.view.px
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
 import com.digeltech.discountone.util.view.visible
+import com.facebook.appevents.AppEventsLogger
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop), SearchView.OnQueryTextListener {
@@ -27,6 +29,9 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
     override val viewModel: CategoryAndShopViewModel by viewModels()
 
     private val args: CategoryAndShopFragmentArgs by navArgs()
+
+    @Inject
+    lateinit var logger: AppEventsLogger
 
     private lateinit var dealAdapter: GridDealAdapter
     private lateinit var searchAdapter: GridDealAdapter
@@ -55,7 +60,7 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
             binding.tvSearchResultEmpty.invisible()
             binding.tvTitle.visible()
         } else {
-            logSearch(newText.toString())
+            logSearch(newText.toString(), requireContext(), logger)
             viewModel.searchDeals(newText.toString())
         }
         return true

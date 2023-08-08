@@ -13,13 +13,18 @@ import com.digeltech.discountone.util.view.invisible
 import com.digeltech.discountone.util.view.px
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
 import com.digeltech.discountone.util.view.visible
+import com.facebook.appevents.AppEventsLogger
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SavedPublicationsFragment : BaseFragment(R.layout.fragment_saved_publications), SearchView.OnQueryTextListener {
 
     private val binding by viewBinding(FragmentSavedPublicationsBinding::bind)
     override val viewModel: SavedPublicationsViewModel by viewModels()
+
+    @Inject
+    lateinit var logger: AppEventsLogger
 
     private lateinit var adapter: SavedPublicationsAdapter
 
@@ -39,7 +44,7 @@ class SavedPublicationsFragment : BaseFragment(R.layout.fragment_saved_publicati
         if (newText.isNullOrEmpty()) {
             viewModel.getSavedPublications()
         } else {
-            logSearch(newText.toString())
+            logSearch(newText.toString(), requireContext(), logger)
             viewModel.searchDeals(newText.toString())
         }
         return true

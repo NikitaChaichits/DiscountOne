@@ -1,14 +1,10 @@
 package com.digeltech.discountone
 
 import android.app.Application
-import android.content.Context
-import android.content.res.Configuration.UI_MODE_NIGHT_MASK
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.WorkManager
-import com.digeltech.discountone.data.source.local.UpdateCacheWorker
+import com.facebook.appevents.AppEventsLogger
 import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.HiltAndroidApp
+import io.branch.referral.Branch
 
 @HiltAndroidApp
 class App : Application() {
@@ -17,20 +13,13 @@ class App : Application() {
         super.onCreate()
 
         Hawk.init(applicationContext).build()
-//        scheduleHomeCategoryUpdate(applicationContext)
+
+        // Branch logging for debugging
+        Branch.enableTestMode()
+        // Branch object initialization
+        Branch.getAutoInstance(this)
+
+        AppEventsLogger.activateApp(this)
     }
 
-    private fun scheduleHomeCategoryUpdate(context: Context) {
-        val workRequest = UpdateCacheWorker.scheduleNextCacheUpdate()
-        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-            "cache_update",
-            ExistingPeriodicWorkPolicy.UPDATE,
-            workRequest
-        )
-    }
-
-    private fun isDarkThemeEnabled(context: Context): Boolean {
-        val currentNightMode = context.resources.configuration.uiMode and UI_MODE_NIGHT_MASK
-        return currentNightMode == UI_MODE_NIGHT_YES
-    }
 }

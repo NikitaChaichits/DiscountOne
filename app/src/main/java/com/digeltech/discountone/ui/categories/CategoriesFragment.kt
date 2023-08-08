@@ -18,9 +18,11 @@ import com.digeltech.discountone.util.view.px
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
 import com.digeltech.discountone.util.view.setCircleImage
 import com.digeltech.discountone.util.view.visible
+import com.facebook.appevents.AppEventsLogger
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -33,6 +35,9 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories), SearchVie
     private lateinit var categoryAdapter: CategoryAdapter
 
     private lateinit var searchDealAdapter: GridDealAdapter
+
+    @Inject
+    lateinit var logger: AppEventsLogger
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -55,7 +60,7 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories), SearchVie
             binding.tvSearchResultEmpty.invisible()
             binding.tvTitle.visible()
         } else {
-            logSearch(newText.toString())
+            logSearch(newText.toString(), requireContext(), logger)
             viewModel.searchDeals(newText.toString())
         }
         return true
@@ -70,7 +75,7 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories), SearchVie
                     slug = it.slug
                 )
             )
-            logOpenCategoryDeals(it.name)
+            logOpenCategoryDeals(it.name, requireContext(), logger)
         }
         binding.rvCategories.adapter = categoryAdapter
         binding.rvCategories.addItemDecoration(

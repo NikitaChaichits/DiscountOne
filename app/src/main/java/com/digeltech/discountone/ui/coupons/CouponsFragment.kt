@@ -14,13 +14,18 @@ import com.digeltech.discountone.util.view.invisible
 import com.digeltech.discountone.util.view.px
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
 import com.digeltech.discountone.util.view.visible
+import com.facebook.appevents.AppEventsLogger
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQueryTextListener {
 
     private val binding by viewBinding(FragmentCouponsBinding::bind)
     override val viewModel: CouponsViewModel by viewModels()
+
+    @Inject
+    lateinit var logger: AppEventsLogger
 
     private lateinit var dealAdapter: GridDealAdapter
     private lateinit var searchAdapter: GridDealAdapter
@@ -43,7 +48,7 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
             binding.tvSearchResultEmpty.invisible()
             binding.tvTitle.visible()
         } else {
-            logSearch(newText.toString())
+            logSearch(newText.toString(), requireContext(), logger)
             viewModel.searchDeals(newText.toString())
         }
         return true

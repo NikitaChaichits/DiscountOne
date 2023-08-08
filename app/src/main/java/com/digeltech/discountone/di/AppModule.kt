@@ -1,8 +1,10 @@
 package com.digeltech.discountone.di
 
+import android.app.Application
 import android.content.Context
 import com.digeltech.discountone.data.file.FileManager
 import com.digeltech.discountone.data.file.FileManagerImpl
+import com.facebook.appevents.AppEventsLogger
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,4 +22,10 @@ class AppModule {
     @Provides
     @Singleton
     fun provideFileManager(context: Context): FileManager = FileManagerImpl(context)
+
+    @Provides
+    @Singleton
+    fun provideAppEventsLogger(application: Application): AppEventsLogger {
+        return AppEventsLogger.newLogger(application)
+    }
 }

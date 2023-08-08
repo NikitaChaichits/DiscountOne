@@ -17,7 +17,9 @@ import com.digeltech.discountone.util.copyTextToClipboard
 import com.digeltech.discountone.util.getDiscountText
 import com.digeltech.discountone.util.isNotNullAndNotEmpty
 import com.digeltech.discountone.util.view.*
+import com.facebook.appevents.AppEventsLogger
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class DealFragment : BaseFragment(R.layout.fragment_deal) {
@@ -29,6 +31,9 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
 
     private lateinit var categoryDealsAdapter: LinearDealAdapter
     private lateinit var shopDealsAdapter: LinearDealAdapter
+
+    @Inject
+    lateinit var logger: AppEventsLogger
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -64,7 +69,15 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
 
     private fun initCoupon(deal: DealParcelable) {
         with(binding) {
-            logOpenDeal(deal.title)
+            logOpenDeal(
+                name = deal.title,
+                shopName = deal.shopName,
+                categoryName = getCategoryNameById(deal.categoryId),
+                price = deal.price.toString(),
+                className = "DealFragment",
+                context = requireContext(),
+                logger
+            )
             initListeners(deal)
             viewModel.getSimilarDealsByCategory(deal.categoryId, deal.id)
             viewModel.getSimilarDealsByShop(deal.shopName, deal.id)
@@ -188,7 +201,17 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
         }
         btnGetDeal.setOnClickListener {
             it.openLink(deal.shopLink)
-            logShopNow(name = deal.title, url = deal.shopLink)
+
+            logShopNow(
+                name = deal.title,
+                url = deal.shopLink,
+                shopName = deal.shopName,
+                categoryName = getCategoryNameById(deal.categoryId),
+                price = deal.price.toString(),
+                className = "DealFragment",
+                context = requireContext(),
+                logger
+            )
         }
         btnCopy.setOnClickListener {
             copyTextToClipboard(it.context, deal.title)

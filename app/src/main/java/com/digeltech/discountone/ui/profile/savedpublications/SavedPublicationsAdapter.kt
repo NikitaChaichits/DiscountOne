@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.digeltech.discountone.R
 import com.digeltech.discountone.databinding.RvDealGridBinding
 import com.digeltech.discountone.ui.common.addToBookmark
+import com.digeltech.discountone.ui.common.getCategoryNameById
 import com.digeltech.discountone.ui.common.logShopNow
 import com.digeltech.discountone.ui.common.model.DealParcelable
 import com.digeltech.discountone.ui.common.removeFromBookmark
@@ -17,10 +18,15 @@ import com.digeltech.discountone.util.copyTextToClipboard
 import com.digeltech.discountone.util.getDiscountText
 import com.digeltech.discountone.util.isNotNullAndNotEmpty
 import com.digeltech.discountone.util.view.*
+import com.facebook.appevents.AppEventsLogger
+import javax.inject.Inject
 
 class SavedPublicationsAdapter(
     private val onClickListener: (deal: DealParcelable) -> Unit,
 ) : ListAdapter<DealParcelable, SavedPublicationsAdapter.ItemViewholder>(DiffCallback()) {
+
+    @Inject
+    lateinit var logger: AppEventsLogger
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewholder {
         return RvDealGridBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -69,7 +75,16 @@ class SavedPublicationsAdapter(
 
                 btnGetDeal.setOnClickListener {
                     it.openLink(item.shopLink)
-                    logShopNow(name = item.title, url = item.shopLink)
+                    logShopNow(
+                        name = item.title,
+                        url = item.shopLink,
+                        shopName = item.shopName,
+                        categoryName = getCategoryNameById(item.categoryId),
+                        price = item.price.toString(),
+                        className = "DealFragment",
+                        context = it.context,
+                        logger = logger
+                    )
                 }
 
                 if (item.promocode.isNotNullAndNotEmpty()) {

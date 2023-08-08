@@ -9,20 +9,22 @@ import androidx.recyclerview.widget.RecyclerView
 import com.digeltech.discountone.R
 import com.digeltech.discountone.data.source.local.SharedPreferencesDataSource
 import com.digeltech.discountone.databinding.RvDealLinearBinding
-import com.digeltech.discountone.ui.common.addToBookmark
-import com.digeltech.discountone.ui.common.isAddedToBookmark
-import com.digeltech.discountone.ui.common.logShopNow
+import com.digeltech.discountone.ui.common.*
 import com.digeltech.discountone.ui.common.model.DealParcelable
-import com.digeltech.discountone.ui.common.removeFromBookmark
 import com.digeltech.discountone.util.capitalizeFirstLetter
 import com.digeltech.discountone.util.copyTextToClipboard
 import com.digeltech.discountone.util.getDiscountText
 import com.digeltech.discountone.util.isNotNullAndNotEmpty
 import com.digeltech.discountone.util.view.*
+import com.facebook.appevents.AppEventsLogger
+import javax.inject.Inject
 
 class LinearDealAdapter(
     private val onClickListener: (deal: DealParcelable) -> Unit,
 ) : ListAdapter<DealParcelable, LinearDealAdapter.ItemViewholder>(DiffCallback()) {
+
+    @Inject
+    lateinit var logger: AppEventsLogger
 
     private lateinit var prefs: SharedPreferencesDataSource
 
@@ -74,7 +76,16 @@ class LinearDealAdapter(
 
                 btnGetDeal.setOnClickListener {
                     it.openLink(item.shopLink)
-                    logShopNow(name = item.title, url = item.shopLink)
+                    logShopNow(
+                        name = item.title,
+                        url = item.shopLink,
+                        shopName = item.shopName,
+                        categoryName = getCategoryNameById(item.categoryId),
+                        price = item.price.toString(),
+                        className = "DealFragment",
+                        context = it.context,
+                        logger = logger
+                    )
                 }
 
                 if (item.promocode.isNotNullAndNotEmpty()) {

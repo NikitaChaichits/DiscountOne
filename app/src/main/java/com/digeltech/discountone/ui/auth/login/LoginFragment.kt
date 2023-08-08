@@ -13,13 +13,18 @@ import com.digeltech.discountone.ui.common.logLogin
 import com.digeltech.discountone.util.validation.isValidEmail
 import com.digeltech.discountone.util.validation.isValidPassword
 import com.digeltech.discountone.util.view.*
+import com.facebook.appevents.AppEventsLogger
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : BaseFragment(R.layout.fragment_login) {
 
     private val binding by viewBinding(FragmentLoginBinding::bind)
     override val viewModel: LoginViewModel by viewModels()
+
+    @Inject
+    lateinit var logger: AppEventsLogger
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -63,7 +68,7 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
     private fun observeData() {
         viewModel.success.observe(viewLifecycleOwner) {
             if (it) {
-                logLogin(binding.etEmail.text.toString())
+                logLogin(binding.etEmail.text.toString(), requireContext(), logger)
                 prefs.setLogin(true)
                 navigate(R.id.homeFragment)
             } else {

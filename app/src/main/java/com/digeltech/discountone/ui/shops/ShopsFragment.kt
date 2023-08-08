@@ -14,9 +14,11 @@ import com.digeltech.discountone.ui.home.HomeFragmentDirections
 import com.digeltech.discountone.ui.shops.adapter.ShopAdapter
 import com.digeltech.discountone.util.view.*
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
+import com.facebook.appevents.AppEventsLogger
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ShopsFragment : BaseFragment(R.layout.fragment_shops), SearchView.OnQueryTextListener {
@@ -24,6 +26,9 @@ class ShopsFragment : BaseFragment(R.layout.fragment_shops), SearchView.OnQueryT
     private val binding by viewBinding(FragmentShopsBinding::bind)
 
     override val viewModel: ShopsViewModel by viewModels()
+
+    @Inject
+    lateinit var logger: AppEventsLogger
 
     private lateinit var shopAdapter: ShopAdapter
     private lateinit var searchDealAdapter: GridDealAdapter
@@ -63,7 +68,7 @@ class ShopsFragment : BaseFragment(R.layout.fragment_shops), SearchView.OnQueryT
                     slug = it.slug
                 )
             )
-            logOpenShopDeals(it.name)
+            logOpenShopDeals(it.name, requireContext(), logger)
         }
         binding.rvShops.adapter = shopAdapter
         binding.rvShops.addItemDecoration(

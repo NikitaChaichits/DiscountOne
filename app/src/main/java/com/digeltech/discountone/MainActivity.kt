@@ -1,6 +1,8 @@
 package com.digeltech.discountone
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavOptions
@@ -9,6 +11,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.digeltech.discountone.data.source.local.SharedPreferencesDataSource
 import com.digeltech.discountone.databinding.ActivityMainBinding
 import com.digeltech.discountone.ui.home.KEY_HOMEPAGE_DATA
+import com.facebook.appevents.AppEventsLogger
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
@@ -21,6 +24,8 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
+import io.branch.referral.Branch
+import javax.inject.Inject
 
 
 private const val UPDATE_CODE = 100
@@ -31,6 +36,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var prefs: SharedPreferencesDataSource
     private lateinit var appUpdateManager: AppUpdateManager
+
+    @Inject
+    lateinit var logger: AppEventsLogger
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +57,40 @@ class MainActivity : AppCompatActivity() {
 
         checkForUpdates()
         setupNavigation()
+
+        logger = AppEventsLogger.newLogger(this)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Branch.sessionBuilder(this).withCallback { branchUniversalObject, linkProperties, error ->
+            if (error != null) {
+                Log.e("BranchSDK_Tester", "branch init failed. Caused by -" + error.message)
+            } else {
+                Log.i("BranchSDK_Tester", "branch init complete!")
+                if (branchUniversalObject != null) {
+                    Log.i("BranchSDK_Tester", "title " + branchUniversalObject.title)
+                    Log.i("BranchSDK_Tester", "CanonicalIdentifier " + branchUniversalObject.canonicalIdentifier)
+                    Log.i("BranchSDK_Tester", "metadata " + branchUniversalObject.contentMetadata.convertToJson())
+                }
+                if (linkProperties != null) {
+                    Log.i("BranchSDK_Tester", "Channel " + linkProperties.channel)
+                    Log.i("BranchSDK_Tester", "control params " + linkProperties.controlParams)
+                }
+            }
+        }.withData(this.intent.data).init()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        this.intent = intent
+        Branch.sessionBuilder(this).withCallback { referringParams, error ->
+            if (error != null) {
+                Log.e("BranchSDK_Tester", error.message)
+            } else if (referringParams != null) {
+                Log.i("BranchSDK_Tester", referringParams.toString())
+            }
+        }.reInit()
     }
 
     override fun onResume() {

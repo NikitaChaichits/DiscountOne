@@ -52,7 +52,7 @@ class BottomSheetPriceFragment(private val priceFrom: Int, private val priceTo: 
                 var input1 = etPriceFrom.text.toString().trim()
                 var input2 = etPriceTo.text.toString().trim()
 
-                if (input1.toInt() > input2.toInt()) {
+                if (input1.isNotEmpty() && input2.isNotEmpty() && input1.toInt() > input2.toInt()) {
                     it.context.toast("Value From must be less then value To")
                     etPriceFrom.text = null
                     etPriceTo.text = null
