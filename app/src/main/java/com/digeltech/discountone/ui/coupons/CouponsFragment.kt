@@ -55,10 +55,13 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
     }
 
     private fun initAdapters() {
-        dealAdapter = GridDealAdapter {
-            viewModel.updateDealViewsClick(it.id.toString())
-            navigate(CouponsFragmentDirections.toDealFragment(it))
-        }
+        dealAdapter = GridDealAdapter(
+            {
+                viewModel.updateDealViewsClick(it.id.toString())
+                navigate(CouponsFragmentDirections.toDealFragment(it))
+            },
+            logger
+        )
         binding.rvDeals.addItemDecoration(
             GridOffsetDecoration(
                 edgesOffset = 16.px,
@@ -68,11 +71,14 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
         )
         binding.rvDeals.adapter = dealAdapter
 
-        searchAdapter = GridDealAdapter {
-            viewModel.updateDealViewsClick(it.id.toString())
-            navigate(CouponsFragmentDirections.toDealFragment(it))
-            binding.searchView.setQuery("", false)
-        }
+        searchAdapter = GridDealAdapter(
+            {
+                viewModel.updateDealViewsClick(it.id.toString())
+                navigate(CouponsFragmentDirections.toDealFragment(it))
+                binding.searchView.setQuery("", false)
+            },
+            logger
+        )
         binding.rvSearchDeals.addItemDecoration(
             GridOffsetDecoration(
                 edgesOffset = 16.px,

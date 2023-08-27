@@ -14,7 +14,7 @@ interface DealsRepository {
 
     suspend fun getAllCoupons(): Result<List<Deal>>
 
-    suspend fun getDealsByCategoryId(categoryId: Int): Result<List<Deal>>
+    suspend fun getDealsByCategoryAndShopId(categoryId: Int?, shopId: Int?): Result<List<Deal>>
 
     suspend fun getDealsByShopId(shopId: Int): Result<List<Deal>>
 
@@ -36,9 +36,9 @@ interface DealsRepository {
         taxSlug: String,
         sorting: Sorting,
         sortBy: SortBy,
+        catOrShopSlug: String?,
         priceFrom: Int?,
-        priceTo: Int?,
-        discountFrom: Int?,
-        discountTo: Int?,
+        priceTo: Int?
     ): Result<List<Deal>>
+
 }

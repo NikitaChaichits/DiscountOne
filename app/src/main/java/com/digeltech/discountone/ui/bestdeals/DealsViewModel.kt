@@ -33,6 +33,8 @@ class DealsViewModel @Inject constructor(
 
     private var categorySpinnerPosition = 0
     private var shopSpinnerPosition = 0
+    private var selectedShopId = 0
+    private var selectedCategoryId = 0
 
     init {
         initDeals()
@@ -93,6 +95,10 @@ class DealsViewModel @Inject constructor(
 
     fun loadCategoryDeals(spinnerPosition: Int) {
         categorySpinnerPosition = spinnerPosition
+        selectedCategoryId = if (spinnerPosition > 0)
+            _categories.value?.get(spinnerPosition - 1)?.id ?: 0
+        else 0
+
         viewModelScope.launch {
             if (spinnerPosition == 0) {
                 if (shopSpinnerPosition == 0) {
@@ -102,18 +108,20 @@ class DealsViewModel @Inject constructor(
                 }
             } else {
                 viewModelScope.launchWithLoading {
-                    _categories.value?.get(spinnerPosition - 1)?.id?.let {
-                        dealsRepository.getDealsByCategoryId(it)
+                    _categories.value?.get(spinnerPosition - 1)?.id?.let { categoryId ->
+                        dealsRepository.getDealsByCategoryAndShopId(
+                            categoryId = categoryId,
+                            shopId = selectedShopId.takeIf { shopId -> shopId != 0 })
                             .onSuccess { deals ->
-                                if (shopSpinnerPosition == 0) {
-                                    _deals.postValue(deals.toParcelableList())
-                                } else {
-                                    val selectedShopName = _shops.value?.get(shopSpinnerPosition - 1)?.name
-                                    _deals.postValue(
-                                        deals.toParcelableList().filter { deal ->
-                                            deal.shopName.equals(selectedShopName, true)
-                                        })
-                                }
+//                     Ï           if (shopSpinnerPosition == 0) {
+                                _deals.postValue(deals.toParcelableList())
+//                                } else {
+//                                    val selectedShopName = _shops.value?.get(shopSpinnerPosition - 1)?.name
+//                                    _deals.postValue(
+//                                        deals.toParcelableList().filter { deal ->
+//                                            deal.shopName.equals(selectedShopName, true)
+//                                        })
+//                                }
                             }
                             .onFailure { e ->
                                 log(e.toString())
@@ -127,6 +135,11 @@ class DealsViewModel @Inject constructor(
 
     fun loadShopDeals(spinnerPosition: Int) {
         shopSpinnerPosition = spinnerPosition
+
+        selectedShopId = if (spinnerPosition > 0)
+            _shops.value?.get(spinnerPosition - 1)?.id ?: 0
+        else 0
+
         viewModelScope.launch {
             if (spinnerPosition == 0) {
                 if (categorySpinnerPosition == 0) {
@@ -136,18 +149,21 @@ class DealsViewModel @Inject constructor(
                 }
             } else {
                 viewModelScope.launchWithLoading {
-                    _shops.value?.get(spinnerPosition - 1)?.id?.let {
-                        dealsRepository.getDealsByShopId(it)
+                    _shops.value?.get(spinnerPosition - 1)?.id?.let { shopId ->
+                        dealsRepository.getDealsByCategoryAndShopId(
+                            categoryId = selectedCategoryId.takeIf { categoryId -> categoryId != 0 },
+                            shopId = shopId
+                        )
                             .onSuccess { deals ->
-                                if (categorySpinnerPosition == 0) {
-                                    _deals.postValue(deals.toParcelableList())
-                                } else {
-                                    val selectedCategoryId = _categories.value?.get(categorySpinnerPosition - 1)?.id
-                                    _deals.postValue(
-                                        deals.toParcelableList().filter { deal ->
-                                            deal.categoryId == selectedCategoryId
-                                        })
-                                }
+//                                if (categorySpinnerPosition == 0) {
+                                _deals.postValue(deals.toParcelableList())
+//                                } else {
+//                                    val selectedCategoryId = _categories.value?.get(categorySpinnerPosition - 1)?.id
+//                                    _deals.postValue(
+//                                        deals.toParcelableList().filter { deal ->
+//                                            deal.categoryId == selectedCategoryId
+//                                        })
+//                                }
                             }
                             .onFailure { e ->
                                 log(e.toString())

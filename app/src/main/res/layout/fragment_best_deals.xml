@@ -88,6 +88,7 @@
         android:layout_marginStart="@dimen/common_offset_16dp"
         android:layout_marginTop="@dimen/common_offset_4dp"
         android:layout_marginEnd="@dimen/common_offset_4dp"
+        android:background="@drawable/bg_deal"
         app:layout_constraintEnd_toStartOf="@id/spinnerShops"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvFilterCategories" />
@@ -109,9 +110,23 @@
         android:layout_marginStart="@dimen/common_offset_4dp"
         android:layout_marginTop="@dimen/common_offset_4dp"
         android:layout_marginEnd="@dimen/common_offset_8dp"
+        android:background="@drawable/bg_deal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/spinnerCategories"
         app:layout_constraintTop_toBottomOf="@id/tvFilterShops" />
+
+
+    <TextView
+        android:id="@+id/tvSortingResultEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/common_offset_16dp"
+        android:layout_marginTop="@dimen/common_offset_24dp"
+        android:text="@string/empty_sorting_result"
+        android:textAlignment="center"
+        android:textColor="@color/defaultColor"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/spinnerCategories" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvDeals"

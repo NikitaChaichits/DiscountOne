@@ -82,7 +82,6 @@
             android:layout_marginHorizontal="@dimen/common_offset_16dp"
             android:layout_marginTop="@dimen/common_offset_16dp"
             android:text="@string/fr_home_title"
-            android:visibility="invisible"
             app:layout_constraintTop_toBottomOf="@id/rvBanners" />
 
         <TextView
@@ -93,7 +92,6 @@
             android:text="@string/fr_deal_similar_more_deals"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold"
-            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@id/tvBestDealsTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tvBestDealsTitle" />
@@ -155,6 +153,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:constraint_referenced_ids="rvBanners, ivBannerSale, tvBestDealsTitle, tvMoreBestDeals, rvBestDeals, rvCategories" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/bestDealsGroup"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:constraint_referenced_ids="tvBestDealsTitle, tvMoreBestDeals, rvBestDeals" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.core.widget.NestedScrollView>

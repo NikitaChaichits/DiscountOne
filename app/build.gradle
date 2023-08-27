@@ -121,6 +121,7 @@ dependencies {
     implementation firebaseDependencies.crashlyticsKtx
     implementation firebaseDependencies.authKtx
     implementation firebaseDependencies.firestoreKtx
+    implementation firebaseDependencies.messaging
 
     //Tests
     testImplementation appDependencies.junit

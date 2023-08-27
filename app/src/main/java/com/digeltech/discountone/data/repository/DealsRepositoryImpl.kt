@@ -38,11 +38,12 @@ class DealsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getDealsByCategoryId(categoryId: Int): Result<List<Deal>> = withContext(Dispatchers.IO) {
-        runCatching {
-            DealsMapper().mapDeals(api.getCategoryDeals(categoryId.toString()))
+    override suspend fun getDealsByCategoryAndShopId(categoryId: Int?, shopId: Int?): Result<List<Deal>> =
+        withContext(Dispatchers.IO) {
+            runCatching {
+                DealsMapper().mapDeals(api.getSortingBestDeals(categoryId, shopId))
+            }
         }
-    }
 
     override suspend fun getDealsByShopId(shopId: Int): Result<List<Deal>> = withContext(Dispatchers.IO) {
         runCatching {
@@ -88,10 +89,9 @@ class DealsRepositoryImpl @Inject constructor(
         taxSlug: String,
         sorting: Sorting,
         sortBy: SortBy,
+        catOrShopSlug: String?,
         priceFrom: Int?,
-        priceTo: Int?,
-        discountFrom: Int?,
-        discountTo: Int?
+        priceTo: Int?
     ): Result<List<Deal>> = withContext(Dispatchers.IO) {
         runCatching {
             DealsMapper().mapDeals(
@@ -101,10 +101,9 @@ class DealsRepositoryImpl @Inject constructor(
                     taxSlug = taxSlug,
                     sorting = sorting.name,
                     sortBy = sortBy.type,
+                    catOrShopSlug = catOrShopSlug,
                     priceFrom = priceFrom,
                     priceTo = priceTo,
-                    discountFrom = discountFrom,
-                    discountTo = discountTo
                 )
             )
         }

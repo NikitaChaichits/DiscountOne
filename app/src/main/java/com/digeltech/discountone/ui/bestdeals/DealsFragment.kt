@@ -77,10 +77,13 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
     }
 
     private fun initAdapters() {
-        dealAdapter = GridDealAdapter {
-            viewModel.updateDealViewsClick(it.id.toString())
-            navigate(CouponsFragmentDirections.toDealFragment(it))
-        }
+        dealAdapter = GridDealAdapter(
+            {
+                viewModel.updateDealViewsClick(it.id.toString())
+                navigate(CouponsFragmentDirections.toDealFragment(it))
+            },
+            logger
+        )
         binding.rvDeals.addItemDecoration(
             GridOffsetDecoration(
                 edgesOffset = 16.px,
@@ -103,11 +106,14 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
             }
         })
 
-        searchAdapter = GridDealAdapter {
-            viewModel.updateDealViewsClick(it.id.toString())
-            navigate(CouponsFragmentDirections.toDealFragment(it))
-            binding.searchView.setQuery("", false)
-        }
+        searchAdapter = GridDealAdapter(
+            {
+                viewModel.updateDealViewsClick(it.id.toString())
+                navigate(CouponsFragmentDirections.toDealFragment(it))
+                binding.searchView.setQuery("", false)
+            },
+            logger
+        )
         binding.rvSearchDeals.addItemDecoration(
             GridOffsetDecoration(
                 edgesOffset = 16.px,
@@ -160,7 +166,17 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
             else
                 binding.ivLoading.invisible()
         }
-        viewModel.deals.observe(viewLifecycleOwner, dealAdapter::submitList)
+        viewModel.deals.observe(viewLifecycleOwner) {
+            if (it.isEmpty()) {
+                binding.tvSortingResultEmpty.visible()
+                binding.rvDeals.invisible()
+            } else {
+                binding.tvSortingResultEmpty.invisible()
+                binding.rvDeals.visible()
+                dealAdapter.submitList(null)
+                dealAdapter.submitList(it)
+            }
+        }
         viewModel.shops.observe(viewLifecycleOwner) {
             val adapterShops = ArrayAdapter(requireContext(), R.layout.spinner_item, getFilteredNames(it))
             adapterShops.setDropDownViewResource(R.layout.spinner_item_dropdown)

@@ -116,10 +116,13 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         autoScrollHelper.startAutoScroll()
 
         // Linear horizontal RV for best deals
-        bestDealsAdapter = LinearDealAdapter {
-            viewModel.updateDealViewsClick(it.id.toString())
-            navigate(HomeFragmentDirections.toDealFragment(it))
-        }
+        bestDealsAdapter = LinearDealAdapter(
+            {
+                viewModel.updateDealViewsClick(it.id.toString())
+                navigate(HomeFragmentDirections.toDealFragment(it))
+            },
+            logger
+        )
         binding.rvBestDeals.adapter = bestDealsAdapter
 
         // Linear vertical RV for Categories with subcategories with Linear horizontal RV for deals
@@ -137,7 +140,8 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
             {
                 viewModel.updateDealViewsClick(it.id.toString())
                 navigate(HomeFragmentDirections.toDealFragment(it))
-            }
+            },
+            logger
         )
         binding.rvCategories.apply {
             adapter = categoriesAdapter
@@ -164,9 +168,12 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         }
 
         //Grid RV for searching results
-        searchDealAdapter = GridDealAdapter {
-            navigate(HomeFragmentDirections.toDealFragment(it))
-        }
+        searchDealAdapter = GridDealAdapter(
+            {
+                navigate(HomeFragmentDirections.toDealFragment(it))
+            },
+            logger
+        )
         binding.rvSearchDeals.addItemDecoration(
             GridOffsetDecoration(
                 edgesOffset = 16.px,
@@ -191,21 +198,8 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
             else
                 binding.ivLoading.invisible()
         }
-//        viewModel.soloBanner.observe(viewLifecycleOwner) { banner ->
-//            banner?.let {
-//                binding.ivBannerSale.apply {
-//                    setImageWithRadius(banner.urlImage, R.dimen.radius_16)
-//                    setOnClickListener {
-//                        viewModel.getDeal(dealId = banner.dealId, categoryId = banner.categoryId)
-//                    }
-//                    visible()
-//                }
-//
-//            }
-//        }
         viewModel.bestDeals.observe(viewLifecycleOwner) {
-            binding.tvMoreBestDeals.visible()
-            binding.tvBestDealsTitle.visible()
+            binding.bestDealsGroup.visible()
             bestDealsAdapter.submitList(it)
         }
         viewModel.categories.observe(viewLifecycleOwner) {
@@ -216,15 +210,18 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         viewModel.searchResult.observe(viewLifecycleOwner) {
             if (binding.searchView.query.isNullOrEmpty()) {
                 binding.homeGroup.visible()
+                binding.bestDealsGroup.visible()
                 binding.tvSearchResultEmpty.invisible()
                 binding.rvSearchDeals.invisible()
             } else if (it.isEmpty() && !binding.searchView.query.isNullOrEmpty()) {
                 binding.tvSearchResultEmpty.visible()
                 binding.homeGroup.invisible()
+                binding.bestDealsGroup.invisible()
                 binding.rvSearchDeals.invisible()
             } else {
                 binding.tvSearchResultEmpty.invisible()
                 binding.homeGroup.gone()
+                binding.bestDealsGroup.gone()
                 binding.rvSearchDeals.visible()
             }
             searchDealAdapter.submitList(it)

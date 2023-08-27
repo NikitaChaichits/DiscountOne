@@ -54,16 +54,22 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
     }
 
     private fun initAdapters() {
-        categoryDealsAdapter = LinearDealAdapter {
-            initCoupon(it)
-            binding.scrollView.scrollTo(0, 0)
-        }
+        categoryDealsAdapter = LinearDealAdapter(
+            {
+                initCoupon(it)
+                binding.scrollView.scrollTo(0, 0)
+            },
+            logger
+        )
         binding.rvSimilarCategoryDeals.adapter = categoryDealsAdapter
 
-        shopDealsAdapter = LinearDealAdapter {
-            initCoupon(it)
-            binding.scrollView.scrollTo(0, 0)
-        }
+        shopDealsAdapter = LinearDealAdapter(
+            {
+                initCoupon(it)
+                binding.scrollView.scrollTo(0, 0)
+            },
+            logger
+        )
         binding.rvSimilarShopDeals.adapter = shopDealsAdapter
     }
 

@@ -3,6 +3,8 @@ package com.digeltech.discountone.di
 import com.digeltech.discountone.domain.repository.CategoriesRepository
 import com.digeltech.discountone.domain.repository.DealsRepository
 import com.digeltech.discountone.domain.repository.ShopsRepository
+import com.digeltech.discountone.ui.categories.categoryandshop.interactor.CategoryAndShopInteractor
+import com.digeltech.discountone.ui.categories.categoryandshop.interactor.CategoryAndShopInteractorImpl
 import com.digeltech.discountone.ui.categories.interactor.CategoriesInteractor
 import com.digeltech.discountone.ui.categories.interactor.CategoriesInteractorImpl
 import com.digeltech.discountone.ui.home.interactor.HomeInteractor
@@ -46,6 +48,18 @@ object InteractorModule {
         HomeInteractorImpl(
             dealsRepository = dealsRepository,
             shopsRepository = shopsRepository
+        )
+
+    @Provides
+    fun provideCategoryAndShopInteractor(
+        dealsRepository: DealsRepository,
+        shopsRepository: ShopsRepository,
+        categoriesRepository: CategoriesRepository,
+    ): CategoryAndShopInteractor =
+        CategoryAndShopInteractorImpl(
+            dealsRepository = dealsRepository,
+            shopsRepository = shopsRepository,
+            categoriesRepository = categoriesRepository
         )
 
 }

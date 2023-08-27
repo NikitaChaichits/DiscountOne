@@ -23,7 +23,7 @@ class SplashFragment : BaseFragment(R.layout.fragment_splash) {
 
         CoroutineScope(Dispatchers.Main).launch {
             delay(1500L)
-            navigate(SplashFragmentDirections.toHomeFragment())
+            navigate(R.id.homeFragment)
             activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         }
     }

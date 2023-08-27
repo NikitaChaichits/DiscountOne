@@ -86,9 +86,12 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories), SearchVie
             )
         )
 
-        searchDealAdapter = GridDealAdapter {
-            navigate(HomeFragmentDirections.toDealFragment(it))
-        }
+        searchDealAdapter = GridDealAdapter(
+            {
+                navigate(HomeFragmentDirections.toDealFragment(it))
+            },
+            logger
+        )
         binding.rvSearchDeals.addItemDecoration(
             GridOffsetDecoration(
                 edgesOffset = 16.px,

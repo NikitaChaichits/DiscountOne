@@ -28,6 +28,8 @@
     <string name="search_by_categories">Search by categories</string>
     <string name="search_by_shops">Search by stores</string>
     <string name="empty_search_result"><b>Nothing found</b>\nTry different phrasing</string>
+    <string name="sort_by">Sort by</string>
+    <string name="empty_sorting_result"><b>Nothing found</b></string>
     <string name="toast_bookmark">You must be logged in to add bookmark</string>
     <string name="share_text">Look what I found in DiscouneOne %s</string>
     <string name="trow_off">Trow off</string>
@@ -145,7 +147,8 @@
     <string name="fr_deal_similar_deals">Other deals from</string>
     <string name="fr_deal_daily_top">Daily Top</string>
     <string name="fr_deal_similar_more_deals">More deals</string>
-    <string name="shop_now">Shop now</string>
+    <string name="shop_now">SEE MORE</string>
+    <string name="get_deal">Get Deal</string>
 
     <!-- Fragment Saved Publications-->
     <string name="fr_saved_publ_title">Saved Publications</string>

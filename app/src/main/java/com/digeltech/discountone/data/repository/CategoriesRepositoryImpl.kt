@@ -21,4 +21,10 @@ class CategoriesRepositoryImpl @Inject constructor(
             }
         }
     }
+
+    override suspend fun getCategoryShops(pageslug: String): Result<List<String>> = withContext(Dispatchers.IO) {
+        runCatching {
+            api.getCategoryStores(pageslug)
+        }
+    }
 }

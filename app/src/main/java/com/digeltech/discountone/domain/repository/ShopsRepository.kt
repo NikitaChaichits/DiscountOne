@@ -6,4 +6,6 @@ interface ShopsRepository {
 
     suspend fun getAllShops(): Result<List<Shop>>
 
+    suspend fun getShopCategories(pageslug: String): Result<List<String>>
+
 }

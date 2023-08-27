@@ -17,16 +17,13 @@ import com.digeltech.discountone.util.getDiscountText
 import com.digeltech.discountone.util.isNotNullAndNotEmpty
 import com.digeltech.discountone.util.view.*
 import com.facebook.appevents.AppEventsLogger
-import javax.inject.Inject
 
 class GridDealAdapter(
     private val onClickListener: (deal: DealParcelable) -> Unit,
+    private val logger: AppEventsLogger
 ) : ListAdapter<DealParcelable, GridDealAdapter.ItemViewholder>(DiffCallback()) {
 
     private lateinit var prefs: SharedPreferencesDataSource
-
-    @Inject
-    lateinit var logger: AppEventsLogger
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewholder {
         return RvDealGridBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -75,7 +72,7 @@ class GridDealAdapter(
                 root.setOnClickListener { onClickListener(item) }
 
                 btnGetDeal.setOnClickListener {
-                    it.openLink(item.shopLink)
+                    onClickListener(item)
                     logShopNow(
                         name = item.title,
                         url = item.shopLink,

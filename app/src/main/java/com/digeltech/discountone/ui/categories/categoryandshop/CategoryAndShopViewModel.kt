@@ -4,59 +4,62 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.digeltech.discountone.common.base.BaseViewModel
-import com.digeltech.discountone.domain.repository.DealsRepository
+import com.digeltech.discountone.ui.categories.categoryandshop.interactor.CategoryAndShopInteractor
 import com.digeltech.discountone.ui.common.SEARCH_DELAY
 import com.digeltech.discountone.ui.common.model.*
 import com.digeltech.discountone.util.log
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CategoryAndShopViewModel @Inject constructor(
-    private val dealsRepository: DealsRepository,
+    private val interactor: CategoryAndShopInteractor,
 ) : BaseViewModel() {
 
     private val _deals: MutableLiveData<List<DealParcelable>> = MutableLiveData()
     val deals: LiveData<List<DealParcelable>> = _deals
 
+    private val _categoryOrShopNames: MutableLiveData<List<String>> = MutableLiveData()
+    val categoryOrShopNames: LiveData<List<String>> = _categoryOrShopNames
+
+    val filteringError = MutableLiveData<String>()
+
     private var currentPage = 1
     private var currentCategoryType: CategoryType = CategoryType.SHOP
     private lateinit var taxSlug: String
-    private var currentSortByPosition = 0
+    private var currentSortBySpinnerPosition = -1
+    private var currentCatOrShopSpinnerPosition = 0
+    private var categoryOrShopSlug = ""
     private var priceFrom = 0
     private var priceTo = 0
-    private var discountFrom = 0
-    private var discountTo = 0
     private var sorting = Sorting.DESC
     private var sortBy = SortBy.DATE
 
-    fun initDeals(id: Int, slug: String, isFromCategory: Boolean) {
+    private var sortingJob: Job? = null
+
+    fun initScreenData(slug: String, isFromCategory: Boolean) {
         if (isFromCategory) currentCategoryType = CategoryType.CATEGORY
         taxSlug = slug
-
+        val list = mutableListOf("All")
+        list.addAll(listOf("Category 1", "Category 2", "Category 3"))
+        _categoryOrShopNames.value = list
 //        viewModelScope.launchWithLoading {
 //            if (isFromCategory) {
-//                dealsRepository.getDealsByCategoryId(id)
-//                    .onSuccess { deals ->
-//                        _deals.postValue(deals.toParcelableList().sortedByDescending { it.id })
-//                    }
-//                    .onFailure {
-//                        log(it.toString())
-//                        error.postValue(it.toString())
+//                interactor.getCategoryShops(slug)
+//                    .onSuccess {
+//                        list.addAll(it)
+//                        _categoryOrShopNames.value = list
 //                    }
 //            } else {
-//                dealsRepository.getDealsByShopId(id)
-//                    .onSuccess { deals ->
-//                        _deals.postValue(deals.toParcelableList().sortedByDescending { it.id })
-//                    }
-//                    .onFailure {
-//                        log(it.toString())
-//                        error.postValue(it.toString())
+//                interactor.getShopCategories(slug)
+//                    .onSuccess {
+//                        list.addAll(it)
+//                        _categoryOrShopNames.value = list
 //                    }
 //            }
-//
 //        }
     }
 
@@ -66,19 +69,19 @@ class CategoryAndShopViewModel @Inject constructor(
         searchJob = viewModelScope.launch {
             delay(SEARCH_DELAY)
 
-            val deals = dealsRepository.searchDeals(searchText)
+            val deals = interactor.searchDeals(searchText)
             searchResult.value = deals.toParcelableList()
         }
     }
 
     fun updateDealViewsClick(id: String) {
         viewModelScope.launch {
-            dealsRepository.updateDealViewsClick(id)
+            interactor.updateDealViewsClick(id)
         }
     }
 
     fun sortingByType(spinnerPosition: Int) {
-        currentSortByPosition = spinnerPosition
+        currentSortBySpinnerPosition = spinnerPosition
         when (spinnerPosition) {
             0 -> {
                 sortBy = SortBy.DATE
@@ -110,37 +113,42 @@ class CategoryAndShopViewModel @Inject constructor(
         getSortingDeals()
     }
 
-    fun getPriceFrom() = priceFrom
-    fun getPriceTo() = priceTo
-
-    fun sortingByDiscount(discountFrom: Int, discountTo: Int) {
-        this.discountFrom = discountFrom
-        this.discountTo = discountTo
+    fun sortingByCatOrShop(spinnerPosition: Int) {
+        currentCatOrShopSpinnerPosition = spinnerPosition
+        categoryOrShopSlug = if (spinnerPosition == 0) {
+            ""
+        } else {
+            _categoryOrShopNames.value?.get(spinnerPosition - 1) ?: ""
+        }
         getSortingDeals()
     }
 
-    fun getDiscountFrom() = discountFrom
-    fun getDiscountTo() = discountTo
+    fun getPriceFrom() = priceFrom
+    fun getPriceTo() = priceTo
+
+    fun getSortBySpinnerPosition(): Int = currentSortBySpinnerPosition
+
+    fun getCatOrShopSpinnerPosition(): Int = currentCatOrShopSpinnerPosition
 
     private fun getSortingDeals() {
-        viewModelScope.launchWithLoading {
-            dealsRepository.getSortingDeals(
+        if (sortingJob?.isActive == true) sortingJob?.cancel()
+        sortingJob = viewModelScope.launchWithLoading {
+            interactor.getSortingDeals(
                 page = currentPage.toString(),
                 categoryType = currentCategoryType,
                 taxSlug = taxSlug,
                 sorting = sorting,
                 sortBy = sortBy,
+                catOrShopSlug = categoryOrShopSlug.takeIf { it.isNotEmpty() },
                 priceFrom = priceFrom,
-                priceTo = priceTo,
-                discountFrom = discountFrom,
-                discountTo = discountTo
+                priceTo = priceTo
             )
                 .onSuccess { deals ->
                     _deals.postValue(deals.toParcelableList())
                 }
                 .onFailure {
                     log(it.toString())
-                    error.postValue(it.toString())
+                    filteringError.postValue(it.toString())
                 }
         }
     }

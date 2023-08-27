@@ -122,5 +122,6 @@ ext {
             authKtx              : "com.google.firebase:firebase-auth-ktx",
             firestoreKtx         : "com.google.firebase:firebase-firestore-ktx",
             crashlyticsBuildTools: "com.google.firebase:firebase-crashlytics-buildtools:${libraryVersions.buildtools}",
+            messaging            : "com.google.firebase:firebase-messaging-ktx",
     ]
 }

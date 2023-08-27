@@ -43,10 +43,12 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
         initListeners()
 
         binding.tvTitle.text = args.title
+        binding.tvSortingCatOrShop.text = if (args.isFromCategory) getString(R.string.fr_deals_filter_shops)
+        else getString(R.string.fr_deals_filter_categories)
         /**
          * isFromCategory default value = true, false value setup as default for 2 cases in mobile_navigation.xml
          */
-        viewModel.initDeals(args.id, args.slug, args.isFromCategory)
+        viewModel.initScreenData(args.slug, args.isFromCategory)
 
         observeData()
     }
@@ -67,10 +69,13 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
     }
 
     private fun initAdapters() {
-        dealAdapter = GridDealAdapter {
-            viewModel.updateDealViewsClick(it.id.toString())
-            navigate(CategoryAndShopFragmentDirections.toDealFragment(it))
-        }
+        dealAdapter = GridDealAdapter(
+            {
+                viewModel.updateDealViewsClick(it.id.toString())
+                navigate(CategoryAndShopFragmentDirections.toDealFragment(it))
+            },
+            logger
+        )
         binding.rvDeals.addItemDecoration(
             GridOffsetDecoration(
                 edgesOffset = 16.px,
@@ -80,11 +85,14 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
         )
         binding.rvDeals.adapter = dealAdapter
 
-        searchAdapter = GridDealAdapter {
-            viewModel.updateDealViewsClick(it.id.toString())
-            navigate(CategoryAndShopFragmentDirections.toDealFragment(it))
-            binding.searchView.setQuery("", false)
-        }
+        searchAdapter = GridDealAdapter(
+            {
+                viewModel.updateDealViewsClick(it.id.toString())
+                navigate(CategoryAndShopFragmentDirections.toDealFragment(it))
+                binding.searchView.setQuery("", false)
+            },
+            logger
+        )
         binding.rvSearchDeals.addItemDecoration(
             GridOffsetDecoration(
                 edgesOffset = 16.px,
@@ -111,20 +119,23 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
         }
         binding.spinnerSortingType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (position == viewModel.getSortBySpinnerPosition()) {
+                    return
+                }
                 viewModel.sortingByType(position)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) = Unit
         }
-        binding.tvSortingDiscount.setOnClickListener {
-            val bottomSheetFragment =
-                BottomSheetDiscountFragment(viewModel.getDiscountFrom(), viewModel.getDiscountTo())
-            bottomSheetFragment.setBottomSheetListener(object : BottomSheetDiscountFragment.BottomSheetListener {
-                override fun onSubmitClicked(input1: Int, input2: Int) {
-                    viewModel.sortingByDiscount(input1, input2)
+        binding.spinnerSortingCatOrShop.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (position == viewModel.getCatOrShopSpinnerPosition()) {
+                    return
                 }
-            })
-            bottomSheetFragment.show(requireActivity().supportFragmentManager, bottomSheetFragment.tag)
+                viewModel.sortingByCatOrShop(position)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) = Unit
         }
         binding.tvSortingPrice.setOnClickListener {
             val bottomSheetFragment = BottomSheetPriceFragment(viewModel.getPriceFrom(), viewModel.getPriceTo())
@@ -138,7 +149,17 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
     }
 
     private fun observeData() {
-        viewModel.deals.observe(viewLifecycleOwner, dealAdapter::submitList)
+        viewModel.categoryOrShopNames.observe(viewLifecycleOwner) {
+            val spinnerAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, it)
+            spinnerAdapter.setDropDownViewResource(R.layout.spinner_item_dropdown)
+            binding.spinnerSortingCatOrShop.adapter = spinnerAdapter
+        }
+        viewModel.deals.observe(viewLifecycleOwner) {
+            dealAdapter.submitList(null)
+            dealAdapter.submitList(it)
+            binding.tvFilteringResultEmpty.invisible()
+            binding.rvDeals.visible()
+        }
         viewModel.searchResult.observe(viewLifecycleOwner) {
             if (it.isEmpty() && !binding.searchView.query.isNullOrEmpty()) {
                 binding.tvSearchResultEmpty.visible()
@@ -149,6 +170,10 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
             }
             searchAdapter.submitList(it)
             binding.rvSearchDeals.visible()
+            binding.rvDeals.invisible()
+        }
+        viewModel.filteringError.observe(viewLifecycleOwner) {
+            binding.tvFilteringResultEmpty.visible()
             binding.rvDeals.invisible()
         }
     }

@@ -28,9 +28,6 @@ interface ServerApi {
     @GET("/wp-json/theme/v1/products/id/{id}")
     suspend fun getDeal(@Path("id") id: String): DealDto
 
-    @GET("/wp-json/theme/v1/list_categories?categories=categories&page=1&limit=1000")
-    suspend fun getCategoryDeals(@Query("id") id: String): List<DealDto>
-
     @GET("/wp-json/theme/v1/list_categories?categories=categories-shops&page=1&limit=1000")
     suspend fun getShopDeals(@Query("id") id: String): List<DealDto>
 
@@ -53,10 +50,21 @@ interface ServerApi {
         @Query("tax_slug") taxSlug: String,
         @Query("sort") sorting: String,
         @Query("sortBy") sortBy: String,
+        @Query("cat_or_shop") catOrShopSlug: String?,
         @Query("priceFrom") priceFrom: Int?,
-        @Query("priceTo") priceTo: Int?,
-        @Query("discountFrom") discountFrom: Int?,
-        @Query("discountTo") discountTo: Int?
+        @Query("priceTo") priceTo: Int?
     ): List<DealDto>
+
+    @GET("/wp-json/theme/v1/list_categories?categories=categories&page=1&limit=1000")
+    suspend fun getSortingBestDeals(
+        @Query("id_category") idCategory: Int?,
+        @Query("id_shop") idShop: Int?
+    ): List<DealDto>
+
+    @GET("/wp-json/theme/v1/cat_and_chop_filter?category=categories")
+    suspend fun getCategoryStores(@Query("pageslug") pageslug: String): List<String>
+
+    @GET("/wp-json/theme/v1/cat_and_chop_filter?category=categories-shop")
+    suspend fun getShopCategories(@Query("pageslug") pageslug: String): List<String>
 
 }

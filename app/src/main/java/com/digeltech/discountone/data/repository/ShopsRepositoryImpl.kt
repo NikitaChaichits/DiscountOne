@@ -22,4 +22,10 @@ class ShopsRepositoryImpl @Inject constructor(
             }
         }
     }
+
+    override suspend fun getShopCategories(pageslug: String): Result<List<String>> = withContext(Dispatchers.IO) {
+        runCatching {
+            api.getShopCategories(pageslug)
+        }
+    }
 }

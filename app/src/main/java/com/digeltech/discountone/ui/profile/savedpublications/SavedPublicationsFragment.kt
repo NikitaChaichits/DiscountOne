@@ -51,7 +51,12 @@ class SavedPublicationsFragment : BaseFragment(R.layout.fragment_saved_publicati
     }
 
     private fun initAdapter() {
-        adapter = SavedPublicationsAdapter { navigate(SavedPublicationsFragmentDirections.toDealFragment(it)) }
+        adapter = SavedPublicationsAdapter(
+            {
+                navigate(SavedPublicationsFragmentDirections.toDealFragment(it))
+            },
+            logger
+        )
         binding.rvDeals.adapter = adapter
         binding.rvDeals.addItemDecoration(
             GridOffsetDecoration(

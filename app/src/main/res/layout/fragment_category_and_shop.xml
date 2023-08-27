@@ -48,22 +48,54 @@
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/searchView" />
 
+    <TextView
+        android:id="@+id/tvSortingType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/common_offset_16dp"
+        android:layout_marginTop="@dimen/common_offset_8dp"
+        android:text="@string/sort_by"
+        android:textStyle="bold"
+        android:textColor="@color/defaultColor"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
     <Spinner
         android:id="@+id/spinnerSortingType"
         android:layout_width="match_parent"
         android:layout_height="38dp"
         android:layout_marginHorizontal="@dimen/common_offset_16dp"
-        android:layout_marginTop="@dimen/common_offset_8dp"
         android:background="@drawable/bg_deal"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+        app:layout_constraintTop_toBottomOf="@id/tvSortingType" />
+
+    <TextView
+        android:id="@+id/tvSortingCatOrShop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_offset_16dp"
+        android:layout_marginTop="@dimen/common_offset_8dp"
+        tools:text="Store"
+        android:textStyle="bold"
+        android:textColor="@color/defaultColor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/spinnerSortingType" />
+
+    <Spinner
+        android:id="@+id/spinnerSortingCatOrShop"
+        android:layout_width="0dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="@dimen/common_offset_16dp"
+        android:layout_marginEnd="@dimen/common_offset_4dp"
+        android:background="@drawable/bg_deal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvSortingCatOrShop"
+        app:layout_constraintEnd_toStartOf="@id/tvSortingPrice" />
 
     <TextView
         android:id="@+id/tvSortingPrice"
         android:layout_width="0dp"
         android:layout_height="38dp"
-        android:layout_marginStart="@dimen/common_offset_16dp"
-        android:layout_marginTop="@dimen/common_offset_8dp"
-        android:layout_marginEnd="@dimen/common_offset_4dp"
+        android:layout_marginEnd="@dimen/common_offset_16dp"
+        android:layout_marginStart="@dimen/common_offset_4dp"
         android:background="@drawable/bg_sorting"
         android:drawableEnd="@drawable/ic_arrow_down"
         android:drawablePadding="@dimen/common_offset_8dp"
@@ -73,28 +105,21 @@
         android:text="@string/fr_deals_sorting_price"
         android:textColor="@color/defaultColor"
         android:textSize="@dimen/common_textSize_16sp"
-        app:layout_constraintEnd_toStartOf="@id/tvSortingDiscount"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/spinnerSortingType" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/spinnerSortingCatOrShop"
+        app:layout_constraintTop_toBottomOf="@id/tvSortingCatOrShop" />
 
     <TextView
-        android:id="@+id/tvSortingDiscount"
-        android:layout_width="0dp"
-        android:layout_height="38dp"
-        android:layout_marginStart="@dimen/common_offset_4dp"
-        android:layout_marginTop="@dimen/common_offset_8dp"
-        android:layout_marginEnd="@dimen/common_offset_16dp"
-        android:background="@drawable/bg_sorting"
-        android:drawableEnd="@drawable/ic_arrow_down"
-        android:gravity="center_vertical"
-        android:paddingStart="@dimen/common_offset_12dp"
-        android:paddingEnd="@dimen/common_offset_8dp"
-        android:text="@string/fr_deals_sorting_discount"
+        android:id="@+id/tvFilteringResultEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/common_offset_16dp"
+        android:layout_marginTop="@dimen/common_offset_24dp"
+        android:text="@string/empty_sorting_result"
+        android:textAlignment="center"
         android:textColor="@color/defaultColor"
-        android:textSize="@dimen/common_textSize_16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/tvSortingPrice"
-        app:layout_constraintTop_toBottomOf="@id/spinnerSortingType" />
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/tvSortingPrice" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvDeals"

@@ -17,14 +17,11 @@ import com.digeltech.discountone.util.getDiscountText
 import com.digeltech.discountone.util.isNotNullAndNotEmpty
 import com.digeltech.discountone.util.view.*
 import com.facebook.appevents.AppEventsLogger
-import javax.inject.Inject
 
 class LinearDealAdapter(
     private val onClickListener: (deal: DealParcelable) -> Unit,
+    private val logger: AppEventsLogger
 ) : ListAdapter<DealParcelable, LinearDealAdapter.ItemViewholder>(DiffCallback()) {
-
-    @Inject
-    lateinit var logger: AppEventsLogger
 
     private lateinit var prefs: SharedPreferencesDataSource
 
@@ -75,7 +72,7 @@ class LinearDealAdapter(
                 root.setOnClickListener { onClickListener(item) }
 
                 btnGetDeal.setOnClickListener {
-                    it.openLink(item.shopLink)
+                    onClickListener(item)
                     logShopNow(
                         name = item.title,
                         url = item.shopLink,

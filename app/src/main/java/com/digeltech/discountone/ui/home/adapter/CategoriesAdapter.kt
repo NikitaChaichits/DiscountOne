@@ -10,10 +10,12 @@ import com.digeltech.discountone.databinding.RvHomeCategoriesBinding
 import com.digeltech.discountone.domain.model.CategoryWithSubcategories
 import com.digeltech.discountone.ui.common.model.CategoryWithDealsParcelable
 import com.digeltech.discountone.ui.common.model.DealParcelable
+import com.facebook.appevents.AppEventsLogger
 
 class CategoriesAdapter(
     private val onMoreDealsClick: (category: CategoryWithDealsParcelable) -> Unit,
     private val onDealClick: (deal: DealParcelable) -> Unit,
+    private val logger: AppEventsLogger
 ) : ListAdapter<CategoryWithSubcategories, CategoriesAdapter.ItemViewholder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewholder {
@@ -42,7 +44,9 @@ class CategoriesAdapter(
                     },
                     onDealClick = {
                         onDealClick(it)
-                    })
+                    },
+                    logger = logger
+                )
 
                 subcategoriesAdapter.submitList(item.subcategories)
                 rvSubcategories.adapter = subcategoriesAdapter
