@@ -3,9 +3,12 @@
     <string name="privacy_policy_link">https://discount.one/privacy-policy</string>
     <string name="terms_of_use_link">https://discount.one/terms-of-use</string>
     <string name="affiliate_disclosure_link">https://discount.one/affiliate-disclosure</string>
+
     <string name="facebook_app_id">311718021309174</string>
     <string name="facebook_client_token">7e9df79e0dca1aabd0f0b359f0907d2e</string>
     <string name="branch_key">key_live_ii8wqSTw9Hj7uZ1rlPTIQkmbxrauAyJC</string>
+    <string name="default_notification_channel_id">discount_one_fcm_channel</string>
+    <string name="default_notification_channel_name" translatable="true">Discount One special notifications</string>
 
     <string name="nav_home">Home</string>
     <string name="nav_categories">Categories</string>
@@ -67,7 +70,7 @@
 
     <!-- Log In -->
     <string name="log_in_title">My account</string>
-    <string name="log_in_error">Incorrect number or password. Please verify your information and try again</string>
+    <string name="log_in_error">Incorrect email or password. Please verify your information and try again</string>
     <string name="forgot_password">Forgot password?</string>
 
     <!-- Forgot password -->

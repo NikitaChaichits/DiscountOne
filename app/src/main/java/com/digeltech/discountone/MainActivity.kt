@@ -1,17 +1,25 @@
 package com.digeltech.discountone
 
-import android.content.Intent
+import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavOptions
-import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.Navigation
 import androidx.navigation.ui.setupWithNavController
 import com.digeltech.discountone.data.source.local.SharedPreferencesDataSource
 import com.digeltech.discountone.databinding.ActivityMainBinding
 import com.digeltech.discountone.ui.home.KEY_HOMEPAGE_DATA
+import com.digeltech.discountone.util.log
+import com.digeltech.discountone.util.view.toast
 import com.facebook.appevents.AppEventsLogger
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
@@ -22,11 +30,10 @@ import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
-import io.branch.referral.Branch
 import javax.inject.Inject
-
 
 private const val UPDATE_CODE = 100
 
@@ -40,8 +47,24 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var logger: AppEventsLogger
 
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            toast("Notifications permission granted")
+        } else {
+            toast("FCM can't post notifications without POST_NOTIFICATIONS permission")
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (intent != null && intent.extras != null) {
+            for (key in intent.extras!!.keySet()) {
+                log("Key: " + key + " Data: " + intent.extras!!.getString(key))
+            }
+        }
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -54,44 +77,68 @@ class MainActivity : AppCompatActivity() {
         Hawk.delete(KEY_HOMEPAGE_DATA)
 
         appUpdateManager = AppUpdateManagerFactory.create(baseContext)
+        logger = AppEventsLogger.newLogger(this)
 
         checkForUpdates()
         setupNavigation()
-
-        logger = AppEventsLogger.newLogger(this)
+        setupFCM()
     }
 
-    override fun onStart() {
-        super.onStart()
-        Branch.sessionBuilder(this).withCallback { branchUniversalObject, linkProperties, error ->
-            if (error != null) {
-                Log.e("BranchSDK_Tester", "branch init failed. Caused by -" + error.message)
-            } else {
-                Log.i("BranchSDK_Tester", "branch init complete!")
-                if (branchUniversalObject != null) {
-                    Log.i("BranchSDK_Tester", "title " + branchUniversalObject.title)
-                    Log.i("BranchSDK_Tester", "CanonicalIdentifier " + branchUniversalObject.canonicalIdentifier)
-                    Log.i("BranchSDK_Tester", "metadata " + branchUniversalObject.contentMetadata.convertToJson())
-                }
-                if (linkProperties != null) {
-                    Log.i("BranchSDK_Tester", "Channel " + linkProperties.channel)
-                    Log.i("BranchSDK_Tester", "control params " + linkProperties.controlParams)
-                }
+    private fun setupFCM() {
+        val channelId = getString(R.string.default_notification_channel_id)
+        val channelName = getString(R.string.default_notification_channel_name)
+        val notificationManager = getSystemService(NotificationManager::class.java)
+        notificationManager?.createNotificationChannel(
+            NotificationChannel(
+                channelId,
+                channelName,
+                NotificationManager.IMPORTANCE_LOW,
+            ),
+        )
+        askNotificationPermission()
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                log("Fetching FCM registration token failed ${task.exception}")
+                return@OnCompleteListener
             }
-        }.withData(this.intent.data).init()
+
+            val token = task.result
+            log("Firebase token $token")
+        })
     }
 
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        this.intent = intent
-        Branch.sessionBuilder(this).withCallback { referringParams, error ->
-            if (error != null) {
-                Log.e("BranchSDK_Tester", error.message)
-            } else if (referringParams != null) {
-                Log.i("BranchSDK_Tester", referringParams.toString())
-            }
-        }.reInit()
-    }
+//    override fun onStart() {
+//        super.onStart()
+//        Branch.sessionBuilder(this).withCallback { branchUniversalObject, linkProperties, error ->
+//            if (error != null) {
+//                Log.e("BranchSDK_Tester", "branch init failed. Caused by -" + error.message)
+//            } else {
+//                Log.i("BranchSDK_Tester", "branch init complete!")
+//                if (branchUniversalObject != null) {
+//                    Log.i("BranchSDK_Tester", "title " + branchUniversalObject.title)
+//                    Log.i("BranchSDK_Tester", "CanonicalIdentifier " + branchUniversalObject.canonicalIdentifier)
+//                    Log.i("BranchSDK_Tester", "metadata " + branchUniversalObject.contentMetadata.convertToJson())
+//                }
+//                if (linkProperties != null) {
+//                    Log.i("BranchSDK_Tester", "Channel " + linkProperties.channel)
+//                    Log.i("BranchSDK_Tester", "control params " + linkProperties.controlParams)
+//                }
+//            }
+//        }.withData(this.intent.data).init()
+//    }
+
+//    override fun onNewIntent(intent: Intent?) {
+//        super.onNewIntent(intent)
+//        this.intent = intent
+//        Branch.sessionBuilder(this).withCallback { referringParams, error ->
+//            if (error != null) {
+//                Log.e("BranchSDK_Tester", error.message)
+//            } else if (referringParams != null) {
+//                Log.i("BranchSDK_Tester", referringParams.toString())
+//            }
+//        }.reInit()
+//    }
 
     override fun onResume() {
         super.onResume()
@@ -129,7 +176,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun popupSnackbarForCompleteUpdate() {
         Snackbar.make(
-            findViewById(R.id.navigationHost),
+            findViewById(R.id.navHostFragment),
             "An update has just been downloaded.",
             Snackbar.LENGTH_INDEFINITE
         ).apply {
@@ -140,9 +187,57 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupNavigation() {
-        val navFragment =
-            supportFragmentManager.findFragmentById(R.id.navigationHost) as NavHostFragment
-        val navController = navFragment.navController
+        val navController = Navigation.findNavController(this, R.id.navHostFragment)
+        val navGraph = navController.navInflater.inflate(R.navigation.mobile_navigation)
+
+        intent.apply {
+            if (extras != null && extras!!.containsKey("fragment")) {
+                when (getStringExtra("fragment")) {
+                    "ShopsFragment" -> {
+                        navGraph.setStartDestination(R.id.shopsFragment)
+                    }
+                    "CategoriesFragment" -> {
+                        navGraph.setStartDestination(R.id.categoriesFragment)
+                    }
+                    "CategoryFragment", "ShopFragment" -> {
+                        val id = getIntExtra("id", 0)
+                        val title = getStringExtra("title")
+                        val slug = getStringExtra("slug")
+                        val isFromCategory = getStringExtra("isFromCategory").toBoolean()
+
+                        if (isFromCategory)
+                            navGraph.setStartDestination(R.id.categoriesFragment)
+                        else
+                            navGraph.setStartDestination(R.id.shopsFragment)
+
+                        val bundle = Bundle().apply {
+                            putInt("id", id)
+                            putString("title", title)
+                            putString("slug", slug)
+                            putBoolean("isFromCategory", isFromCategory)
+                        }
+                        navController.graph = navGraph
+                        navController.navigate(R.id.categoryAndShopFragment, bundle)
+                    }
+                    "DealFragment" -> {
+                        val id = getStringExtra("id")?.toInt() ?: 0
+                        val bundle = Bundle().apply {
+                            putParcelable("deal", null)
+                            putInt("dealId", id)
+                        }
+                        navGraph.setStartDestination(R.id.homeFragment)
+                        navController.graph = navGraph
+                        navController.navigate(R.id.dealFragment, bundle)
+                    }
+                    else -> {
+                        navGraph.setStartDestination(R.id.splashFragment)
+                    }
+                }
+            } else {
+                navGraph.setStartDestination(R.id.splashFragment)
+            }
+            navController.graph = navGraph
+        }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
@@ -202,4 +297,17 @@ class MainActivity : AppCompatActivity() {
         Firebase.analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, params)
     }
 
+    private fun askNotificationPermission() {
+        // This is only necessary for API Level > 33 (TIRAMISU)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+                PackageManager.PERMISSION_GRANTED
+            ) {
+                // FCM SDK (and your app) can post notifications.
+            } else {
+                // Directly ask for the permission
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+    }
 }

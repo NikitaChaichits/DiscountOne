@@ -7,7 +7,7 @@ interface HomeInteractor {
 
     suspend fun getHomepage(): Result<Homepage>
 
-    suspend fun getDeal(dealId: Int, categoryId: Int): Deal
+    suspend fun getDeal(dealId: Int): Result<Deal>
 
     suspend fun searchDeals(searchText: String): List<Deal>
 

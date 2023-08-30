@@ -6,6 +6,9 @@ import androidx.core.text.parseAsHtml
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.callbacks.onDismiss
+import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.digeltech.discountone.R
 import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentDealBinding
@@ -38,9 +41,14 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initCoupon(args.deal)
         initAdapters()
         observeData()
+
+        if (args.deal != null) {
+            initCoupon(args.deal!!)
+        } else {
+            viewModel.getDeal(args.dealId)
+        }
 
 //        binding.scrollView.setOnTouchListener(object : OnSwipeTouchListener(requireContext()) {
 //            override fun onSwipeLeft() {
@@ -84,10 +92,12 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
                 context = requireContext(),
                 logger
             )
+
             initListeners(deal)
             viewModel.getSimilarDealsByCategory(deal.categoryId, deal.id)
             viewModel.getSimilarDealsByShop(deal.shopName, deal.id)
 
+            scrollView.visible()
             if (!deal.imagesUrl.isNullOrEmpty()) {
                 val listOfDealImages = mutableListOf<String>()
 //                listOfDealImages.add(deal.imageUrl)
@@ -240,18 +250,29 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
         }
         viewModel.similarShopDeals.observe(viewLifecycleOwner) {
             shopDealsAdapter.submitList(it)
+            val firstDeal = it.first()
             binding.grSimilarShopDeals.visible()
-            binding.tvSimilarShopName.text = args.deal.shopName
+            binding.tvSimilarShopName.text = firstDeal.shopName
             binding.tvSimilarShopName.setOnClickListener {
                 navigate(
                     DealFragmentDirections.toShopFragment(
-                        id = getShopIdByName(args.deal.shopName),
-                        title = args.deal.shopName,
-                        slug = args.deal.shopSlug,
+                        id = getShopIdByName(firstDeal.shopName),
+                        title = firstDeal.shopName,
+                        slug = firstDeal.shopSlug,
                         isFromCategory = false
                     )
                 )
             }
+        }
+        viewModel.deal.observe(viewLifecycleOwner, ::initCoupon)
+        viewModel.loadingDealError.observe(viewLifecycleOwner) {
+            MaterialDialog(requireContext())
+                .lifecycleOwner(viewLifecycleOwner)
+                .message(text = "Deal loading error. Please try later.")
+                .cornerRadius(res = R.dimen.radius_12)
+                .cancelOnTouchOutside(cancelable = true)
+                .onDismiss { navigate(R.id.homeFragment) }
+                .show()
         }
     }
 }

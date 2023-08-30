@@ -51,8 +51,10 @@ class DealsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getDealById(dealId: Int, categoryId: Int): Deal = withContext(Dispatchers.IO) {
-        DealsMapper().mapToDeal(api.getDeal(dealId.toString()))
+    override suspend fun getDealById(dealId: Int): Result<Deal> = withContext(Dispatchers.IO) {
+        runCatching {
+            DealsMapper().mapToDeal(api.getDeal(dealId.toString()))
+        }
     }
 
     override suspend fun getHomepage(): Result<Homepage> = withContext(Dispatchers.IO) {

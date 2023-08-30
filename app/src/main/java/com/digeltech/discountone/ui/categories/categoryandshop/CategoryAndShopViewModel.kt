@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.digeltech.discountone.common.base.BaseViewModel
+import com.digeltech.discountone.domain.model.CategoryShopFilterItem
 import com.digeltech.discountone.ui.categories.categoryandshop.interactor.CategoryAndShopInteractor
 import com.digeltech.discountone.ui.common.SEARCH_DELAY
 import com.digeltech.discountone.ui.common.model.*
@@ -22,8 +23,8 @@ class CategoryAndShopViewModel @Inject constructor(
     private val _deals: MutableLiveData<List<DealParcelable>> = MutableLiveData()
     val deals: LiveData<List<DealParcelable>> = _deals
 
-    private val _categoryOrShopNames: MutableLiveData<List<String>> = MutableLiveData()
-    val categoryOrShopNames: LiveData<List<String>> = _categoryOrShopNames
+    private val _categoryOrShopNames: MutableLiveData<List<CategoryShopFilterItem>> = MutableLiveData()
+    val categoryOrShopNames: LiveData<List<CategoryShopFilterItem>> = _categoryOrShopNames
 
     val filteringError = MutableLiveData<String>()
 
@@ -43,24 +44,19 @@ class CategoryAndShopViewModel @Inject constructor(
     fun initScreenData(slug: String, isFromCategory: Boolean) {
         if (isFromCategory) currentCategoryType = CategoryType.CATEGORY
         taxSlug = slug
-        val list = mutableListOf("All")
-        list.addAll(listOf("Category 1", "Category 2", "Category 3"))
-        _categoryOrShopNames.value = list
-//        viewModelScope.launchWithLoading {
-//            if (isFromCategory) {
-//                interactor.getCategoryShops(slug)
-//                    .onSuccess {
-//                        list.addAll(it)
-//                        _categoryOrShopNames.value = list
-//                    }
-//            } else {
-//                interactor.getShopCategories(slug)
-//                    .onSuccess {
-//                        list.addAll(it)
-//                        _categoryOrShopNames.value = list
-//                    }
-//            }
-//        }
+        viewModelScope.launchWithLoading {
+            if (isFromCategory) {
+                interactor.getCategoryShops(slug)
+                    .onSuccess {
+                        _categoryOrShopNames.value = it
+                    }
+            } else {
+                interactor.getShopCategories(slug)
+                    .onSuccess {
+                        _categoryOrShopNames.value = it
+                    }
+            }
+        }
     }
 
     fun searchDeals(searchText: String) {
@@ -118,7 +114,7 @@ class CategoryAndShopViewModel @Inject constructor(
         categoryOrShopSlug = if (spinnerPosition == 0) {
             ""
         } else {
-            _categoryOrShopNames.value?.get(spinnerPosition - 1) ?: ""
+            _categoryOrShopNames.value?.get(spinnerPosition - 1)?.slug ?: ""
         }
         getSortingDeals()
     }
@@ -132,7 +128,8 @@ class CategoryAndShopViewModel @Inject constructor(
 
     private fun getSortingDeals() {
         if (sortingJob?.isActive == true) sortingJob?.cancel()
-        sortingJob = viewModelScope.launchWithLoading {
+
+        sortingJob = viewModelScope.launch {
             interactor.getSortingDeals(
                 page = currentPage.toString(),
                 categoryType = currentCategoryType,

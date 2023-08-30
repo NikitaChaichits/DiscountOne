@@ -2,8 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mobile_navigation"
-    app:startDestination="@id/splashFragment">
+    android:id="@+id/mobile_navigation">
 
     <fragment
         android:id="@+id/splashFragment"
@@ -42,8 +41,8 @@
                 app:argType="string" />
             <argument
                 android:name="isFromCategory"
-                app:argType="boolean"
-                android:defaultValue="true" />
+                android:defaultValue="true"
+                app:argType="boolean" />
         </action>
         <action
             android:id="@+id/toStartFragment"
@@ -92,8 +91,8 @@
             app:argType="string" />
         <argument
             android:name="isFromCategory"
-            app:argType="boolean"
-            android:defaultValue="true" />
+            android:defaultValue="true"
+            app:argType="boolean" />
 
         <action
             android:id="@+id/toDealFragment"
@@ -131,7 +130,13 @@
         tools:layout="@layout/fragment_deal">
         <argument
             android:name="deal"
-            app:argType="com.digeltech.discountone.ui.common.model.DealParcelable" />
+            app:argType="com.digeltech.discountone.ui.common.model.DealParcelable"
+            app:nullable="true" />
+        <argument
+            android:name="dealId"
+            android:defaultValue="0"
+            app:argType="integer" />
+
         <action
             android:id="@+id/toCategoriesFragment"
             app:destination="@id/categoriesFragment" />
@@ -146,8 +151,8 @@
                 app:argType="string" />
             <argument
                 android:name="isFromCategory"
-                app:argType="boolean"
-                android:defaultValue="false" />
+                android:defaultValue="false"
+                app:argType="boolean" />
         </action>
         <action
             android:id="@+id/toCategoryFragment"
@@ -186,8 +191,8 @@
                 app:argType="string" />
             <argument
                 android:name="isFromCategory"
-                app:argType="boolean"
-                android:defaultValue="false" />
+                android:defaultValue="false"
+                app:argType="boolean" />
         </action>
         <action
             android:id="@+id/toStartFragment"

@@ -36,6 +36,7 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
     private fun initListeners() {
         binding.toolbarLayout.ivBack.setOnClickListener {
             if (binding.webView.isVisible) {
+                binding.grContent.visible()
                 binding.webView.invisible()
             } else {
                 navigateBack()
@@ -48,7 +49,9 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
             navigate(R.id.newAccountFragment)
         }
         binding.tvForgotPassword.setOnClickListener {
-//            navigate(R.id.forgotPasswordFragment)
+            binding.grContent.invisible()
+            binding.tvPasswordError.gone()
+            binding.tvForgotPassword.gone()
             binding.webView.openWebView("https://discount.one/wp-login.php?action=lostpassword")
         }
         binding.etEmail.doAfterTextChanged { checkLoginButtonEnable() }
@@ -67,14 +70,13 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
 
     private fun observeData() {
         viewModel.success.observe(viewLifecycleOwner) {
-            if (it) {
-                logLogin(binding.etEmail.text.toString(), requireContext(), logger)
-                prefs.setLogin(true)
-                navigate(R.id.homeFragment)
-            } else {
-                binding.tvPasswordError.visible()
-                binding.tvForgotPassword.visible()
-            }
+            logLogin(binding.etEmail.text.toString(), requireContext(), logger)
+            prefs.setLogin(true)
+            navigate(R.id.homeFragment)
+        }
+        viewModel.loginError.observe(viewLifecycleOwner) {
+            binding.tvPasswordError.visible()
+            binding.tvForgotPassword.visible()
         }
     }
 }

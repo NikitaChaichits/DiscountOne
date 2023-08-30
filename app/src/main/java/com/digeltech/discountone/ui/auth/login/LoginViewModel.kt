@@ -1,5 +1,6 @@
 package com.digeltech.discountone.ui.auth.login
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.digeltech.discountone.common.base.BaseViewModel
 import com.digeltech.discountone.domain.repository.AuthRepository
@@ -11,6 +12,8 @@ class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : BaseViewModel() {
 
+    val loginError = MutableLiveData<String>()
+
     fun login(email: String, password: String) {
         viewModelScope.launchWithLoading {
             authRepository.login(email, password)
@@ -18,7 +21,7 @@ class LoginViewModel @Inject constructor(
                     success.postValue(true)
                 }
                 .onFailure {
-                    error.postValue(it.message)
+                    loginError.postValue("The password or the email address is incorrect")
                 }
         }
     }

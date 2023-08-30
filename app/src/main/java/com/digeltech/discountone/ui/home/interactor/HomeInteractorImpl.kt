@@ -15,8 +15,7 @@ internal class HomeInteractorImpl @Inject constructor(
         shopsRepository.getAllShops()
     }
 
-    override suspend fun getDeal(dealId: Int, categoryId: Int): Deal =
-        dealsRepository.getDealById(dealId = dealId, categoryId = categoryId)
+    override suspend fun getDeal(dealId: Int): Result<Deal> = dealsRepository.getDealById(dealId = dealId)
 
     override suspend fun searchDeals(searchText: String): List<Deal> = dealsRepository.searchDeals(searchText)
 

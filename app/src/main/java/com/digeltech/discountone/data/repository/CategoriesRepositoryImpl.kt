@@ -3,6 +3,7 @@ package com.digeltech.discountone.data.repository
 import com.digeltech.discountone.data.mapper.CategoryMapper
 import com.digeltech.discountone.data.source.remote.api.ServerApi
 import com.digeltech.discountone.domain.model.Category
+import com.digeltech.discountone.domain.model.CategoryShopFilterItem
 import com.digeltech.discountone.domain.repository.CategoriesRepository
 import com.digeltech.discountone.ui.common.KEY_CATEGORIES
 import com.orhanobut.hawk.Hawk
@@ -22,9 +23,12 @@ class CategoriesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getCategoryShops(pageslug: String): Result<List<String>> = withContext(Dispatchers.IO) {
-        runCatching {
-            api.getCategoryStores(pageslug)
+    override suspend fun getCategoryShops(pageslug: String): Result<List<CategoryShopFilterItem>> =
+        withContext(Dispatchers.IO) {
+            runCatching {
+                api.getCategoryStores(pageslug).map {
+                    CategoryShopFilterItem(it.name, it.slug)
+                }
+            }
         }
-    }
 }

@@ -39,9 +39,6 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initAdapters()
-        initListeners()
-
         binding.tvTitle.text = args.title
         binding.tvSortingCatOrShop.text = if (args.isFromCategory) getString(R.string.fr_deals_filter_shops)
         else getString(R.string.fr_deals_filter_categories)
@@ -51,6 +48,8 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
         viewModel.initScreenData(args.slug, args.isFromCategory)
 
         observeData()
+        initAdapters()
+        initListeners()
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean = false
@@ -150,7 +149,11 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
 
     private fun observeData() {
         viewModel.categoryOrShopNames.observe(viewLifecycleOwner) {
-            val spinnerAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, it)
+            val list = mutableListOf("All")
+            it.forEach { item ->
+                list.add(item.name)
+            }
+            val spinnerAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, list)
             spinnerAdapter.setDropDownViewResource(R.layout.spinner_item_dropdown)
             binding.spinnerSortingCatOrShop.adapter = spinnerAdapter
         }

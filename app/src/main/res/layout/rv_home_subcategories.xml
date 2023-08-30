@@ -20,11 +20,14 @@
     <TextView
         android:id="@+id/tvSubcategoryTitle"
         style="@style/TextRegular.Bold"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/common_offset_16dp"
         android:layout_marginTop="@dimen/common_offset_16dp"
+        android:ellipsize="end"
         tools:text="Subcategory Title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tvMoreDeals"
         app:layout_constraintTop_toBottomOf="@id/tvCategoryTitle" />
 
     <TextView

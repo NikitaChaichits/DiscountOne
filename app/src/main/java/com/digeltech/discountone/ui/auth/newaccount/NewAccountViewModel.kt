@@ -1,5 +1,6 @@
 package com.digeltech.discountone.ui.auth.newaccount
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.digeltech.discountone.common.base.BaseViewModel
 import com.digeltech.discountone.domain.repository.AuthRepository
@@ -11,14 +12,15 @@ class NewAccountViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : BaseViewModel() {
 
+    val registerError = MutableLiveData<String>()
+    val userId = MutableLiveData<String>()
+
     fun register(login: String, email: String, password: String) {
         viewModelScope.launchWithLoading {
             authRepository.register(login, email, password)
-                .onSuccess {
-                    success.postValue(true)
-                }
+                .onSuccess(userId::postValue)
                 .onFailure {
-                    error.postValue(it.toString())
+                    registerError.postValue("Failed to register. Email or login already exists")
                 }
         }
     }

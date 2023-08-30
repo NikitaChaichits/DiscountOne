@@ -62,9 +62,9 @@ interface ServerApi {
     ): List<DealDto>
 
     @GET("/wp-json/theme/v1/cat_and_chop_filter?category=categories")
-    suspend fun getCategoryStores(@Query("pageslug") pageslug: String): List<String>
+    suspend fun getCategoryStores(@Query("pageslug") pageslug: String): List<CategoryShopDto>
 
-    @GET("/wp-json/theme/v1/cat_and_chop_filter?category=categories-shop")
-    suspend fun getShopCategories(@Query("pageslug") pageslug: String): List<String>
+    @GET("/wp-json/theme/v1/cat_and_chop_filter?category=categories-shops")
+    suspend fun getShopCategories(@Query("pageslug") pageslug: String): List<CategoryShopDto>
 
 }

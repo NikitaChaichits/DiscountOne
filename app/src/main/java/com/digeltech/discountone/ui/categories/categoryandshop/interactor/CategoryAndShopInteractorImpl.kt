@@ -1,5 +1,6 @@
 package com.digeltech.discountone.ui.categories.categoryandshop.interactor
 
+import com.digeltech.discountone.domain.model.CategoryShopFilterItem
 import com.digeltech.discountone.domain.model.Deal
 import com.digeltech.discountone.domain.repository.CategoriesRepository
 import com.digeltech.discountone.domain.repository.DealsRepository
@@ -17,10 +18,10 @@ internal class CategoryAndShopInteractorImpl @Inject constructor(
 ) : CategoryAndShopInteractor {
 
 
-    override suspend fun getCategoryShops(pageslug: String): Result<List<String>> =
+    override suspend fun getCategoryShops(pageslug: String): Result<List<CategoryShopFilterItem>> =
         categoriesRepository.getCategoryShops(pageslug)
 
-    override suspend fun getShopCategories(pageslug: String): Result<List<String>> =
+    override suspend fun getShopCategories(pageslug: String): Result<List<CategoryShopFilterItem>> =
         shopsRepository.getShopCategories(pageslug)
 
     override suspend fun searchDeals(searchText: String): List<Deal> = dealsRepository.searchDeals(searchText)

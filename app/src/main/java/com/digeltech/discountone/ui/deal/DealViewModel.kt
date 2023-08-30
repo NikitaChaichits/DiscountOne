@@ -12,6 +12,7 @@ import com.digeltech.discountone.domain.repository.ShopsRepository
 import com.digeltech.discountone.ui.common.KEY_CATEGORIES
 import com.digeltech.discountone.ui.common.KEY_SHOPS
 import com.digeltech.discountone.ui.common.model.DealParcelable
+import com.digeltech.discountone.ui.common.model.toParcelable
 import com.digeltech.discountone.ui.common.model.toParcelableList
 import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,6 +31,11 @@ class DealViewModel @Inject constructor(
 
     private val _similarShopDeals: MutableLiveData<List<DealParcelable>> = MutableLiveData()
     val similarShopDeals: LiveData<List<DealParcelable>> = _similarShopDeals
+
+    private val _deal: MutableLiveData<DealParcelable> = MutableLiveData()
+    val deal: LiveData<DealParcelable> = _deal
+
+    val loadingDealError = MutableLiveData<String>()
 
     fun getSimilarDealsByCategory(categoryId: Int, dealId: Int) {
         if (Hawk.contains(KEY_CATEGORIES)) {
@@ -84,6 +90,18 @@ class DealViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    fun getDeal(id: Int) {
+        viewModelScope.launchWithLoading {
+            dealsRepository.getDealById(id)
+                .onSuccess {
+                    _deal.postValue(it.toParcelable())
+                }
+                .onFailure {
+                    loadingDealError.value = ""
+                }
         }
     }
 
