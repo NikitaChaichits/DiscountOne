@@ -13,15 +13,15 @@ import com.digeltech.discountone.R
 import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentBestDealsBinding
 import com.digeltech.discountone.domain.model.Item
+import com.digeltech.discountone.domain.model.User
+import com.digeltech.discountone.ui.common.KEY_USER
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
 import com.digeltech.discountone.ui.common.logSearch
 import com.digeltech.discountone.ui.coupons.CouponsFragmentDirections
-import com.digeltech.discountone.util.view.invisible
-import com.digeltech.discountone.util.view.loadGif
-import com.digeltech.discountone.util.view.px
+import com.digeltech.discountone.util.view.*
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
-import com.digeltech.discountone.util.view.visible
 import com.facebook.appevents.AppEventsLogger
+import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -41,8 +41,10 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
         super.onViewCreated(view, savedInstanceState)
 
         initAdapters()
-        observeData()
         initListeners()
+
+        loadProfileImage()
+        observeData()
 
         binding.ivLoading.loadGif()
     }
@@ -72,6 +74,14 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
         viewModel.getShopFilterPosition().let {
             if (it > 0) {
                 binding.spinnerShops.setSelection(it)
+            }
+        }
+    }
+
+    private fun loadProfileImage() {
+        Hawk.get<User>(KEY_USER)?.let {
+            it.avatarUrl?.let { url ->
+                binding.ivProfile.setProfileImage(url)
             }
         }
     }

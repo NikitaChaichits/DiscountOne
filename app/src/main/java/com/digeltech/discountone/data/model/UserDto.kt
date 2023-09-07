@@ -29,7 +29,9 @@ data class DataDto(
     @SerializedName("user_email")
     val email: String,
     @SerializedName("user_registered")
-    val dateRegistration: String
+    val dateRegistration: String,
+    @SerializedName("avatar_url")
+    val avatarUrl: String
 )
 
 data class UserIdDto(

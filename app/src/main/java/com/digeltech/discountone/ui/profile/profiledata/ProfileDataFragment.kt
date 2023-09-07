@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.DatePicker
+import androidx.core.net.toFile
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.discountone.R
@@ -14,14 +15,17 @@ import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentProfileDataBinding
 import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.common.KEY_USER
+import com.digeltech.discountone.util.log
 import com.digeltech.discountone.util.view.setCircleImage
+import com.digeltech.discountone.util.view.setProfileImage
 import com.digeltech.discountone.util.view.showDatePickerDialog
 import com.github.dhaval2404.imagepicker.ImagePicker
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.auth.ktx.userProfileChangeRequest
-import com.google.firebase.ktx.Firebase
 import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 
 @AndroidEntryPoint
 class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePickerDialog.OnDateSetListener {
@@ -59,17 +63,15 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
     }
 
     private fun initUser() {
+        log("ProfileDataFragment ${Hawk.get<User>(KEY_USER)}")
         Hawk.get<User>(KEY_USER)?.let {
             binding.tvProfileEmail.text = it.email
             binding.etProfileName.setText(it.login)
             binding.tvDateOfBirth.text = it.birthdate
             binding.etCity.setText(it.city)
             binding.tvDateRegistration.text = getString(R.string.date_of_registration, it.dateRegistration)
-        }
-
-        Firebase.auth.currentUser?.let {
-            it.photoUrl?.let { uri ->
-                binding.ivProfileImage.setCircleImage(uri)
+            it.avatarUrl?.let { url ->
+                binding.ivProfileImage.setProfileImage(url)
             }
         }
     }
@@ -96,16 +98,30 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
         val city = binding.etCity.text.toString().trim()
         val dateOfBirth = binding.tvDateOfBirth.text.toString()
         val login = binding.etProfileName.text.toString()
-        val user = Hawk.get<User>(KEY_USER)
-        viewModel.updateProfile(id = user.id, city = city, birthday = dateOfBirth, login = login)
-        updateFirebaseProfile()
-    }
+        var userAvatarPart: MultipartBody.Part? = null
 
-    private fun updateFirebaseProfile() {
-        val profileUpdates = userProfileChangeRequest {
-            photoUri = userPhotoUri
+        userPhotoUri?.let {
+            val file = it.toFile()
+            val requestFile: RequestBody = file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+            userAvatarPart = MultipartBody.Part.createFormData("file", file.name, requestFile)
         }
-        Firebase.auth.currentUser?.updateProfile(profileUpdates)
+
+        val user = Hawk.get<User>(KEY_USER)
+        if (userAvatarPart != null)
+            viewModel.updateProfileWithAvatar(
+                id = user.id,
+                city = city,
+                birthday = dateOfBirth,
+                login = login,
+                userAvatar = userAvatarPart
+            )
+        else
+            viewModel.updateProfile(
+                id = user.id,
+                city = city,
+                birthday = dateOfBirth,
+                login = login,
+            )
     }
 
     private fun observeData() {
@@ -116,9 +132,10 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
                     KEY_USER, user.copy(
                         city = binding.etCity.text.toString().trim(),
                         birthdate = binding.tvDateOfBirth.text.toString(),
-                        login = binding.etProfileName.text.toString()
+                        login = binding.etProfileName.text.toString(),
                     )
                 )
+                log("ProfileDataFragment put $user")
                 navigateBack()
             }
         }

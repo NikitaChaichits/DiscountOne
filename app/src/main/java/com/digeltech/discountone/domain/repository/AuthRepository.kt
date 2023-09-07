@@ -1,6 +1,7 @@
 package com.digeltech.discountone.domain.repository
 
 import com.digeltech.discountone.domain.model.User
+import okhttp3.MultipartBody
 
 interface AuthRepository {
 
@@ -8,6 +9,19 @@ interface AuthRepository {
 
     suspend fun login(email: String, password: String): Result<User>
 
-    suspend fun updateProfile(id: String, login: String?, city: String?, birthday: String?): Result<Unit>
+    suspend fun updateProfileWithAvatar(
+        id: String,
+        login: String?,
+        city: String?,
+        birthday: String?,
+        userAvatar: MultipartBody.Part?
+    ): Result<Unit>
+
+    suspend fun updateProfile(
+        id: String,
+        login: String?,
+        city: String?,
+        birthday: String?,
+    ): Result<Unit>
 
 }

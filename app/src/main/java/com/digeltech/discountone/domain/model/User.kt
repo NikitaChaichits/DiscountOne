@@ -7,4 +7,5 @@ data class User(
     val dateRegistration: String,
     val city: String,
     val birthdate: String,
+    val avatarUrl: String?,
 )

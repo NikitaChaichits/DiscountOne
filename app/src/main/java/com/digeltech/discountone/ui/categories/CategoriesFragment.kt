@@ -8,19 +8,17 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.discountone.R
 import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentCategoriesBinding
+import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.categories.adapter.CategoryAdapter
+import com.digeltech.discountone.ui.common.KEY_USER
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
 import com.digeltech.discountone.ui.common.logOpenCategoryDeals
 import com.digeltech.discountone.ui.common.logSearch
 import com.digeltech.discountone.ui.home.HomeFragmentDirections
-import com.digeltech.discountone.util.view.invisible
-import com.digeltech.discountone.util.view.px
+import com.digeltech.discountone.util.view.*
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
-import com.digeltech.discountone.util.view.setCircleImage
-import com.digeltech.discountone.util.view.visible
 import com.facebook.appevents.AppEventsLogger
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -118,7 +116,11 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories), SearchVie
     }
 
     private fun loadProfileImage() {
-        Firebase.auth.currentUser?.photoUrl?.let(binding.ivProfile::setCircleImage)
+        Hawk.get<User>(KEY_USER)?.let {
+            it.avatarUrl?.let { url ->
+                binding.ivProfile.setProfileImage(url)
+            }
+        }
     }
 
     private fun observeData() {

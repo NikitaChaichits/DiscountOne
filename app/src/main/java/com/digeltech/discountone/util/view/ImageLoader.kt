@@ -6,6 +6,7 @@ import android.widget.ImageView
 import androidx.annotation.DimenRes
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -31,6 +32,18 @@ fun ImageView.setCircleImage(
         .apply(glideCircleTransformOption)
         .apply { if (requestListener != null) addListener(requestListener) }
 //        .placeholder(placeholderRes)
+        .transition(glideTransitionOption)
+        .into(this)
+}
+
+fun ImageView.setProfileImage(
+    url: String,
+) {
+    Glide.with(this)
+        .load(url)
+        .diskCacheStrategy(DiskCacheStrategy.ALL)
+        .placeholder(R.drawable.ic_avatar)
+        .apply(glideCircleTransformOption)
         .transition(glideTransitionOption)
         .into(this)
 }
@@ -64,7 +77,7 @@ fun ImageView.loadGif() {
 }
 
 open class RequestListenerAdapter(
-    private val onSuccess: () -> Unit = {},
+    private val onSuccess: (resource: Drawable) -> Unit = {},
     private val onFail: () -> Unit = {}
 ) : RequestListener<Drawable> {
 
@@ -79,13 +92,13 @@ open class RequestListenerAdapter(
     }
 
     override fun onResourceReady(
-        resource: Drawable?,
+        resource: Drawable,
         model: Any?,
-        target: Target<Drawable>?,
+        target: Target<Drawable>,
         dataSource: DataSource?,
         isFirstResource: Boolean
     ): Boolean {
-        onSuccess()
+        onSuccess(resource)
         return false
     }
 }

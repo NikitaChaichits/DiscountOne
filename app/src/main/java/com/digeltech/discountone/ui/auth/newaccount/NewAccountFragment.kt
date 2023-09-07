@@ -11,6 +11,7 @@ import com.digeltech.discountone.databinding.FragmentNewAccountBinding
 import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.common.KEY_USER
 import com.digeltech.discountone.ui.common.logSignUp
+import com.digeltech.discountone.util.log
 import com.digeltech.discountone.util.time.getCurrentDateTime
 import com.digeltech.discountone.util.validation.PASSWORD_MIN
 import com.digeltech.discountone.util.validation.isValidEmail
@@ -82,9 +83,11 @@ class NewAccountFragment : BaseFragment(R.layout.fragment_new_account) {
                 email = binding.etEmail.text.toString().trim(),
                 dateRegistration = getCurrentDateTime(requireContext()),
                 city = "",
-                birthdate = ""
+                birthdate = "",
+                avatarUrl = null
             )
             Hawk.put(KEY_USER, user)
+            log("NewAccountFragment $user")
             navigate(R.id.onboardingFragment)
         }
         viewModel.registerError.observe(viewLifecycleOwner, ::showDialog)

@@ -9,6 +9,8 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.discountone.R
 import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentHomeBinding
+import com.digeltech.discountone.domain.model.User
+import com.digeltech.discountone.ui.common.KEY_USER
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
 import com.digeltech.discountone.ui.common.adapter.LinearDealAdapter
 import com.digeltech.discountone.ui.common.getShopIdByName
@@ -21,8 +23,7 @@ import com.digeltech.discountone.util.view.recycler.AutoScrollHelper
 import com.digeltech.discountone.util.view.recycler.CyclicScrollHelper
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
 import com.facebook.appevents.AppEventsLogger
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -185,8 +186,10 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
     }
 
     private fun loadProfileImage() {
-        Firebase.auth.currentUser?.photoUrl?.let {
-            binding.ivProfile.setCircleImage(it)
+        Hawk.get<User>(KEY_USER)?.let {
+            it.avatarUrl?.let { url ->
+                binding.ivProfile.setProfileImage(url)
+            }
         }
     }
 

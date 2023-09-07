@@ -13,7 +13,8 @@ class UserMapper {
         email = userData.data.email,
         dateRegistration = userData.data.dateRegistration,
         city = userMetaData.city ?: "",
-        birthdate = userMetaData.birthdate ?: ""
+        birthdate = userMetaData.birthdate ?: "",
+        avatarUrl = userData.data.avatarUrl
     )
 
 }
