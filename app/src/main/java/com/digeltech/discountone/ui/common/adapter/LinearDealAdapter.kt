@@ -50,8 +50,11 @@ class LinearDealAdapter(
                     tvPrice.gone()
                 } else {
                     tvPrice.setStrikethrough(item.priceCurrency + item.oldPrice)
-                    tvPriceWithDiscount.text =
-                        getDiscountText(item.oldPrice?.toDouble() ?: 0.0, item.price?.toDouble() ?: 0.0)
+                    tvPriceWithDiscount.text = getDiscountText(
+                        price = item.oldPrice?.toDouble() ?: 0.0,
+                        discountPrice = item.price?.toDouble() ?: 0.0,
+                        saleSize = item.saleSize,
+                    )
                 }
 
                 tvTitle.text = item.title

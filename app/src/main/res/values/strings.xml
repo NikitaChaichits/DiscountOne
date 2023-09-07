@@ -144,7 +144,7 @@
     <string name="fr_coupons_title">Coupons</string>
 
     <!-- Fragment Deal-->
-    <string name="fr_deal_published">Published %s</string>
+    <string name="fr_deal_published">Updated: %s</string>
     <string name="fr_deal_more_about_discount">Product Information</string>
     <string name="fr_deal_disclosure">Disclosure: If you follow a link or buy an item from a post, Discount One may receive a commission from the store, but this does not affect what discounts are posted on the site. \n<u>Affiliate Disclosure</u></string>
     <string name="fr_deal_similar_deals">Other deals from</string>
@@ -156,4 +156,8 @@
     <!-- Fragment Saved Publications-->
     <string name="fr_saved_publ_title">Saved Publications</string>
 
+    <!-- Fragment Notifications-->
+    <string name="fr_notifications_title">Notifications</string>
+    <string name="fr_notifications_today">Today</string>
+    <string name="fr_notifications_other_days">Previously</string>
 </resources>

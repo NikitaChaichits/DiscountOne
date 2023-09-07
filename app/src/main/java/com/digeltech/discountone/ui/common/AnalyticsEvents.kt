@@ -6,7 +6,6 @@ import com.facebook.appevents.AppEventsLogger
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
-import io.branch.referral.util.BranchEvent
 
 const val ANALYTICS_SHOP_NOW = "shop_now"
 const val ANALYTICS_SHOW_CATEGORY_DEALS = "show_category_deals"
@@ -23,10 +22,6 @@ fun logSignUp(
     params.putString("email", email)
     Firebase.analytics.logEvent("complete_registration", params)
 
-    BranchEvent("complete_registration")
-        .setDescription("User $email")
-        .logEvent(context)
-
     val facebookParams = Bundle()
     params.putString("email", email)
     logger.logEvent("complete_registration", facebookParams)
@@ -40,9 +35,6 @@ fun logLogin(
     params.putString("email", email)
     Firebase.analytics.logEvent("login", params)
 
-    BranchEvent("login")
-        .setDescription("User $email")
-        .logEvent(context)
     val facebookParams = Bundle()
     params.putString("email", email)
     logger.logEvent("login", facebookParams)
@@ -63,17 +55,6 @@ fun logShopNow(
     params.putString(PARAMETER_URL, url)
     Firebase.analytics.logEvent(ANALYTICS_SHOP_NOW, params)
 
-    BranchEvent("product_checkout")
-        .setDescription("User click Shop Now")
-        .addCustomDataProperty("product_name", name)
-        .addCustomDataProperty("partner_name", shopName)
-        .addCustomDataProperty("brand_name", shopName)
-        .addCustomDataProperty("category_name", categoryName)
-        .addCustomDataProperty("price", price)
-        .addCustomDataProperty("shopUrl", url)
-        .addCustomDataProperty("list_name", className)
-        .logEvent(context)
-
     val facebookParams = Bundle()
     facebookParams.putString("product_name", name)
     facebookParams.putString("partner_name", shopName)
@@ -93,10 +74,6 @@ fun logOpenShopDeals(
     params.putString(FirebaseAnalytics.Param.ITEM_NAME, shopName)
     Firebase.analytics.logEvent(ANALYTICS_SHOW_SHOP_DEALS, params)
 
-    BranchEvent("open_shops_deals")
-        .setDescription("User open $shopName deals")
-        .logEvent(context)
-
     val facebookParams = Bundle()
     facebookParams.putString("brand_name", shopName)
     logger.logEvent("open_shops_deals", facebookParams)
@@ -109,10 +86,6 @@ fun logOpenCategoryDeals(
     val params = Bundle()
     params.putString(FirebaseAnalytics.Param.ITEM_NAME, categoryName)
     Firebase.analytics.logEvent(ANALYTICS_SHOW_CATEGORY_DEALS, params)
-
-    BranchEvent("open_category_deals")
-        .setDescription("User open $categoryName deals")
-        .logEvent(context)
 
     val facebookParams = Bundle()
     facebookParams.putString("category_name", categoryName)
@@ -132,16 +105,6 @@ fun logOpenDeal(
     params.putString(FirebaseAnalytics.Param.ITEM_NAME, name)
     Firebase.analytics.logEvent(ANALYTICS_OPEN_DEAL, params)
 
-    BranchEvent("product_view")
-        .setDescription("User opened Deal Screen")
-        .addCustomDataProperty("product_name", name)
-        .addCustomDataProperty("partner_name", shopName)
-        .addCustomDataProperty("brand_name", shopName)
-        .addCustomDataProperty("category_name", categoryName)
-        .addCustomDataProperty("price", price)
-        .addCustomDataProperty("list_name", className)
-        .logEvent(context)
-
     val facebookParams = Bundle()
     facebookParams.putString("product_name", name)
     facebookParams.putString("partner_name", shopName)
@@ -159,10 +122,6 @@ fun logSearch(
     val params = Bundle()
     params.putString(FirebaseAnalytics.Param.ITEM_NAME, searchText)
     Firebase.analytics.logEvent(FirebaseAnalytics.Event.SEARCH, params)
-
-    BranchEvent("product_search")
-        .setSearchQuery(searchText)
-        .logEvent(context)
 
     val facebookParams = Bundle()
     facebookParams.putString("search_string", searchText)

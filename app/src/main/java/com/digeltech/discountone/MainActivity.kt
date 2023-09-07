@@ -108,38 +108,6 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-//    override fun onStart() {
-//        super.onStart()
-//        Branch.sessionBuilder(this).withCallback { branchUniversalObject, linkProperties, error ->
-//            if (error != null) {
-//                Log.e("BranchSDK_Tester", "branch init failed. Caused by -" + error.message)
-//            } else {
-//                Log.i("BranchSDK_Tester", "branch init complete!")
-//                if (branchUniversalObject != null) {
-//                    Log.i("BranchSDK_Tester", "title " + branchUniversalObject.title)
-//                    Log.i("BranchSDK_Tester", "CanonicalIdentifier " + branchUniversalObject.canonicalIdentifier)
-//                    Log.i("BranchSDK_Tester", "metadata " + branchUniversalObject.contentMetadata.convertToJson())
-//                }
-//                if (linkProperties != null) {
-//                    Log.i("BranchSDK_Tester", "Channel " + linkProperties.channel)
-//                    Log.i("BranchSDK_Tester", "control params " + linkProperties.controlParams)
-//                }
-//            }
-//        }.withData(this.intent.data).init()
-//    }
-
-//    override fun onNewIntent(intent: Intent?) {
-//        super.onNewIntent(intent)
-//        this.intent = intent
-//        Branch.sessionBuilder(this).withCallback { referringParams, error ->
-//            if (error != null) {
-//                Log.e("BranchSDK_Tester", error.message)
-//            } else if (referringParams != null) {
-//                Log.i("BranchSDK_Tester", referringParams.toString())
-//            }
-//        }.reInit()
-//    }
-
     override fun onResume() {
         super.onResume()
 
@@ -192,6 +160,12 @@ class MainActivity : AppCompatActivity() {
 
         intent.apply {
             if (extras != null && extras!!.containsKey("fragment")) {
+//                addNotificationToCache(
+//                    title = "Test",
+//                    text = "Test",
+//                    data = emptyMap()
+//                )
+                log("setupNavigation MainActivity")
                 when (getStringExtra("fragment")) {
                     "ShopsFragment" -> {
                         navGraph.setStartDestination(R.id.shopsFragment)
@@ -298,14 +272,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun askNotificationPermission() {
-        // This is only necessary for API Level > 33 (TIRAMISU)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
                 PackageManager.PERMISSION_GRANTED
             ) {
                 // FCM SDK (and your app) can post notifications.
             } else {
-                // Directly ask for the permission
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         }

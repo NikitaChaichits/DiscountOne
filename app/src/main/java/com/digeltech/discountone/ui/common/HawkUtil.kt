@@ -2,8 +2,11 @@ package com.digeltech.discountone.ui.common
 
 import android.os.Bundle
 import com.digeltech.discountone.domain.model.Category
+import com.digeltech.discountone.domain.model.Notification
 import com.digeltech.discountone.domain.model.Shop
 import com.digeltech.discountone.ui.common.model.DealParcelable
+import com.digeltech.discountone.util.log
+import com.digeltech.discountone.util.time.getCurrentDate
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
@@ -13,6 +16,7 @@ private const val KEY_SAVED_DEALS = "saved-deals"
 const val KEY_SHOPS = "all-shops"
 const val KEY_CATEGORIES = "all-categories"
 const val KEY_USER = "user"
+const val KEY_NOTIFICATION = "notification"
 
 fun addToBookmark(deal: DealParcelable) {
     if (Hawk.contains(KEY_SAVED_DEALS)) {
@@ -82,4 +86,31 @@ fun getShopIdByName(name: String): Int {
         }?.id ?: 0
     }
     return 0
+}
+
+fun addNotificationToCache(title: String, text: String, data: Map<String, String>) {
+    val notification = Notification(title = title, text = text, date = getCurrentDate(), data = data)
+    log("Added notification to cache")
+    log("$title $text")
+    if (Hawk.contains(KEY_NOTIFICATION)) {
+        val listOfNotifications: List<Notification> = Hawk.get(KEY_NOTIFICATION)
+        val mutableList = listOfNotifications.toMutableList()
+        mutableList.add(0, notification)
+        Hawk.put(KEY_NOTIFICATION, mutableList)
+    } else {
+        Hawk.put(KEY_NOTIFICATION, listOf(notification))
+    }
+}
+
+fun getNotificationsList(): List<Notification> {
+    if (Hawk.contains(KEY_NOTIFICATION)) {
+        return Hawk.get(KEY_NOTIFICATION) as List<Notification>
+    }
+    return emptyList()
+}
+
+fun updateNotification(notification: Notification) {
+    val listOfNotifications: List<Notification> = Hawk.get(KEY_NOTIFICATION)
+    listOfNotifications.find { it == notification }?.isRead = true
+    Hawk.put(KEY_NOTIFICATION, listOfNotifications)
 }

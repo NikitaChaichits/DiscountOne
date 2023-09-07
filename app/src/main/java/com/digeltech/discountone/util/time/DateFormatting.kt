@@ -41,6 +41,11 @@ fun getCurrentDateTime(context: Context): String {
     return formatter.format(timeNow)
 }
 
+fun getCurrentDate(): String {
+    val formatter = SimpleDateFormat(date, fallbackLocale)
+    return formatter.format(timeNow)
+}
+
 private fun Long.isYesterday(): Boolean {
 
     calendar.timeInMillis = this
@@ -75,3 +80,15 @@ fun OffsetDateTime.toLocalisedDate(context: Context): String {
 }
 
 fun LocalTime.toDayTime(): String = dayTimeFormatter.format(this)
+
+fun formatDate(inputDateTime: String): String {
+    try {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val date = inputFormat.parse(inputDateTime)
+        return outputFormat.format(date)
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+    return inputDateTime
+}

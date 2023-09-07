@@ -20,9 +20,9 @@ class DealsMapper {
 
     fun mapToDeal(data: DealDto): Deal {
         return Deal(
-            id = data.id,
-            categoryId = data.categoryId,
-            title = data.title,
+            id = data.id ?: 0,
+            categoryId = data.categoryId ?: 0,
+            title = data.title.toString(),
             description = data.description.toString(),
             imageUrl = data.imageUrl.toString(),
             imagesUrl = data.imagesUrl,
@@ -35,8 +35,9 @@ class DealsMapper {
             promocode = data.promocode,
             shopLink = data.shopLink.toString(),
             rating = data.rating.toString(),
-            publishedDate = data.publishedDate,
+            publishedDate = data.publishedDate.toString(),
             expirationDate = data.expirationDate,
+            lastUpdateDate = data.lastUpdateDate,
             sale = data.sale,
             saleSize = data.saleSize ?: 0,
             viewsClick = data.viewsClick ?: 0,

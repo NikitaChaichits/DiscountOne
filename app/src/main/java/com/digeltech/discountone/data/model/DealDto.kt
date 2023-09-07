@@ -4,15 +4,15 @@ import com.google.gson.annotations.SerializedName
 
 data class DealDto(
     @SerializedName("id")
-    val id: Int,
+    val id: Int?,
     @SerializedName("category_id")
-    val categoryId: Int,
+    val categoryId: Int?,
     @SerializedName("post_title")
-    val title: String,
+    val title: String?,
     @SerializedName("post_content")
     val description: String?,
     @SerializedName("post_date")
-    val publishedDate: String,
+    val publishedDate: String?,
     @SerializedName("image_url")
     val imageUrl: String?, // main image
     @SerializedName("images_url")
@@ -43,6 +43,8 @@ data class DealDto(
     val rating: String?,
     @SerializedName("expiration_date")
     val expirationDate: String?,
+    @SerializedName("post_modified")
+    val lastUpdateDate: String?,
     @SerializedName("views_click")
     val viewsClick: Int?,
     @SerializedName("guid")

@@ -69,6 +69,9 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
             llSavedPublication.setOnClickListener {
                 navigate(R.id.savedPublicationsFragment)
             }
+            llNotification.setOnClickListener {
+                navigate(R.id.notificationsFragment)
+            }
             llLogout.setOnClickListener {
                 Firebase.auth.signOut()
                 prefs.clear()

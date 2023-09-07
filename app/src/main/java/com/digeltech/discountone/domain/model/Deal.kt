@@ -21,6 +21,7 @@ data class Deal(
     var isAddedToBookmark: Boolean = false,
     val publishedDate: String,
     val expirationDate: String? = null,
+    val lastUpdateDate: String? = null,
     val sale: String? = null,
     val saleSize: Int = 0,
     val viewsClick: Int = 0,

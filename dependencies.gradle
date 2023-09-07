@@ -69,7 +69,6 @@ ext {
      * Dependencies for app module
      */
     appDependencies = [
-
             constraintLayout           : "androidx.constraintlayout:constraintlayout:${libraryVersions.constraintLayoutVersion}",
             recyclerView               : "androidx.recyclerview:recyclerview:${libraryVersions.recyclerViewVersion}",
             lifecycleViewmodelKtx      : "androidx.lifecycle:lifecycle-viewmodel-ktx:${libraryVersions.lifecycleVersion}",

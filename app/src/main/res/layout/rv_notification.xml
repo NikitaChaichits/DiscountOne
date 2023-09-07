@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:paddingVertical="@dimen/common_offset_8dp"
+    android:paddingStart="@dimen/common_offset_16dp">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivDot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical"
+            app:srcCompat="@drawable/ic_dot" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginHorizontal="@dimen/common_offset_8dp"
+            android:textColor="@color/defaultColor"
+            android:textSize="16sp"
+            tools:text="Notification title" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <TextView
+        android:id="@+id/tvText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginHorizontal="@dimen/common_offset_16dp"
+        android:textColor="@color/defaultColor"
+        android:textSize="14sp"
+        tools:text="text" />
+
+    <TextView
+        android:id="@+id/tvDate"
+        style="@style/TextRegular.Description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginHorizontal="@dimen/common_offset_16dp"
+        android:textSize="12sp"
+        tools:text="31.08.2023" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

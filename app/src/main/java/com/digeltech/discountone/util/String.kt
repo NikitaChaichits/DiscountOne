@@ -18,8 +18,11 @@ fun String.safeToInt(): Int {
     }
 }
 
-fun getDiscountText(price: Double, discountPrice: Double): String {
-    val discountSize = (price - discountPrice).getPercent(price)
+fun getDiscountText(price: Double, discountPrice: Double, saleSize: Int): String {
+    val discountSize = if (saleSize == 0)
+        (price - discountPrice).getPercent(price)
+    else saleSize
+
     return if (discountSize > 0)
         "₹ ${discountPrice.roundToInt()} ($discountSize%)"
     else

@@ -19,6 +19,7 @@ import com.digeltech.discountone.util.capitalizeFirstLetter
 import com.digeltech.discountone.util.copyTextToClipboard
 import com.digeltech.discountone.util.getDiscountText
 import com.digeltech.discountone.util.isNotNullAndNotEmpty
+import com.digeltech.discountone.util.time.formatDate
 import com.digeltech.discountone.util.view.*
 import com.facebook.appevents.AppEventsLogger
 import dagger.hilt.android.AndroidEntryPoint
@@ -126,12 +127,14 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
                 tvPriceWithDiscount.gone()
             } else {
                 tvPrice.setStrikethrough(deal.priceCurrency + deal.oldPrice)
-                tvPriceWithDiscount.text =
-                    getDiscountText(deal.oldPrice?.toDouble() ?: 0.0, deal.price?.toDouble() ?: 0.0)
+                tvPriceWithDiscount.text = getDiscountText(
+                    price = deal.oldPrice?.toDouble() ?: 0.0,
+                    discountPrice = deal.price?.toDouble() ?: 0.0,
+                    saleSize = deal.saleSize,
+                )
             }
-            tvPublishedDate.text = getString(R.string.fr_deal_published, deal.publishedDate)
+            tvPublishedDate.text = getString(R.string.fr_deal_published, formatDate(deal.lastUpdateDate))
             tvDealName.text = deal.title
-
 
             deal.shopImageUrl.let { ivCouponCompanyLogo.setImageWithRadius(it, R.dimen.radius_10) }
             if (deal.shopName.isNotEmpty()) {

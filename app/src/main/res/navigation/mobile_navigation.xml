@@ -296,6 +296,9 @@
         <action
             android:id="@+id/toSavedPublicationsFragment"
             app:destination="@id/savedPublicationsFragment" />
+        <action
+            android:id="@+id/toNotificationsFragment"
+            app:destination="@id/notificationsFragment" />
     </fragment>
 
     <fragment
@@ -328,5 +331,10 @@
         </action>
     </fragment>
 
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="com.digeltech.discountone.ui.profile.notification.NotificationsFragment"
+        android:label="NotificationsFragment"
+        tools:layout="@layout/fragment_notifications" />
 
 </navigation>

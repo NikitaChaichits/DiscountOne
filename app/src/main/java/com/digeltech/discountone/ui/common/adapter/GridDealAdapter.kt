@@ -15,6 +15,7 @@ import com.digeltech.discountone.util.capitalizeFirstLetter
 import com.digeltech.discountone.util.copyTextToClipboard
 import com.digeltech.discountone.util.getDiscountText
 import com.digeltech.discountone.util.isNotNullAndNotEmpty
+import com.digeltech.discountone.util.time.formatDate
 import com.digeltech.discountone.util.view.*
 import com.facebook.appevents.AppEventsLogger
 
@@ -45,13 +46,17 @@ class GridDealAdapter(
             with(binding) {
                 item.imageUrl.let(ivDealImage::setImageWithRadius)
 
+                tvPublishedDate.text = "Updated: ${formatDate(item.lastUpdateDate)}"
                 if (item.sale.isNotNullAndNotEmpty() && item.sale != "0") {
                     tvPriceWithDiscount.text = item.sale
                     tvPrice.gone()
                 } else {
                     tvPrice.setStrikethrough(item.priceCurrency + item.oldPrice)
-                    tvPriceWithDiscount.text =
-                        getDiscountText(item.oldPrice?.toDouble() ?: 0.0, item.price?.toDouble() ?: 0.0)
+                    tvPriceWithDiscount.text = getDiscountText(
+                        price = item.oldPrice?.toDouble() ?: 0.0,
+                        discountPrice = item.price?.toDouble() ?: 0.0,
+                        saleSize = item.saleSize,
+                    )
                 }
 
                 tvTitle.text = item.title

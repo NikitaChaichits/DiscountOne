@@ -38,9 +38,9 @@ class HomepageMapper {
 
     private fun DealDto.mapToDeal(categoryId: Int): Deal {
         return Deal(
-            id = id,
+            id = id ?: 0,
             categoryId = categoryId,
-            title = title,
+            title = title.toString(),
             description = description.toString(),
             imageUrl = imageUrl.toString(),
             imagesUrl = imagesUrl,
@@ -52,7 +52,7 @@ class HomepageMapper {
             promocode = promocode,
             shopLink = shopLink.toString(),
             rating = rating.toString(),
-            publishedDate = publishedDate,
+            publishedDate = publishedDate.toString(),
             expirationDate = expirationDate,
             sale = sale,
             viewsClick = viewsClick ?: 0,

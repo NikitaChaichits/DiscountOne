@@ -44,7 +44,7 @@ class CategoryAndShopViewModel @Inject constructor(
     fun initScreenData(slug: String, isFromCategory: Boolean) {
         if (isFromCategory) currentCategoryType = CategoryType.CATEGORY
         taxSlug = slug
-        viewModelScope.launchWithLoading {
+        viewModelScope.launch {
             if (isFromCategory) {
                 interactor.getCategoryShops(slug)
                     .onSuccess {
@@ -129,7 +129,7 @@ class CategoryAndShopViewModel @Inject constructor(
     private fun getSortingDeals() {
         if (sortingJob?.isActive == true) sortingJob?.cancel()
 
-        sortingJob = viewModelScope.launch {
+        sortingJob = viewModelScope.launchWithLoading {
             interactor.getSortingDeals(
                 page = currentPage.toString(),
                 categoryType = currentCategoryType,
