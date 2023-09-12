@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="340dp"
-    android:minWidth="154dp"
+    android:layout_height="320dp"
     android:background="@drawable/bg_deal"
+    android:minWidth="154dp"
     android:padding="@dimen/common_offset_8dp"
     tools:ignore="ContentDescription">
 
@@ -13,8 +13,8 @@
         android:id="@+id/ivDealImage"
         android:layout_width="0dp"
         android:layout_height="140dp"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
@@ -45,11 +45,15 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_offset_8dp"
         android:layout_marginEnd="@dimen/common_offset_8dp"
+        android:gravity="center_vertical"
         android:textColor="@color/defaultColor"
-        android:textSize="13sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
+        app:autoSizeMaxTextSize="13sp"
+        app:autoSizeMinTextSize="10sp"
+        app:autoSizeStepGranularity="1sp"
+        app:autoSizeTextType="uniform"
         app:layout_constraintEnd_toStartOf="@id/tvPriceWithDiscount"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvPublishedDate"
         tools:text="€130.00" />
 
@@ -57,24 +61,30 @@
         android:id="@+id/tvPriceWithDiscount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
+        android:gravity="center_vertical"
+        android:maxLines="1"
         android:textColor="@color/green"
-        android:textSize="@dimen/common_textSize_14sp"
-        app:layout_constraintStart_toEndOf="@id/tvPrice"
-        app:layout_constraintTop_toTopOf="@id/tvPrice"
+        android:textStyle="bold"
+        app:autoSizeMaxTextSize="16sp"
+        app:autoSizeMinTextSize="10sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toBottomOf="@id/tvPrice"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:text="€65.00" />
+        app:layout_constraintStart_toEndOf="@id/tvPrice"
+        app:layout_constraintTop_toTopOf="@id/tvPrice"
+        tools:text="€65.000" />
 
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_offset_8dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+
         android:textColor="@color/defaultColor"
         android:textSize="@dimen/common_textSize_12sp"
-        android:maxLines="2"
-        android:ellipsize="end"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvPriceWithDiscount"
         tools:text="Nike Air Max 90 SENike Air Max 90 SENike Air Max 90 SENike Air Max 90 SENike Air Max 90 SE" />
@@ -92,11 +102,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/common_offset_8dp"
-        android:maxLines="1"
+        android:layout_marginEnd="@dimen/common_offset_4dp"
         android:ellipsize="end"
+        android:maxLines="1"
         android:textColor="@color/defaultColor"
         android:textSize="@dimen/common_textSize_14sp"
-        android:layout_marginEnd="@dimen/common_offset_4dp"
         app:layout_constraintBottom_toBottomOf="@id/ivCouponCompanyLogo"
         app:layout_constraintEnd_toStartOf="@id/ivRateArrow"
         app:layout_constraintStart_toEndOf="@id/ivCouponCompanyLogo"
@@ -141,11 +151,11 @@
         android:id="@+id/btnCopy"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/ic_copy_coupon"
         android:layout_marginStart="@dimen/common_offset_8dp"
-        app:layout_constraintStart_toEndOf="@id/btnGetDeal"
+        android:src="@drawable/ic_copy_coupon"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btnGetDeal" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

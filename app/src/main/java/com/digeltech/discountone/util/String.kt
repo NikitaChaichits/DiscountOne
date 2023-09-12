@@ -24,9 +24,9 @@ fun getDiscountText(price: Double, discountPrice: Double, saleSize: Int): String
     else saleSize
 
     return if (discountSize > 0)
-        "₹ ${discountPrice.roundToInt()} ($discountSize%)"
+        "₹${discountPrice.roundToInt()} ($discountSize%)"
     else
-        "₹ ${discountPrice.roundToInt()}"
+        "₹${discountPrice.roundToInt()}"
 }
 
 

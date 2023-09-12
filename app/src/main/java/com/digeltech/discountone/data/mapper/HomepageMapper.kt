@@ -54,7 +54,9 @@ class HomepageMapper {
             rating = rating.toString(),
             publishedDate = publishedDate.toString(),
             expirationDate = expirationDate,
+            lastUpdateDate = lastUpdateDate,
             sale = sale,
+            saleSize = saleSize ?: 0,
             viewsClick = viewsClick ?: 0,
             webLink = webLink
         )

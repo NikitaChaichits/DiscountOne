@@ -33,7 +33,7 @@ fun TextView.setupDecimalSeparator() {
 fun TextView.setStrikethrough(string: String) {
     text = buildSpannedString {
         strikeThrough {
-            append(string)
+            append(string.trim())
         }
     }
 }

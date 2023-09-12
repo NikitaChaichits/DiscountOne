@@ -39,24 +39,25 @@ class HomeViewModel @Inject constructor(
     fun getHomepageData() {
         viewModelScope.launch {
             loadingGifVisibility.value = true
-            interactor.getHomepage().onSuccess {
-                _banners.value = it.listOfBanners
-                _bestDeals.value = it.bestDeals.items.toParcelableList()
-                val list: MutableList<CategoryWithDeals> = mutableListOf()
-                it.categories.forEach { category ->
-                    category.subcategories.forEachIndexed { index, subcategory ->
-                        if (index == 0) {
-                            list.add(subcategory.copy(showParentName = true))
-                        } else {
-                            list.add(subcategory)
+            interactor.getHomepage()
+                .onSuccess {
+                    _banners.value = it.listOfBanners
+                    _bestDeals.value = it.bestDeals.items.toParcelableList()
+                    val list: MutableList<CategoryWithDeals> = mutableListOf()
+                    it.categories.forEach { category ->
+                        category.subcategories.forEachIndexed { index, subcategory ->
+                            if (index == 0) {
+                                list.add(subcategory.copy(showParentName = true))
+                            } else {
+                                list.add(subcategory)
+                            }
                         }
                     }
+                    _categories.value = list.take(70)
+                }.onFailure {
+                    log(it.toString())
+                    error.postValue(it.toString())
                 }
-                _categories.value = list.take(70)
-            }.onFailure {
-                log(it.toString())
-                error.postValue(it.toString())
-            }
             loadingGifVisibility.value = false
         }
     }
