@@ -17,7 +17,6 @@ import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentOnboardingBinding
 import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.common.KEY_USER
-import com.digeltech.discountone.util.log
 import com.digeltech.discountone.util.view.disable
 import com.digeltech.discountone.util.view.enable
 import com.digeltech.discountone.util.view.setCircleImage
@@ -52,6 +51,7 @@ class OnboardingFragment : BaseFragment(R.layout.fragment_onboarding),
             Activity.RESULT_OK -> {
                 val uri = data?.data!!
                 binding.ivProfileImage.setCircleImage(uri)
+                userPhotoUri = uri
             }
             ImagePicker.RESULT_ERROR -> {
                 toast(ImagePicker.getError(data))
@@ -98,7 +98,6 @@ class OnboardingFragment : BaseFragment(R.layout.fragment_onboarding),
                         birthdate = binding.tvDateOfBirth.text.toString(),
                     )
                 )
-                log("OnboardingFragment put $user")
                 navigateBack()
             }
         }

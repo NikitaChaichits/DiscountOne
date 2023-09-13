@@ -25,14 +25,6 @@ class CouponsViewModel @Inject constructor(
         initDeals()
     }
 
-    fun initDeals() {
-        viewModelScope.launchWithLoading {
-            dealsRepository.getAllCoupons()
-                .onSuccess { _deals.postValue(it.toParcelableList()) }
-                .onFailure { error.postValue(it.toString()) }
-        }
-    }
-
     fun searchDeals(searchText: String) {
         if (searchJob?.isActive == true) searchJob?.cancel()
 
@@ -47,6 +39,14 @@ class CouponsViewModel @Inject constructor(
     fun updateDealViewsClick(id: String) {
         viewModelScope.launch {
             dealsRepository.updateDealViewsClick(id)
+        }
+    }
+
+    private fun initDeals() {
+        viewModelScope.launchWithLoading {
+            dealsRepository.getAllCoupons()
+                .onSuccess { _deals.postValue(it.toParcelableList()) }
+                .onFailure { error.postValue(it.toString()) }
         }
     }
 

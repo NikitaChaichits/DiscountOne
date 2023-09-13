@@ -16,7 +16,6 @@ import com.digeltech.discountone.ui.common.adapter.LinearDealAdapter
 import com.digeltech.discountone.ui.common.getShopIdByName
 import com.digeltech.discountone.ui.common.logSearch
 import com.digeltech.discountone.ui.home.adapter.BannerAdapter
-import com.digeltech.discountone.ui.home.adapter.CategoryPaginator
 import com.digeltech.discountone.ui.home.adapter.SubcategoriesAdapter
 import com.digeltech.discountone.util.view.*
 import com.digeltech.discountone.util.view.recycler.AutoScrollHelper
@@ -44,7 +43,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
     private lateinit var autoScrollHelper: AutoScrollHelper
     private lateinit var cyclicScrollHelper: CyclicScrollHelper
 
-    private lateinit var categoryPaginator: CategoryPaginator
+//    private lateinit var categoryPaginator: CategoryPaginator
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -67,7 +66,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
             binding.tvSearchResultEmpty.invisible()
             binding.rvSearchDeals.invisible()
         } else {
-            logSearch(newText.toString(), requireContext(), logger)
+            logSearch(newText.toString(), logger)
             viewModel.searchDeals(newText.toString())
         }
         return true
@@ -99,7 +98,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
     private fun initAdapters() {
         // scrolling horizontal RV for banners
         bannerAdapter = BannerAdapter {
-            viewModel.updateDealViewsClick(it.id.toString())
+//            viewModel.updateDealViewsClick(it.id.toString())
             navigate(
                 HomeFragmentDirections.toCategoryFragment(
                     id = getShopIdByName(it.shopName),
@@ -119,7 +118,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         // Linear horizontal RV for best deals
         bestDealsAdapter = LinearDealAdapter(
             {
-                viewModel.updateDealViewsClick(it.id.toString())
+//                viewModel.updateDealViewsClick(it.id.toString())
                 navigate(HomeFragmentDirections.toDealFragment(it))
             },
             logger
@@ -139,7 +138,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
                 )
             },
             {
-                viewModel.updateDealViewsClick(it.id.toString())
+//                viewModel.updateDealViewsClick(it.id.toString())
                 navigate(HomeFragmentDirections.toDealFragment(it))
             },
             logger

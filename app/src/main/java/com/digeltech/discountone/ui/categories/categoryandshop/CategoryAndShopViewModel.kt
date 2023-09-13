@@ -65,8 +65,10 @@ class CategoryAndShopViewModel @Inject constructor(
         searchJob = viewModelScope.launch {
             delay(SEARCH_DELAY)
 
-            val deals = interactor.searchDeals(searchText)
-            searchResult.value = deals.toParcelableList()
+            launchWithLoading {
+                val deals = interactor.searchDeals(searchText)
+                searchResult.value = deals.toParcelableList()
+            }
         }
     }
 

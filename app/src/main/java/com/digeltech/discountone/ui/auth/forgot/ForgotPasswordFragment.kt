@@ -12,7 +12,6 @@ import com.digeltech.discountone.util.log
 import com.digeltech.discountone.util.validation.isValidEmail
 import com.digeltech.discountone.util.view.disable
 import com.digeltech.discountone.util.view.enable
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -21,12 +20,9 @@ class ForgotPasswordFragment : BaseFragment(R.layout.fragment_forgot_password) {
     private val binding by viewBinding(FragmentForgotPasswordBinding::bind)
     override val viewModel: ForgotPasswordViewModel by viewModels()
 
-    private lateinit var auth: FirebaseAuth
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        auth = Firebase.auth
         initListeners()
     }
 

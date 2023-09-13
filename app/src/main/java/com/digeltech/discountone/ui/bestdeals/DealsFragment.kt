@@ -37,6 +37,8 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
     private lateinit var dealAdapter: GridDealAdapter
     private lateinit var searchAdapter: GridDealAdapter
 
+    private var isMoreDealsLoaded = false
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -58,7 +60,7 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
             binding.tvTitle.visible()
             binding.grContent.visible()
         } else {
-            logSearch(newText.toString(), requireContext(), logger)
+            logSearch(newText.toString(), logger)
             viewModel.searchDeals(newText.toString())
         }
         return true
@@ -89,7 +91,7 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
     private fun initAdapters() {
         dealAdapter = GridDealAdapter(
             {
-                viewModel.updateDealViewsClick(it.id.toString())
+//                viewModel.updateDealViewsClick(it.id.toString())
                 navigate(CouponsFragmentDirections.toDealFragment(it))
             },
             logger
@@ -110,15 +112,16 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
 
                 val totalItemCount = layoutManager.itemCount
                 val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
-                if (totalItemCount <= lastVisibleItem + 50) {
+                if (!isMoreDealsLoaded && totalItemCount <= lastVisibleItem + 50) {
                     viewModel.loadMoreDeals()
+                    isMoreDealsLoaded = true
                 }
             }
         })
 
         searchAdapter = GridDealAdapter(
             {
-                viewModel.updateDealViewsClick(it.id.toString())
+//                viewModel.updateDealViewsClick(it.id.toString())
                 navigate(CouponsFragmentDirections.toDealFragment(it))
                 binding.searchView.setQuery("", false)
             },

@@ -58,7 +58,7 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories), SearchVie
             binding.tvSearchResultEmpty.invisible()
             binding.tvTitle.visible()
         } else {
-            logSearch(newText.toString(), requireContext(), logger)
+            logSearch(newText.toString(), logger)
             viewModel.searchDeals(newText.toString())
         }
         return true
@@ -73,7 +73,7 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories), SearchVie
                     slug = it.slug
                 )
             )
-            logOpenCategoryDeals(it.name, requireContext(), logger)
+            logOpenCategoryDeals(it.name, logger)
         }
         binding.rvCategories.adapter = categoryAdapter
         binding.rvCategories.addItemDecoration(

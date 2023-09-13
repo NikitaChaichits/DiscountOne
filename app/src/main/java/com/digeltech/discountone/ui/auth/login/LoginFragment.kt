@@ -70,7 +70,7 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
 
     private fun observeData() {
         viewModel.success.observe(viewLifecycleOwner) {
-            logLogin(binding.etEmail.text.toString(), requireContext(), logger)
+            logLogin(binding.etEmail.text.toString(), logger)
             prefs.setLogin(true)
             navigate(R.id.homeFragment)
         }

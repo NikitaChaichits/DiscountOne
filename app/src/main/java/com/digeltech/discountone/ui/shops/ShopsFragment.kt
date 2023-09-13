@@ -69,7 +69,7 @@ class ShopsFragment : BaseFragment(R.layout.fragment_shops), SearchView.OnQueryT
                     slug = it.slug
                 )
             )
-            logOpenShopDeals(it.name, requireContext(), logger)
+            logOpenShopDeals(it.name, logger)
         }
         binding.rvShops.adapter = shopAdapter
         binding.rvShops.addItemDecoration(

@@ -90,7 +90,6 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
                 categoryName = getCategoryNameById(deal.categoryId),
                 price = deal.price.toString(),
                 className = "DealFragment",
-                context = requireContext(),
                 logger
             )
 
@@ -101,7 +100,6 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
             scrollView.visible()
             if (!deal.imagesUrl.isNullOrEmpty()) {
                 val listOfDealImages = mutableListOf<String>()
-//                listOfDealImages.add(deal.imageUrl)
                 listOfDealImages.addAll(deal.imagesUrl!!)
 
                 val adapter = ImageSliderAdapter(requireContext(), listOfDealImages)
@@ -219,8 +217,8 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
             tvRate.text = deal.rating.dec().toString()
         }
         btnGetDeal.setOnClickListener {
+            viewModel.updateDealViewsClick(it.id.toString())
             it.openLink(deal.shopLink)
-
             logShopNow(
                 name = deal.title,
                 url = deal.shopLink,
@@ -228,7 +226,6 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
                 categoryName = getCategoryNameById(deal.categoryId),
                 price = deal.price.toString(),
                 className = "DealFragment",
-                context = requireContext(),
                 logger
             )
         }

@@ -13,6 +13,7 @@ import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentCategoryAndShopBinding
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
 import com.digeltech.discountone.ui.common.logSearch
+import com.digeltech.discountone.util.view.gone
 import com.digeltech.discountone.util.view.invisible
 import com.digeltech.discountone.util.view.px
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
@@ -40,11 +41,11 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
         super.onViewCreated(view, savedInstanceState)
 
         binding.tvTitle.text = args.title
+        /**
+         * isFromCategory default value = true
+         */
         binding.tvSortingCatOrShop.text = if (args.isFromCategory) getString(R.string.fr_deals_filter_shops)
         else getString(R.string.fr_deals_filter_categories)
-        /**
-         * isFromCategory default value = true, false value setup as default for 2 cases in mobile_navigation.xml
-         */
         viewModel.initScreenData(args.slug, args.isFromCategory)
 
         observeData()
@@ -56,12 +57,17 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
 
     override fun onQueryTextChange(newText: String?): Boolean {
         if (newText.isNullOrEmpty()) {
-            binding.rvSearchDeals.invisible()
-            binding.rvDeals.visible()
-            binding.tvSearchResultEmpty.invisible()
             binding.tvTitle.visible()
+            binding.rvSearchDeals.invisible()
+            binding.grFilters.visible()
+            if (binding.rvDeals.adapter?.itemCount == 0) {
+                binding.tvFilteringResultEmpty.visible()
+            } else {
+                binding.rvDeals.visible()
+            }
+            binding.tvSearchResultEmpty.invisible()
         } else {
-            logSearch(newText.toString(), requireContext(), logger)
+            logSearch(newText.toString(), logger)
             viewModel.searchDeals(newText.toString())
         }
         return true
@@ -70,7 +76,7 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
     private fun initAdapters() {
         dealAdapter = GridDealAdapter(
             {
-                viewModel.updateDealViewsClick(it.id.toString())
+//                viewModel.updateDealViewsClick(it.id.toString())
                 navigate(CategoryAndShopFragmentDirections.toDealFragment(it))
             },
             logger
@@ -86,7 +92,7 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
 
         searchAdapter = GridDealAdapter(
             {
-                viewModel.updateDealViewsClick(it.id.toString())
+//                viewModel.updateDealViewsClick(it.id.toString())
                 navigate(CategoryAndShopFragmentDirections.toDealFragment(it))
                 binding.searchView.setQuery("", false)
             },
@@ -159,9 +165,14 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
         }
         viewModel.deals.observe(viewLifecycleOwner) {
             dealAdapter.submitList(null)
-            dealAdapter.submitList(it)
-            binding.tvFilteringResultEmpty.invisible()
-            binding.rvDeals.visible()
+            if (it.isNotEmpty()) {
+                dealAdapter.submitList(it)
+                binding.tvFilteringResultEmpty.invisible()
+                binding.rvDeals.visible()
+            } else {
+                binding.tvFilteringResultEmpty.visible()
+                binding.rvDeals.invisible()
+            }
         }
         viewModel.searchResult.observe(viewLifecycleOwner) {
             if (it.isEmpty() && !binding.searchView.query.isNullOrEmpty()) {
@@ -174,6 +185,8 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
             searchAdapter.submitList(it)
             binding.rvSearchDeals.visible()
             binding.rvDeals.invisible()
+            binding.grFilters.gone()
+            binding.tvFilteringResultEmpty.invisible()
         }
         viewModel.filteringError.observe(viewLifecycleOwner) {
             binding.tvFilteringResultEmpty.visible()

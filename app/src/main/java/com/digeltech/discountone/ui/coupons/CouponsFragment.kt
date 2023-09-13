@@ -48,7 +48,7 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
             binding.tvSearchResultEmpty.invisible()
             binding.tvTitle.visible()
         } else {
-            logSearch(newText.toString(), requireContext(), logger)
+            logSearch(newText.toString(), logger)
             viewModel.searchDeals(newText.toString())
         }
         return true
@@ -57,7 +57,7 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
     private fun initAdapters() {
         dealAdapter = GridDealAdapter(
             {
-                viewModel.updateDealViewsClick(it.id.toString())
+//                viewModel.updateDealViewsClick(it.id.toString())
                 navigate(CouponsFragmentDirections.toDealFragment(it))
             },
             logger
@@ -73,7 +73,7 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
 
         searchAdapter = GridDealAdapter(
             {
-                viewModel.updateDealViewsClick(it.id.toString())
+//                viewModel.updateDealViewsClick(it.id.toString())
                 navigate(CouponsFragmentDirections.toDealFragment(it))
                 binding.searchView.setQuery("", false)
             },

@@ -8,7 +8,6 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.discountone.R
 import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentRecoveryPasswordBinding
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -18,12 +17,9 @@ class RecoveryPasswordFragment : BaseFragment(R.layout.fragment_recovery_passwor
     override val viewModel: RecoveryPasswordViewModel by viewModels()
     private val args: RecoveryPasswordFragmentArgs by navArgs()
 
-    private lateinit var auth: FirebaseAuth
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        auth = Firebase.auth
         initListeners()
     }
 

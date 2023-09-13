@@ -13,6 +13,7 @@ import com.digeltech.discountone.util.view.toast
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
+//NOT USING
 class BottomSheetDiscountFragment(private val discountFrom: Int?, private val discountTo: Int?) :
     BottomSheetDialogFragment() {
 

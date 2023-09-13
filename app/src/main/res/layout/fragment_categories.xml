@@ -43,7 +43,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/common_offset_16dp"
-        android:layout_marginTop="@dimen/common_offset_24dp"
         android:text="@string/fr_cat_title"
         app:layout_constraintTop_toBottomOf="@id/searchView" />
 
@@ -52,7 +51,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/common_offset_16dp"
-        android:layout_marginTop="@dimen/common_offset_24dp"
+        android:layout_marginTop="@dimen/common_offset_16dp"
         android:textColor="@color/defaultColor"
         android:textAlignment="center"
         android:visibility="gone"

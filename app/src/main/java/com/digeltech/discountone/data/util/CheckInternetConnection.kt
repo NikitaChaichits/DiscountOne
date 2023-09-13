@@ -13,8 +13,7 @@ class CheckInternetConnection {
      * @return: internet connection status
      */
     fun netCheck(context: Context): Boolean {
-        val cm =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val nInfo = cm.activeNetworkInfo
         return nInfo != null && nInfo.isConnectedOrConnecting
     }

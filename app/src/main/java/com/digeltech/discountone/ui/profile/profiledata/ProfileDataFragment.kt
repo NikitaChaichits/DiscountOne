@@ -15,7 +15,6 @@ import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentProfileDataBinding
 import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.common.KEY_USER
-import com.digeltech.discountone.util.log
 import com.digeltech.discountone.util.view.setCircleImage
 import com.digeltech.discountone.util.view.setProfileImage
 import com.digeltech.discountone.util.view.showDatePickerDialog
@@ -51,7 +50,6 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
         super.onActivityResult(requestCode, resultCode, data)
         when (resultCode) {
             Activity.RESULT_OK -> {
-                //Image Uri will not be null for RESULT_OK
                 val uri: Uri = data?.data!!
                 binding.ivProfileImage.setCircleImage(uri)
                 userPhotoUri = uri
@@ -63,7 +61,6 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
     }
 
     private fun initUser() {
-        log("ProfileDataFragment ${Hawk.get<User>(KEY_USER)}")
         Hawk.get<User>(KEY_USER)?.let {
             binding.tvProfileEmail.text = it.email
             binding.etProfileName.setText(it.login)
@@ -135,7 +132,6 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
                         login = binding.etProfileName.text.toString(),
                     )
                 )
-                log("ProfileDataFragment put $user")
                 navigateBack()
             }
         }

@@ -1,6 +1,5 @@
 package com.digeltech.discountone.ui.common
 
-import android.content.Context
 import android.os.Bundle
 import com.facebook.appevents.AppEventsLogger
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -15,7 +14,7 @@ const val ANALYTICS_OPEN_DEAL = "open_deal"
 const val PARAMETER_URL = "url"
 
 fun logSignUp(
-    email: String, context: Context,
+    email: String,
     logger: AppEventsLogger
 ) {
     val params = Bundle()
@@ -28,7 +27,7 @@ fun logSignUp(
 }
 
 fun logLogin(
-    email: String, context: Context,
+    email: String,
     logger: AppEventsLogger
 ) {
     val params = Bundle()
@@ -47,7 +46,6 @@ fun logShopNow(
     categoryName: String,
     price: String,
     className: String,
-    context: Context,
     logger: AppEventsLogger
 ) {
     val params = Bundle()
@@ -67,7 +65,7 @@ fun logShopNow(
 }
 
 fun logOpenShopDeals(
-    shopName: String, context: Context,
+    shopName: String,
     logger: AppEventsLogger
 ) {
     val params = Bundle()
@@ -80,7 +78,7 @@ fun logOpenShopDeals(
 }
 
 fun logOpenCategoryDeals(
-    categoryName: String, context: Context,
+    categoryName: String,
     logger: AppEventsLogger
 ) {
     val params = Bundle()
@@ -98,7 +96,6 @@ fun logOpenDeal(
     categoryName: String,
     price: String,
     className: String,
-    context: Context,
     logger: AppEventsLogger
 ) {
     val params = Bundle()
@@ -116,7 +113,7 @@ fun logOpenDeal(
 }
 
 fun logSearch(
-    searchText: String, context: Context,
+    searchText: String,
     logger: AppEventsLogger
 ) {
     val params = Bundle()

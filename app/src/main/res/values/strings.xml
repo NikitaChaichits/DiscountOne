@@ -22,6 +22,7 @@
     <string name="back">Back</string>
     <string name="skip">Skip</string>
     <string name="save">Save</string>
+    <string name="yes">Yes</string>
     <string name="copied">Copied to clipboard</string>
     <string name="added_to_bookmarks">Added to bookmarks</string>
     <string name="removed_from_bookmarks">Removed from bookmarks</string>
@@ -39,8 +40,8 @@
     <string name="apply">Apply</string>
 
     <!-- Wildcard strings -->
-    <string name="price_wildcard">₹ %d</string>
-    <string name="price_wildcard_with_discount_vallue">₹ %s (%d%%)</string>
+    <string name="price_wildcard">₹%d</string>
+    <string name="price_wildcard_with_discount_vallue">₹%s (%d%%)</string>
 
     <!-- Permission -->
 
@@ -160,4 +161,5 @@
     <string name="fr_notifications_title">Notifications</string>
     <string name="fr_notifications_today">Today</string>
     <string name="fr_notifications_other_days">Previously</string>
+    <string name="fr_notifications_clear">Clear all notifications?</string>
 </resources>

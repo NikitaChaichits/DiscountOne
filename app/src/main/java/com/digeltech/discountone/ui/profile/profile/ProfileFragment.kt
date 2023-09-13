@@ -11,7 +11,6 @@ import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentProfileBinding
 import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.common.KEY_USER
-import com.digeltech.discountone.util.log
 import com.digeltech.discountone.util.view.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.ktx.auth
@@ -40,7 +39,6 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
     }
 
     private fun initUser() {
-        log("ProfileFragment ${Hawk.get<User>(KEY_USER)}")
         Hawk.get<User>(KEY_USER)?.let { user ->
             binding.tvProfileName.text = user.login
             binding.tvProfileEmail.text = user.email

@@ -60,12 +60,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (intent != null && intent.extras != null) {
-            for (key in intent.extras!!.keySet()) {
-                log("Key: " + key + " Data: " + intent.extras!!.getString(key))
-            }
-        }
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -160,12 +154,6 @@ class MainActivity : AppCompatActivity() {
 
         intent.apply {
             if (extras != null && extras!!.containsKey("fragment")) {
-//                addNotificationToCache(
-//                    title = "Test",
-//                    text = "Test",
-//                    data = emptyMap()
-//                )
-                log("setupNavigation MainActivity")
                 when (getStringExtra("fragment")) {
                     "ShopsFragment" -> {
                         navGraph.setStartDestination(R.id.shopsFragment)
@@ -217,6 +205,7 @@ class MainActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.homeFragment,
                 R.id.categoriesFragment,
+                R.id.categoryAndShopFragment,
                 R.id.dealsFragment,
                 R.id.shopsFragment,
                 R.id.couponsFragment -> {

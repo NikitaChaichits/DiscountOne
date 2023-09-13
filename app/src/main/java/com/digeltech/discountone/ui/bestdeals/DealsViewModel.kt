@@ -40,8 +40,8 @@ class DealsViewModel @Inject constructor(
         initDeals()
     }
 
-    fun initDeals() {
-        viewModelScope.launch {
+    private fun initDeals() {
+        viewModelScope.launchWithLoading {
             dealsRepository.getBestDeals()
                 .onSuccess {
                     allDeals = it.posts.toParcelableList()
@@ -113,15 +113,7 @@ class DealsViewModel @Inject constructor(
                             categoryId = categoryId,
                             shopId = selectedShopId.takeIf { shopId -> shopId != 0 })
                             .onSuccess { deals ->
-//                     Ï           if (shopSpinnerPosition == 0) {
                                 _deals.postValue(deals.toParcelableList())
-//                                } else {
-//                                    val selectedShopName = _shops.value?.get(shopSpinnerPosition - 1)?.name
-//                                    _deals.postValue(
-//                                        deals.toParcelableList().filter { deal ->
-//                                            deal.shopName.equals(selectedShopName, true)
-//                                        })
-//                                }
                             }
                             .onFailure { e ->
                                 log(e.toString())
@@ -155,15 +147,7 @@ class DealsViewModel @Inject constructor(
                             shopId = shopId
                         )
                             .onSuccess { deals ->
-//                                if (categorySpinnerPosition == 0) {
                                 _deals.postValue(deals.toParcelableList())
-//                                } else {
-//                                    val selectedCategoryId = _categories.value?.get(categorySpinnerPosition - 1)?.id
-//                                    _deals.postValue(
-//                                        deals.toParcelableList().filter { deal ->
-//                                            deal.categoryId == selectedCategoryId
-//                                        })
-//                                }
                             }
                             .onFailure { e ->
                                 log(e.toString())

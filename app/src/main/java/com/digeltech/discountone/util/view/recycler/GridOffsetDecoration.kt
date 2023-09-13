@@ -50,7 +50,7 @@ class GridOffsetDecoration(
         // Saved size
         val sizeBasedOnFirstColumn = if (isFirstColumn) edgesOffset else horizontalOffset / 2
         val sizeBasedOnLastColumn = if (isLastColumn) edgesOffset else horizontalOffset / 2
-        val sizeBasedOnFirstRow = if (isFirstRow) edgesOffset else verticalOffset / 2
+        val sizeBasedOnFirstRow = if (isFirstRow) edgesOffset / 2 else verticalOffset / 2
         val sizeBasedOnLastRow = if (isLastRow) edgesOffset else verticalOffset / 2
 
         with(outRect) {

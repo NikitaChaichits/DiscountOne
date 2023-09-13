@@ -4,7 +4,6 @@ import com.digeltech.discountone.data.mapper.UserMapper
 import com.digeltech.discountone.data.source.remote.api.AuthApi
 import com.digeltech.discountone.domain.repository.AuthRepository
 import com.digeltech.discountone.ui.common.KEY_USER
-import com.digeltech.discountone.util.log
 import com.orhanobut.hawk.Hawk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -26,7 +25,6 @@ class AuthRepositoryImpl @Inject constructor(
             val response = api.login(email = email, password = password)
             UserMapper().map(response).also {
                 Hawk.put(KEY_USER, it)
-                log("AuthRepositoryImpl $it")
             }
         }
     }

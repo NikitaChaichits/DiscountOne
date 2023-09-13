@@ -37,12 +37,12 @@ class NotificationsFragment : BaseFragment(R.layout.fragment_notifications) {
             }
             ivDelete.setOnClickListener {
                 MaterialDialog(requireContext()).show {
-                    title(text = "Clear all notifications?")
-                    positiveButton(text = "Yes") {
+                    title(text = getString(R.string.fr_notifications_clear))
+                    positiveButton(text = getString(R.string.yes)) {
                         Hawk.delete(KEY_NOTIFICATION)
                         binding.llContent.gone()
                     }
-                    negativeButton(text = "Cancel") {
+                    negativeButton(text = getString(R.string.cancel)) {
                         dismiss()
                     }
                 }

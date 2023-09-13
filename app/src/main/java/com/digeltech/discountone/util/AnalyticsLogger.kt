@@ -6,7 +6,7 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 
 
-class AnalyticsLogger() {
+class AnalyticsLogger {
 
     fun logOpenedScreen(screenName: String?, screenClass: String?) {
         val params = Bundle()

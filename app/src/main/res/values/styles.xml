@@ -25,6 +25,7 @@
         <item name="lineHeight">@dimen/common_offset_32dp</item>
         <item name="android:textColor">@color/defaultColor</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginTop">@dimen/common_offset_16dp</item>
     </style>
 
     <style name="TextRegular.Description">

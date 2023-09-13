@@ -83,7 +83,6 @@ class LinearDealAdapter(
                         categoryName = getCategoryNameById(item.categoryId),
                         price = item.price.toString(),
                         className = "DealFragment",
-                        context = it.context,
                         logger = logger
                     )
                 }

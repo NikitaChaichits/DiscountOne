@@ -31,7 +31,6 @@
         style="@style/TextRegular.Title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_offset_24dp"
         android:text="@string/fr_start_title"
         app:layout_constraintBottom_toTopOf="@+id/btnLogin"
         app:layout_constraintEnd_toEndOf="parent"

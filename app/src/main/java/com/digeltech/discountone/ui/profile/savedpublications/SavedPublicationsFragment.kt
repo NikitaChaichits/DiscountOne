@@ -44,7 +44,7 @@ class SavedPublicationsFragment : BaseFragment(R.layout.fragment_saved_publicati
         if (newText.isNullOrEmpty()) {
             viewModel.getSavedPublications()
         } else {
-            logSearch(newText.toString(), requireContext(), logger)
+            logSearch(newText.toString(), logger)
             viewModel.searchDeals(newText.toString())
         }
         return true

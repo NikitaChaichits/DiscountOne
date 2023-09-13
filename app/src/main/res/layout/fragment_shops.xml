@@ -43,7 +43,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/common_offset_16dp"
-        android:layout_marginTop="@dimen/common_offset_24dp"
         android:text="@string/fr_shops_title"
         app:layout_constraintTop_toBottomOf="@id/searchView" />
 
@@ -63,7 +62,7 @@
         android:id="@+id/rvShops"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/common_offset_20dp"
+        android:layout_marginTop="@dimen/common_offset_16dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
