@@ -2,7 +2,9 @@ package com.digeltech.discountone.ui.deal
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.core.text.parseAsHtml
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -51,15 +53,21 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
             viewModel.getDeal(args.dealId)
         }
 
-//        binding.scrollView.setOnTouchListener(object : OnSwipeTouchListener(requireContext()) {
-//            override fun onSwipeLeft() {
-//                navigateBack()
-//            }
-//
-//            override fun onSwipeRight() {
-//                navigateBack()
-//            }
-//        })
+        onBackPressed()
+    }
+
+    private fun onBackPressed() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (binding.webView.isVisible) {
+                    binding.grContent.visible()
+                    binding.webView.invisible()
+                } else {
+                    navigateBack()
+                }
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 
     private fun initAdapters() {
@@ -104,12 +112,14 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
 
                 val adapter = ImageSliderAdapter(requireContext(), listOfDealImages)
                 vpImages.adapter = adapter
-                dots.setupWithViewPager(vpImages)
+                if (listOfDealImages.size > 1)
+                    dots.setupWithViewPager(vpImages)
+                else dots.invisible()
             } else {
                 deal.imageUrl.let(ivDealImage::loadImage)
                 ivDealImage.visible()
                 vpImages.invisible()
-                dots.gone()
+                dots.invisible()
             }
 
             deal.isAddedToBookmark = isAddedToBookmark(deal.id)
@@ -174,7 +184,10 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
         ivBookmark.setOnClickListener {
             if (deal.isAddedToBookmark) {
                 deal.isAddedToBookmark = false
-                removeFromBookmark(deal.id)
+                removeFromBookmarkCache(deal.id)
+                getUserId()?.let { userId ->
+                    viewModel.deleteBookmark(userId, deal.id.toString())
+                }
                 ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_bookmark_deal))
                 it.context.toast(it.getString(R.string.removed_from_bookmarks))
             } else {
@@ -182,7 +195,10 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
                     it.context.toast(R.string.toast_bookmark)
                 } else {
                     deal.isAddedToBookmark = true
-                    addToBookmark(deal)
+                    getUserId()?.let { userId ->
+                        viewModel.addBookmark(userId, deal.id.toString())
+                    }
+                    addToBookmarkCache(deal)
                     ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_bookmark_deal_solid))
                     it.context.toast(it.getString(R.string.added_to_bookmarks))
                 }
@@ -218,7 +234,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
         }
         btnGetDeal.setOnClickListener {
             viewModel.updateDealViewsClick(it.id.toString())
-            it.openLink(deal.shopLink)
+            it.openLink(deal.shopLink + "?app=1")
             logShopNow(
                 name = deal.title,
                 url = deal.shopLink,

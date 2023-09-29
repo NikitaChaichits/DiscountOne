@@ -21,7 +21,8 @@ import com.facebook.appevents.AppEventsLogger
 
 class GridDealAdapter(
     private val onClickListener: (deal: DealParcelable) -> Unit,
-    private val logger: AppEventsLogger
+//    private val onBookmarkClickListener: (dealId: Int) -> Unit,
+    private val logger: AppEventsLogger,
 ) : ListAdapter<DealParcelable, GridDealAdapter.ItemViewholder>(DiffCallback()) {
 
     private lateinit var prefs: SharedPreferencesDataSource
@@ -103,13 +104,15 @@ class GridDealAdapter(
 
                 if (item.isAddedToBookmark) {
                     ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_bookmark_solid))
+                } else {
+                    ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_bookmark))
                 }
                 ivBookmark.setOnClickListener {
                     prefs = SharedPreferencesDataSource(it.context)
 
                     if (item.isAddedToBookmark) {
                         item.isAddedToBookmark = false
-                        removeFromBookmark(item.id)
+                        removeFromBookmarkCache(item.id)
                         ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_bookmark))
                         it.context.toast(it.getString(R.string.removed_from_bookmarks))
                     } else {
@@ -117,7 +120,7 @@ class GridDealAdapter(
                             it.context.toast(R.string.toast_bookmark)
                         } else {
                             item.isAddedToBookmark = true
-                            addToBookmark(item)
+                            addToBookmarkCache(item)
                             ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_bookmark_solid))
                             it.context.toast(it.getString(R.string.added_to_bookmarks))
                         }

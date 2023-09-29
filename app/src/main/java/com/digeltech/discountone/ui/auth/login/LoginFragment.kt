@@ -52,7 +52,7 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
             binding.grContent.invisible()
             binding.tvPasswordError.gone()
             binding.tvForgotPassword.gone()
-            binding.webView.openWebView("https://discount.one/wp-login.php?action=lostpassword")
+            binding.webView.openWebView("https://discount.one/wp-login.php?action=lostpassword", binding.ivLoading)
         }
         binding.etEmail.doAfterTextChanged { checkLoginButtonEnable() }
         binding.etPassword.doAfterTextChanged { checkLoginButtonEnable() }

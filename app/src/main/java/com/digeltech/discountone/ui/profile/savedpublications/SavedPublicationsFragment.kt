@@ -79,9 +79,14 @@ class SavedPublicationsFragment : BaseFragment(R.layout.fragment_saved_publicati
     }
 
     private fun observeData() {
+        viewModel.loadingError.observe(viewLifecycleOwner) {
+            if (it)
+                binding.tvLoadingResultEmpty.visible()
+        }
         viewModel.deals.observe(viewLifecycleOwner) {
             adapter.submitList(it)
             binding.tvSearchResultEmpty.invisible()
+            binding.tvLoadingResultEmpty.invisible()
             binding.tvTitle.visible()
         }
         viewModel.searchResult.observe(viewLifecycleOwner) {

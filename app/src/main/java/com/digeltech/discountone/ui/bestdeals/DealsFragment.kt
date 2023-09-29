@@ -2,12 +2,11 @@ package com.digeltech.discountone.ui.bestdeals
 
 import android.os.Bundle
 import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.discountone.R
 import com.digeltech.discountone.common.base.BaseFragment
@@ -36,8 +35,6 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
 
     private lateinit var dealAdapter: GridDealAdapter
     private lateinit var searchAdapter: GridDealAdapter
-
-    private var isMoreDealsLoaded = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -105,19 +102,18 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
         )
         binding.rvDeals.adapter = dealAdapter
 
-        val layoutManager = binding.rvDeals.layoutManager as GridLayoutManager
-        binding.rvDeals.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
+        with(binding.nsvContent) {
+            val scrollListener = ViewTreeObserver.OnScrollChangedListener {
+                val scrollY = this.scrollY
+                val totalHeight = this.getChildAt(0).height
+                val currentHeight = this.height
 
-                val totalItemCount = layoutManager.itemCount
-                val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
-                if (!isMoreDealsLoaded && totalItemCount <= lastVisibleItem + 50) {
+                if (scrollY + currentHeight >= totalHeight) {
                     viewModel.loadMoreDeals()
-                    isMoreDealsLoaded = true
                 }
             }
-        })
+            this.viewTreeObserver.addOnScrollChangedListener(scrollListener)
+        }
 
         searchAdapter = GridDealAdapter(
             {
@@ -174,20 +170,22 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
 
     private fun observeData() {
         viewModel.loadingGifVisibility.observe(viewLifecycleOwner) {
-            if (it)
+            if (it) {
                 binding.ivLoading.visible()
-            else
+            } else {
                 binding.ivLoading.invisible()
+            }
         }
         viewModel.deals.observe(viewLifecycleOwner) {
             if (it.isEmpty()) {
                 binding.tvSortingResultEmpty.visible()
                 binding.rvDeals.invisible()
             } else {
-                binding.tvSortingResultEmpty.invisible()
-                binding.rvDeals.visible()
-                dealAdapter.submitList(null)
                 dealAdapter.submitList(it)
+                dealAdapter.notifyDataSetChanged()
+                binding.tvSortingResultEmpty.invisible()
+                binding.grContent.visible()
+                binding.rvDeals.visible()
             }
         }
         viewModel.shops.observe(viewLifecycleOwner) {

@@ -15,6 +15,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+const val ITEMS_ON_PAGE = "50"
+
 @HiltViewModel
 class DealsViewModel @Inject constructor(
     private val dealsRepository: DealsRepository
@@ -29,22 +31,24 @@ class DealsViewModel @Inject constructor(
     private val _shops: MutableLiveData<List<Item>> = MutableLiveData()
     val shops: LiveData<List<Item>> = _shops
 
-    private lateinit var allDeals: List<DealParcelable>
+    private val allDeals = mutableListOf<DealParcelable>()
 
     private var categorySpinnerPosition = 0
     private var shopSpinnerPosition = 0
     private var selectedShopId = 0
     private var selectedCategoryId = 0
+    private var currentPage = 3 // startup count of deal = 100, next loading loading per page = 50, so currentPage is 2
 
     init {
         initDeals()
     }
 
     private fun initDeals() {
-        viewModelScope.launchWithLoading {
+        viewModelScope.launch {
+            loadingGifVisibility.value = true
             dealsRepository.getBestDeals()
                 .onSuccess {
-                    allDeals = it.posts.toParcelableList()
+                    allDeals.addAll(it.posts.toParcelableList())
                     _deals.postValue(it.posts.toParcelableList())
                     _shops.postValue(it.shops)
 
@@ -59,17 +63,22 @@ class DealsViewModel @Inject constructor(
                     _categories.postValue(categories)
                 }
                 .onFailure { error.postValue(it.toString()) }
+            loadingGifVisibility.value = false
         }
     }
 
     fun loadMoreDeals() {
-        viewModelScope.launch {
-            dealsRepository.getAllDeals()
-                .onSuccess {
-                    _deals.postValue(it.toParcelableList())
+        viewModelScope.launchWithLoading {
+            dealsRepository.getAllDeals(currentPage.toString(), ITEMS_ON_PAGE)
+                .onSuccess { deals ->
+                    if (deals.isNotEmpty()) {
+                        allDeals.addAll(deals.toParcelableList())
+                        _deals.postValue(allDeals as List<DealParcelable>)
+                        currentPage++
+                    }
                 }
                 .onFailure {
-                    dealsRepository.getAllDeals()
+                    log(it.toString())
                 }
         }
     }

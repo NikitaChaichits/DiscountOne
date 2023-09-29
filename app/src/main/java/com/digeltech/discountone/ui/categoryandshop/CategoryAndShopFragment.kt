@@ -1,7 +1,8 @@
-package com.digeltech.discountone.ui.categories.categoryandshop
+package com.digeltech.discountone.ui.categoryandshop
 
 import android.os.Bundle
 import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.widget.SearchView
@@ -46,7 +47,7 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
          */
         binding.tvSortingCatOrShop.text = if (args.isFromCategory) getString(R.string.fr_deals_filter_shops)
         else getString(R.string.fr_deals_filter_categories)
-        viewModel.initScreenData(args.slug, args.isFromCategory)
+        viewModel.initScreenData(args.slug, args.isFromCategory, args.id.toString())
 
         observeData()
         initAdapters()
@@ -76,7 +77,6 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
     private fun initAdapters() {
         dealAdapter = GridDealAdapter(
             {
-//                viewModel.updateDealViewsClick(it.id.toString())
                 navigate(CategoryAndShopFragmentDirections.toDealFragment(it))
             },
             logger
@@ -92,7 +92,6 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
 
         searchAdapter = GridDealAdapter(
             {
-//                viewModel.updateDealViewsClick(it.id.toString())
                 navigate(CategoryAndShopFragmentDirections.toDealFragment(it))
                 binding.searchView.setQuery("", false)
             },
@@ -150,6 +149,18 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
                 }
             })
             bottomSheetFragment.show(requireActivity().supportFragmentManager, bottomSheetFragment.tag)
+        }
+        with(binding.nsvContent) {
+            val scrollListener = ViewTreeObserver.OnScrollChangedListener {
+                val scrollY = this.scrollY
+                val totalHeight = this.getChildAt(0).height
+                val currentHeight = this.height
+
+                if (scrollY + currentHeight >= totalHeight) {
+                    viewModel.loadMoreDeals()
+                }
+            }
+            this.viewTreeObserver.addOnScrollChangedListener(scrollListener)
         }
     }
 

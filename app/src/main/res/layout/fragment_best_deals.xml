@@ -9,13 +9,12 @@
         android:id="@+id/ivLoading"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="300dp"
+        android:layout_marginTop="350dp"
         android:foregroundGravity="top"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivAppIcon"
@@ -50,15 +49,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tvTitle"
-        style="@style/TextRegular.Title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/common_offset_16dp"
-        android:text="@string/fr_deals_title"
-        app:layout_constraintTop_toBottomOf="@id/searchView" />
-
-    <TextView
         android:id="@+id/tvSearchResultEmpty"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -70,96 +60,123 @@
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/searchView" />
 
-    <TextView
-        android:id="@+id/tvFilterCategories"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_offset_8dp"
-        android:text="@string/fr_deals_filter_categories"
-        android:textColor="@color/defaultColor"
-        app:layout_constraintStart_toStartOf="@id/spinnerCategories"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
-
-    <Spinner
-        android:id="@+id/spinnerCategories"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/common_offset_16dp"
-        android:layout_marginTop="@dimen/common_offset_4dp"
-        android:layout_marginEnd="@dimen/common_offset_8dp"
-        android:background="@drawable/bg_deal"
-        app:layout_constraintEnd_toStartOf="@id/spinnerShops"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvFilterCategories" />
-
-    <TextView
-        android:id="@+id/tvFilterShops"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_offset_8dp"
-        android:text="@string/fr_deals_filter_shops"
-        android:textColor="@color/defaultColor"
-        app:layout_constraintStart_toStartOf="@id/spinnerShops"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
-
-    <Spinner
-        android:id="@+id/spinnerShops"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/common_offset_8dp"
-        android:layout_marginTop="@dimen/common_offset_4dp"
-        android:layout_marginEnd="@dimen/common_offset_16dp"
-        android:background="@drawable/bg_deal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/spinnerCategories"
-        app:layout_constraintTop_toBottomOf="@id/tvFilterShops" />
-
-    <TextView
-        android:id="@+id/tvSortingResultEmpty"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nsvContent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/common_offset_16dp"
-        android:layout_marginTop="@dimen/common_offset_24dp"
-        android:text="@string/empty_sorting_result"
-        android:textAlignment="center"
-        android:textColor="@color/defaultColor"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/spinnerCategories" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvDeals"
-        android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/common_offset_8dp"
-        android:paddingBottom="@dimen/common_offset_8dp"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/spinnerCategories"
-        app:spanCount="2"
-        tools:itemCount="8"
-        tools:listitem="@layout/rv_deal_grid" />
+        app:layout_constraintTop_toBottomOf="@id/searchView">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvSearchDeals"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/common_offset_8dp"
-        android:paddingBottom="@dimen/common_offset_8dp"
-        android:visibility="invisible"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle"
-        app:spanCount="2"
-        tools:itemCount="8"
-        tools:listitem="@layout/rv_deal_grid" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/grContent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="tvFilterCategories, tvFilterShops, spinnerCategories, spinnerShops, rvDeals" />
+            <TextView
+                android:id="@+id/tvTitle"
+                style="@style/TextRegular.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/common_offset_16dp"
+                android:text="@string/fr_deals_title"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvFilterCategories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/common_offset_8dp"
+                android:text="@string/fr_deals_filter_categories"
+                android:textColor="@color/defaultColor"
+                app:layout_constraintStart_toStartOf="@id/spinnerCategories"
+                app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+            <Spinner
+                android:id="@+id/spinnerCategories"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/common_offset_16dp"
+                android:layout_marginTop="@dimen/common_offset_4dp"
+                android:layout_marginEnd="@dimen/common_offset_8dp"
+                android:background="@drawable/bg_deal"
+                app:layout_constraintEnd_toStartOf="@id/spinnerShops"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvFilterCategories" />
+
+            <TextView
+                android:id="@+id/tvFilterShops"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/common_offset_8dp"
+                android:text="@string/fr_deals_filter_shops"
+                android:textColor="@color/defaultColor"
+                app:layout_constraintStart_toStartOf="@id/spinnerShops"
+                app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+            <Spinner
+                android:id="@+id/spinnerShops"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/common_offset_8dp"
+                android:layout_marginTop="@dimen/common_offset_4dp"
+                android:layout_marginEnd="@dimen/common_offset_16dp"
+                android:background="@drawable/bg_deal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/spinnerCategories"
+                app:layout_constraintTop_toBottomOf="@id/tvFilterShops" />
+
+            <TextView
+                android:id="@+id/tvSortingResultEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/common_offset_16dp"
+                android:layout_marginTop="@dimen/common_offset_24dp"
+                android:text="@string/empty_sorting_result"
+                android:textAlignment="center"
+                android:textColor="@color/defaultColor"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/spinnerCategories" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvDeals"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/common_offset_8dp"
+                android:paddingBottom="@dimen/common_offset_8dp"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/spinnerCategories"
+                app:spanCount="2"
+                tools:itemCount="8"
+                tools:listitem="@layout/rv_deal_grid" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvSearchDeals"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/common_offset_8dp"
+                android:paddingBottom="@dimen/common_offset_8dp"
+                android:visibility="gone"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvTitle"
+                app:spanCount="2"
+                tools:itemCount="8"
+                tools:listitem="@layout/rv_deal_grid" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/grContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                app:constraint_referenced_ids="tvFilterCategories, tvFilterShops, spinnerCategories, spinnerShops, rvDeals"
+                tools:visibility="visible" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

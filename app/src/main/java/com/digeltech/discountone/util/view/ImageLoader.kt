@@ -24,14 +24,12 @@ val glideCircleTransformOption = RequestOptions().apply(RequestOptions.circleCro
 
 fun ImageView.setCircleImage(
     uri: Uri?,
-//    @DrawableRes placeholderRes: Int,
     requestListener: RequestListener<Drawable>? = null
 ) {
     Glide.with(this)
         .load(uri)
         .apply(glideCircleTransformOption)
         .apply { if (requestListener != null) addListener(requestListener) }
-//        .placeholder(placeholderRes)
         .transition(glideTransitionOption)
         .into(this)
 }
@@ -55,6 +53,7 @@ fun ImageView.setImageWithRadius(
     val radius: Int = context.resources.getDimension(radiusDimen).toInt()
     Glide.with(context)
         .load(url)
+        .diskCacheStrategy(DiskCacheStrategy.ALL)
         .transform(FitCenter(), RoundedCorners(radius))
         .transition(glideTransitionOption)
         .into(this)
@@ -65,6 +64,7 @@ fun ImageView.loadImage(
 ) {
     Glide.with(context)
         .load(url)
+        .diskCacheStrategy(DiskCacheStrategy.ALL)
         .transition(glideTransitionOption)
         .into(this)
 }

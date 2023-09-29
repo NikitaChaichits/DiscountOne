@@ -4,9 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.digeltech.discountone.common.base.BaseViewModel
+import com.digeltech.discountone.domain.repository.DealsRepository
 import com.digeltech.discountone.ui.common.SEARCH_DELAY
 import com.digeltech.discountone.ui.common.getListOfBookmarks
+import com.digeltech.discountone.ui.common.getUserId
 import com.digeltech.discountone.ui.common.model.DealParcelable
+import com.digeltech.discountone.ui.common.model.toParcelableList
 import com.digeltech.discountone.util.log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -14,14 +17,31 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SavedPublicationsViewModel @Inject constructor() : BaseViewModel() {
+class SavedPublicationsViewModel @Inject constructor(
+    private val dealsRepository: DealsRepository
+) : BaseViewModel() {
 
     private val _deals: MutableLiveData<List<DealParcelable>> = MutableLiveData()
     val deals: LiveData<List<DealParcelable>> = _deals
 
+    val loadingError = MutableLiveData<Boolean>()
+
     fun getSavedPublications() {
-        viewModelScope.launch {
-            getListOfBookmarks()?.let { _deals.postValue(it.toMutableList()) }
+        getListOfBookmarks()?.also { bookmarks ->
+            _deals.postValue(bookmarks.toMutableList())
+
+            getUserId()?.let { userId ->
+                viewModelScope.launch {
+                    dealsRepository.getBookmarksDeals(userId)
+                        .onSuccess {
+                            val bookmarksOnServer = it.toParcelableList().toSet()
+                            val uniqueBookmarks = bookmarks.toSet() - bookmarksOnServer
+                            uniqueBookmarks.forEach { deal ->
+                                dealsRepository.addDealToBookmark(userId, deal.id.toString())
+                            }
+                        }
+                }
+            }
         }
     }
 

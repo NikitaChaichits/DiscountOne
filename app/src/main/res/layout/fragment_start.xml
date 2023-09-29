@@ -54,6 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/create_new_account"
+        android:textColor="@color/black"
         android:layout_marginTop="@dimen/common_offset_8dp"
         app:cornerRadius="@dimen/radius_12"
         app:layout_constraintBottom_toBottomOf="parent"

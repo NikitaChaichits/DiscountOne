@@ -24,7 +24,7 @@ data class UserMetaDataDto(
 data class DataDto(
     @SerializedName("id")
     val id: Int,
-    @SerializedName("user_login")
+    @SerializedName("display_name")
     val login: String,
     @SerializedName("user_email")
     val email: String,

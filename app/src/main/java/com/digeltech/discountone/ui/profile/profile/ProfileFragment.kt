@@ -78,17 +78,17 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
                 navigate(ProfileFragmentDirections.toStartFragment(), navOptions)
             }
             llPrivacyPolicy.setOnClickListener {
-                binding.webView.openWebView(getString(R.string.privacy_policy_link))
+                binding.webView.openWebView(getString(R.string.privacy_policy_link), binding.ivLoading)
                 binding.tvTitle.text = getString(R.string.privacy_policy)
                 bottomNavMenu.gone()
             }
             llConditionsOfUse.setOnClickListener {
-                binding.webView.openWebView(getString(R.string.terms_of_use_link))
+                binding.webView.openWebView(getString(R.string.terms_of_use_link), binding.ivLoading)
                 binding.tvTitle.text = getString(R.string.conditions_of_use)
                 bottomNavMenu.gone()
             }
             llAffiliateDisclosure.setOnClickListener {
-                binding.webView.openWebView(getString(R.string.affiliate_disclosure_link))
+                binding.webView.openWebView(getString(R.string.affiliate_disclosure_link), binding.ivLoading)
                 binding.tvTitle.text = getString(R.string.affiliate_disclosure)
                 bottomNavMenu.gone()
             }

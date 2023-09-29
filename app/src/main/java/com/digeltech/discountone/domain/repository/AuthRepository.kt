@@ -15,13 +15,13 @@ interface AuthRepository {
         city: String?,
         birthday: String?,
         userAvatar: MultipartBody.Part?
-    ): Result<Unit>
+    ): Result<User>
 
     suspend fun updateProfile(
         id: String,
         login: String?,
         city: String?,
         birthday: String?,
-    ): Result<Unit>
+    ): Result<User>
 
 }

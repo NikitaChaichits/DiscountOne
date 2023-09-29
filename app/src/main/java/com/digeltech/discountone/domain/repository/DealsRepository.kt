@@ -10,13 +10,11 @@ import com.digeltech.discountone.ui.common.model.Sorting
 interface DealsRepository {
     suspend fun getBestDeals(): Result<AllDeals>
 
-    suspend fun getAllDeals(): Result<List<Deal>>
+    suspend fun getAllDeals(page: String, limit: String): Result<List<Deal>>
 
     suspend fun getAllCoupons(): Result<List<Deal>>
 
     suspend fun getDealsByCategoryAndShopId(categoryId: Int?, shopId: Int?): Result<List<Deal>>
-
-    suspend fun getDealsByShopId(shopId: Int): Result<List<Deal>>
 
     suspend fun getDealById(dealId: Int): Result<Deal>
 
@@ -41,4 +39,14 @@ interface DealsRepository {
         priceTo: Int?
     ): Result<List<Deal>>
 
+    suspend fun getInitialDeals(
+        categoryType: CategoryType,
+        id: String
+    ): Result<List<Deal>>
+
+    suspend fun getBookmarksDeals(userId: String): Result<List<Deal>>
+
+    suspend fun addDealToBookmark(userId: String, dealId: String)
+
+    suspend fun deleteDealFromBookmark(userId: String, dealId: String)
 }

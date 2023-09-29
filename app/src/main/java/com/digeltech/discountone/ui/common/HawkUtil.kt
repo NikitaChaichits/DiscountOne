@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.digeltech.discountone.domain.model.Category
 import com.digeltech.discountone.domain.model.Notification
 import com.digeltech.discountone.domain.model.Shop
+import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.common.model.DealParcelable
 import com.digeltech.discountone.util.log
 import com.digeltech.discountone.util.time.getCurrentDate
@@ -12,13 +13,13 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import com.orhanobut.hawk.Hawk
 
-private const val KEY_SAVED_DEALS = "saved-deals"
+const val KEY_SAVED_DEALS = "saved-deals"
 const val KEY_SHOPS = "all-shops"
 const val KEY_CATEGORIES = "all-categories"
 const val KEY_USER = "user"
 const val KEY_NOTIFICATION = "notification"
 
-fun addToBookmark(deal: DealParcelable) {
+fun addToBookmarkCache(deal: DealParcelable) {
     if (Hawk.contains(KEY_SAVED_DEALS)) {
         val listOfBookMark: List<DealParcelable> = Hawk.get(KEY_SAVED_DEALS)
         val mutableList = listOfBookMark.toMutableList()
@@ -34,7 +35,7 @@ fun addToBookmark(deal: DealParcelable) {
     }
 }
 
-fun removeFromBookmark(id: Int) {
+fun removeFromBookmarkCache(id: Int) {
     val listOfBookMark: List<DealParcelable> = Hawk.get(KEY_SAVED_DEALS)
     val mutableList = listOfBookMark.toMutableList()
     mutableList.find { it.id == id }?.let(mutableList::remove)
@@ -113,4 +114,11 @@ fun updateNotification(notification: Notification) {
     val listOfNotifications: List<Notification> = Hawk.get(KEY_NOTIFICATION)
     listOfNotifications.find { it == notification }?.isRead = true
     Hawk.put(KEY_NOTIFICATION, listOfNotifications)
+}
+
+fun getUserId(): String? {
+    return if (Hawk.contains(KEY_USER)) {
+        val user = Hawk.get(KEY_USER) as User
+        user.id
+    } else null
 }

@@ -110,4 +110,16 @@ class DealViewModel @Inject constructor(
             dealsRepository.updateDealViewsClick(id)
         }
     }
+
+    fun addBookmark(userId: String, dealId: String) {
+        viewModelScope.launch {
+            dealsRepository.addDealToBookmark(userId, dealId)
+        }
+    }
+
+    fun deleteBookmark(userId: String, dealId: String) {
+        viewModelScope.launch {
+            dealsRepository.deleteDealFromBookmark(userId, dealId)
+        }
+    }
 }

@@ -6,11 +6,14 @@ import androidx.lifecycle.viewModelScope
 import com.digeltech.discountone.common.base.BaseViewModel
 import com.digeltech.discountone.domain.model.CategoryWithDeals
 import com.digeltech.discountone.domain.model.Deal
+import com.digeltech.discountone.ui.common.KEY_SAVED_DEALS
 import com.digeltech.discountone.ui.common.SEARCH_DELAY
+import com.digeltech.discountone.ui.common.getUserId
 import com.digeltech.discountone.ui.common.model.DealParcelable
 import com.digeltech.discountone.ui.common.model.toParcelableList
 import com.digeltech.discountone.ui.home.interactor.HomeInteractor
 import com.digeltech.discountone.util.log
+import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -39,6 +42,12 @@ class HomeViewModel @Inject constructor(
     fun getHomepageData() {
         viewModelScope.launch {
             loadingGifVisibility.value = true
+            getUserId()?.let {
+                interactor.getFetchListOfBookmarks(it)
+                    .onSuccess { list ->
+                        Hawk.put(KEY_SAVED_DEALS, list.toParcelableList())
+                    }
+            }
             interactor.getHomepage()
                 .onSuccess {
                     _banners.value = it.listOfBanners

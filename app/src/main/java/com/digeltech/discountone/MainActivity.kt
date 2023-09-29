@@ -52,8 +52,6 @@ class MainActivity : AppCompatActivity() {
     ) { isGranted: Boolean ->
         if (isGranted) {
             toast("Notifications permission granted")
-        } else {
-            toast("FCM can't post notifications without POST_NOTIFICATIONS permission")
         }
     }
 

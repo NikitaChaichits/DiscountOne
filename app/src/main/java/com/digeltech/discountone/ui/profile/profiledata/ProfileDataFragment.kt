@@ -43,7 +43,10 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        binding.tvDateOfBirth.text = "$year-$month-$dayOfMonth"
+        val _month = if (month < 9) "0${month + 1}" else month + 1
+        val _dayOfMonth = if (dayOfMonth < 10) "0$dayOfMonth" else dayOfMonth
+
+        binding.tvDateOfBirth.text = "$year-$_month-$_dayOfMonth"
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -124,14 +127,6 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
     private fun observeData() {
         viewModel.success.observe(viewLifecycleOwner) {
             if (it) {
-                val user = Hawk.get<User>(KEY_USER)
-                Hawk.put(
-                    KEY_USER, user.copy(
-                        city = binding.etCity.text.toString().trim(),
-                        birthdate = binding.tvDateOfBirth.text.toString(),
-                        login = binding.etProfileName.text.toString(),
-                    )
-                )
                 navigateBack()
             }
         }

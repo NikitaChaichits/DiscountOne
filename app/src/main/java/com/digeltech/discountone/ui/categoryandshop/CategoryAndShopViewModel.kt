@@ -1,11 +1,11 @@
-package com.digeltech.discountone.ui.categories.categoryandshop
+package com.digeltech.discountone.ui.categoryandshop
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.digeltech.discountone.common.base.BaseViewModel
 import com.digeltech.discountone.domain.model.CategoryShopFilterItem
-import com.digeltech.discountone.ui.categories.categoryandshop.interactor.CategoryAndShopInteractor
+import com.digeltech.discountone.ui.categoryandshop.interactor.CategoryAndShopInteractor
 import com.digeltech.discountone.ui.common.SEARCH_DELAY
 import com.digeltech.discountone.ui.common.model.*
 import com.digeltech.discountone.util.log
@@ -28,10 +28,10 @@ class CategoryAndShopViewModel @Inject constructor(
 
     val filteringError = MutableLiveData<String>()
 
-    private var currentPage = 1
+    private var currentPage = 2 // startup count of deal = 100, loading per page = 50, so currentPage is 2
     private var currentCategoryType: CategoryType = CategoryType.SHOP
     private lateinit var taxSlug: String
-    private var currentSortBySpinnerPosition = -1
+    private var currentSortBySpinnerPosition = 0
     private var currentCatOrShopSpinnerPosition = 0
     private var categoryOrShopSlug = ""
     private var priceFrom = 0
@@ -41,7 +41,7 @@ class CategoryAndShopViewModel @Inject constructor(
 
     private var sortingJob: Job? = null
 
-    fun initScreenData(slug: String, isFromCategory: Boolean) {
+    fun initScreenData(slug: String, isFromCategory: Boolean, id: String) {
         if (isFromCategory) currentCategoryType = CategoryType.CATEGORY
         taxSlug = slug
         viewModelScope.launch {
@@ -54,6 +54,15 @@ class CategoryAndShopViewModel @Inject constructor(
                 interactor.getShopCategories(slug)
                     .onSuccess {
                         _categoryOrShopNames.value = it
+                    }
+            }
+            launchWithLoading {
+                interactor.getInitialDeals(currentCategoryType, id)
+                    .onSuccess {
+                        _deals.postValue(it.toParcelableList())
+                    }
+                    .onFailure {
+                        error.postValue(it.toString())
                     }
             }
         }
@@ -69,12 +78,6 @@ class CategoryAndShopViewModel @Inject constructor(
                 val deals = interactor.searchDeals(searchText)
                 searchResult.value = deals.toParcelableList()
             }
-        }
-    }
-
-    fun updateDealViewsClick(id: String) {
-        viewModelScope.launch {
-            interactor.updateDealViewsClick(id)
         }
     }
 
@@ -102,12 +105,14 @@ class CategoryAndShopViewModel @Inject constructor(
                 sorting = Sorting.DESC
             }
         }
+        currentPage = 2
         getSortingDeals()
     }
 
     fun sortingByPrice(priceFrom: Int, priceTo: Int) {
         this.priceFrom = priceFrom
         this.priceTo = priceTo
+        currentPage = 2
         getSortingDeals()
     }
 
@@ -118,6 +123,7 @@ class CategoryAndShopViewModel @Inject constructor(
         } else {
             _categoryOrShopNames.value?.get(spinnerPosition - 1)?.slug ?: ""
         }
+        currentPage = 2
         getSortingDeals()
     }
 
@@ -128,12 +134,42 @@ class CategoryAndShopViewModel @Inject constructor(
 
     fun getCatOrShopSpinnerPosition(): Int = currentCatOrShopSpinnerPosition
 
-    private fun getSortingDeals() {
+    fun loadMoreDeals() {
+        currentPage++
         if (sortingJob?.isActive == true) sortingJob?.cancel()
 
         sortingJob = viewModelScope.launchWithLoading {
             interactor.getSortingDeals(
                 page = currentPage.toString(),
+                categoryType = currentCategoryType,
+                taxSlug = taxSlug,
+                sorting = sorting,
+                sortBy = sortBy,
+                catOrShopSlug = categoryOrShopSlug.takeIf { it.isNotEmpty() },
+                priceFrom = priceFrom,
+                priceTo = priceTo
+            )
+                .onSuccess { deals ->
+                    if (deals.isNotEmpty()) {
+                        val mutableList = mutableListOf<DealParcelable>()
+                        _deals.value?.let(mutableList::addAll)
+                        mutableList.addAll(deals.toParcelableList())
+
+                        _deals.postValue(mutableList)
+                    }
+                }
+                .onFailure {
+                    log(it.toString())
+                    filteringError.postValue(it.toString())
+                }
+        }
+    }
+
+    private fun getSortingDeals() {
+        if (sortingJob?.isActive == true) sortingJob?.cancel()
+
+        sortingJob = viewModelScope.launchWithLoading {
+            interactor.getSortingDeals(
                 categoryType = currentCategoryType,
                 taxSlug = taxSlug,
                 sorting = sorting,
@@ -151,4 +187,5 @@ class CategoryAndShopViewModel @Inject constructor(
                 }
         }
     }
+
 }

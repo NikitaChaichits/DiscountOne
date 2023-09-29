@@ -1,4 +1,4 @@
-package com.digeltech.discountone.ui.categories.categoryandshop.interactor
+package com.digeltech.discountone.ui.categoryandshop.interactor
 
 import com.digeltech.discountone.domain.model.CategoryShopFilterItem
 import com.digeltech.discountone.domain.model.Deal
@@ -26,8 +26,6 @@ internal class CategoryAndShopInteractorImpl @Inject constructor(
 
     override suspend fun searchDeals(searchText: String): List<Deal> = dealsRepository.searchDeals(searchText)
 
-    override suspend fun updateDealViewsClick(id: String) = dealsRepository.updateDealViewsClick(id)
-
     override suspend fun getSortingDeals(
         page: String,
         categoryType: CategoryType,
@@ -48,5 +46,8 @@ internal class CategoryAndShopInteractorImpl @Inject constructor(
             priceFrom = priceFrom,
             priceTo = priceTo
         )
+
+    override suspend fun getInitialDeals(categoryType: CategoryType, id: String): Result<List<Deal>> =
+        dealsRepository.getInitialDeals(categoryType, id)
 
 }

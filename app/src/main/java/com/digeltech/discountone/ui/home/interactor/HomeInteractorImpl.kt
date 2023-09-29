@@ -21,4 +21,7 @@ internal class HomeInteractorImpl @Inject constructor(
 
     override suspend fun updateDealViewsClick(id: String) = dealsRepository.updateDealViewsClick(id)
 
+    override suspend fun getFetchListOfBookmarks(userId: String): Result<List<Deal>> =
+        dealsRepository.getBookmarksDeals(userId)
+
 }

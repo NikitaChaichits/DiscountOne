@@ -8,11 +8,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.digeltech.discountone.R
 import com.digeltech.discountone.databinding.RvDealGridBinding
-import com.digeltech.discountone.ui.common.addToBookmark
+import com.digeltech.discountone.ui.common.addToBookmarkCache
 import com.digeltech.discountone.ui.common.getCategoryNameById
 import com.digeltech.discountone.ui.common.logShopNow
 import com.digeltech.discountone.ui.common.model.DealParcelable
-import com.digeltech.discountone.ui.common.removeFromBookmark
+import com.digeltech.discountone.ui.common.removeFromBookmarkCache
 import com.digeltech.discountone.util.capitalizeFirstLetter
 import com.digeltech.discountone.util.copyTextToClipboard
 import com.digeltech.discountone.util.getDiscountText
@@ -20,6 +20,9 @@ import com.digeltech.discountone.util.isNotNullAndNotEmpty
 import com.digeltech.discountone.util.view.*
 import com.facebook.appevents.AppEventsLogger
 
+/**
+ * Нельзя использовать GridDealAdapter, т.к. надо удалять закладку с экрана (111 строка)
+ */
 class SavedPublicationsAdapter(
     private val onClickListener: (deal: DealParcelable) -> Unit,
     private val logger: AppEventsLogger
@@ -98,11 +101,13 @@ class SavedPublicationsAdapter(
 
                 if (item.isAddedToBookmark) {
                     ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_bookmark_solid))
+                } else {
+                    ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_bookmark))
                 }
                 ivBookmark.setOnClickListener {
                     if (item.isAddedToBookmark) {
                         item.isAddedToBookmark = false
-                        removeFromBookmark(item.id)
+                        removeFromBookmarkCache(item.id)
 
                         val list = currentList.toMutableList()
                         list.removeAt(adapterPosition)
@@ -112,7 +117,7 @@ class SavedPublicationsAdapter(
                         it.context.toast(it.getString(R.string.removed_from_bookmarks))
                     } else {
                         item.isAddedToBookmark = true
-                        addToBookmark(item)
+                        addToBookmarkCache(item)
                         ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_bookmark_solid))
                         it.context.toast(it.getString(R.string.added_to_bookmarks))
                     }

@@ -22,8 +22,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun login(email: String, password: String) = withContext(Dispatchers.IO) {
         runCatching {
-            val response = api.login(email = email, password = password)
-            UserMapper().map(response).also {
+            UserMapper().map(api.login(email = email, password = password)).also {
                 Hawk.put(KEY_USER, it)
             }
         }
@@ -37,13 +36,17 @@ class AuthRepositoryImpl @Inject constructor(
         userAvatar: MultipartBody.Part?
     ) = withContext(Dispatchers.IO) {
         runCatching {
-            api.updateProfileWithAvatar(
-                id = id,
-                city = city,
-                birthday = birthday,
-                nickname = login,
-                file = userAvatar
-            )
+            UserMapper().map(
+                api.updateProfileWithAvatar(
+                    id = id,
+                    city = city,
+                    birthday = birthday,
+                    nickname = login,
+                    file = userAvatar
+                )
+            ).also {
+                Hawk.put(KEY_USER, it)
+            }
         }
     }
 
@@ -54,12 +57,16 @@ class AuthRepositoryImpl @Inject constructor(
         birthday: String?,
     ) = withContext(Dispatchers.IO) {
         runCatching {
-            api.updateProfile(
-                id = id,
-                city = city,
-                birthday = birthday,
-                nickname = login,
-            )
+            UserMapper().map(
+                api.updateProfile(
+                    id = id,
+                    city = city,
+                    birthday = birthday,
+                    nickname = login,
+                )
+            ).also {
+                Hawk.put(KEY_USER, it)
+            }
         }
     }
 

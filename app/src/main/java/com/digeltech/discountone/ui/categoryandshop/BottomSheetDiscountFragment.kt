@@ -1,4 +1,4 @@
-package com.digeltech.discountone.ui.categories.categoryandshop
+package com.digeltech.discountone.ui.categoryandshop
 
 import android.app.Dialog
 import android.os.Bundle

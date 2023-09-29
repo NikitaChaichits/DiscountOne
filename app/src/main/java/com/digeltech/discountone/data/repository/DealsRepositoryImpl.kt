@@ -26,9 +26,9 @@ class DealsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getAllDeals(): Result<List<Deal>> = withContext(Dispatchers.IO) {
+    override suspend fun getAllDeals(page: String, limit: String): Result<List<Deal>> = withContext(Dispatchers.IO) {
         runCatching {
-            DealsMapper().mapDeals(api.getAllDeals())
+            DealsMapper().mapDeals(api.getAllDeals(page, limit))
         }
     }
 
@@ -44,12 +44,6 @@ class DealsRepositoryImpl @Inject constructor(
                 DealsMapper().mapDeals(api.getSortingBestDeals(categoryId, shopId))
             }
         }
-
-    override suspend fun getDealsByShopId(shopId: Int): Result<List<Deal>> = withContext(Dispatchers.IO) {
-        runCatching {
-            DealsMapper().mapDeals(api.getShopDeals(shopId.toString()))
-        }
-    }
 
     override suspend fun getDealById(dealId: Int): Result<Deal> = withContext(Dispatchers.IO) {
         runCatching {
@@ -108,6 +102,36 @@ class DealsRepositoryImpl @Inject constructor(
                     priceTo = priceTo,
                 )
             )
+        }
+    }
+
+    override suspend fun getInitialDeals(categoryType: CategoryType, id: String): Result<List<Deal>> =
+        withContext(Dispatchers.IO) {
+            runCatching {
+                DealsMapper().mapDeals(
+                    api.getInitialDeals(
+                        categoryType = categoryType.type,
+                        id = id
+                    )
+                )
+            }
+        }
+
+    override suspend fun getBookmarksDeals(userId: String): Result<List<Deal>> = withContext(Dispatchers.IO) {
+        runCatching {
+            DealsMapper().mapBookmarks(api.getFavoritesDeals(userId = userId))
+        }
+    }
+
+    override suspend fun addDealToBookmark(userId: String, dealId: String): Unit = withContext(Dispatchers.IO) {
+        runCatching {
+            api.saveOrDeleteFavoriteDeal(userId = userId, dealId = dealId)
+        }
+    }
+
+    override suspend fun deleteDealFromBookmark(userId: String, dealId: String): Unit = withContext(Dispatchers.IO) {
+        runCatching {
+            api.saveOrDeleteFavoriteDeal(userId = userId, dealId = dealId)
         }
     }
 

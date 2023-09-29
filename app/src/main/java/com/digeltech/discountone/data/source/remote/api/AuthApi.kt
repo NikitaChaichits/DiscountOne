@@ -29,16 +29,15 @@ interface AuthApi {
         @Query("id") id: String,
         @Query("city") city: String?,
         @Query("my_birthday") birthday: String?,
-        @Query("login") nickname: String?,
+        @Query("nickname") nickname: String?,
         @Part file: MultipartBody.Part?
-    )
+    ): UserDto
 
     @POST("/wp-json/theme/v1/user_upload")
     suspend fun updateProfile(
         @Query("id") id: String,
         @Query("city") city: String?,
         @Query("my_birthday") birthday: String?,
-        @Query("login") nickname: String?,
-    )
-
+        @Query("nickname") nickname: String?,
+    ): UserDto
 }

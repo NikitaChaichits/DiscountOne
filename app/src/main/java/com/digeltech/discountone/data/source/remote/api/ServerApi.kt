@@ -19,17 +19,17 @@ interface ServerApi {
     @GET("/wp-json/theme/v1/promocodes/page=1&limit=1000")
     suspend fun getAllCoupons(): List<DealDto>
 
-    @GET("/wp-json/theme/v1/products/page=1&limit=1000")
-    suspend fun getAllDeals(): List<DealDto>
+    @GET("/wp-json/theme/v1/products")
+    suspend fun getAllDeals(
+        @Query("page") page: String,
+        @Query("limit") limit: String
+    ): List<DealDto>
 
     @GET("/wp-json/theme/v1/best_deals")
     suspend fun getBestDeals(): AllDealsDto
 
     @GET("/wp-json/theme/v1/products/id/{id}")
     suspend fun getDeal(@Path("id") id: String): DealDto
-
-    @GET("/wp-json/theme/v1/list_categories?categories=categories-shops&page=1&limit=1000")
-    suspend fun getShopDeals(@Query("id") id: String): List<DealDto>
 
     @GET("/wp-json/theme/v1/products/search/{searchText}")
     suspend fun searchDeals(@Path("searchText") id: String): List<DealDto>
@@ -43,6 +43,12 @@ interface ServerApi {
     @GET("/wp-json/theme/v1/other_deals")
     suspend fun getOtherDeals(@Query("shop") shopSlugName: String): OtherDealsDto
 
+    @GET("/wp-json/theme/v1/list_categories_start_page")
+    suspend fun getInitialDeals(
+        @Query("categories") categoryType: String,
+        @Query("id") id: String
+    ): List<DealDto>
+
     @GET("/wp-json/theme/v1/filter_cat")
     suspend fun getSortingDeals(
         @Query("page") page: String,
@@ -55,7 +61,7 @@ interface ServerApi {
         @Query("priceTo") priceTo: Int?
     ): List<DealDto>
 
-    @GET("/wp-json/theme/v1/list_categories?categories=categories&page=1&limit=1000")
+    @GET("/wp-json/theme/v1/list_categories?categories=categories&page=1&limit=100")
     suspend fun getSortingBestDeals(
         @Query("id_category") idCategory: Int?,
         @Query("id_shop") idShop: Int?
@@ -67,4 +73,12 @@ interface ServerApi {
     @GET("/wp-json/theme/v1/cat_and_chop_filter?category=categories-shops")
     suspend fun getShopCategories(@Query("pageslug") pageslug: String): List<CategoryShopDto>
 
+    @GET("/wp-json/theme/v1/users/save_coupons")
+    suspend fun getFavoritesDeals(@Query("id") userId: String): List<DealDto>
+
+    @GET("/wp-json/theme/v1/users/upload_save_coupons")
+    suspend fun saveOrDeleteFavoriteDeal(
+        @Query("id") userId: String,
+        @Query("id_coupons") dealId: String
+    )
 }
