@@ -7,7 +7,5 @@ interface CategoriesInteractor {
 
     suspend fun getCategoriesList(): Result<List<Category>>
 
-    suspend fun getCategoryDealsList(categoryId: Int): Result<List<Deal>>
-
     suspend fun searchDeals(searchText: String): List<Deal>
 }

@@ -11,6 +11,7 @@ import com.digeltech.discountone.databinding.FragmentNewAccountBinding
 import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.common.KEY_USER
 import com.digeltech.discountone.ui.common.logSignUp
+import com.digeltech.discountone.util.log
 import com.digeltech.discountone.util.time.getCurrentDateTime
 import com.digeltech.discountone.util.validation.PASSWORD_MIN
 import com.digeltech.discountone.util.validation.isValidEmail
@@ -20,6 +21,8 @@ import com.digeltech.discountone.util.view.enable
 import com.digeltech.discountone.util.view.invisible
 import com.digeltech.discountone.util.view.visible
 import com.facebook.appevents.AppEventsLogger
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -76,6 +79,14 @@ class NewAccountFragment : BaseFragment(R.layout.fragment_new_account) {
         viewModel.userId.observe(viewLifecycleOwner) { id ->
             logSignUp(binding.etEmail.text.toString().trim(), logger)
             prefs.setLogin(true)
+            Firebase.messaging.subscribeToTopic("authorized")
+                .addOnCompleteListener { task ->
+                    var msg = "Subscribed authorized"
+                    if (!task.isSuccessful) {
+                        msg = "Subscribe failed"
+                    }
+                    log(msg)
+                }
             val user = User(
                 id = id,
                 login = binding.etName.text.toString().trim(),

@@ -234,7 +234,6 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
         }
         btnGetDeal.setOnClickListener {
             viewModel.updateDealViewsClick(it.id.toString())
-            it.openLink(deal.shopLink + "?app=1")
             logShopNow(
                 name = deal.title,
                 url = deal.shopLink,
@@ -244,6 +243,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
                 className = "DealFragment",
                 logger
             )
+            it.openLink(deal.shopLink + "?app=1")
         }
         btnCopy.setOnClickListener {
             copyTextToClipboard(it.context, deal.title)

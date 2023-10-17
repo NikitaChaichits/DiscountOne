@@ -11,10 +11,12 @@ import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentProfileBinding
 import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.common.KEY_USER
+import com.digeltech.discountone.util.log
 import com.digeltech.discountone.util.view.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import com.orhanobut.hawk.Hawk
 
 
@@ -76,6 +78,14 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
                     .setPopUpTo(R.id.startFragment, false)
                     .build()
                 navigate(ProfileFragmentDirections.toStartFragment(), navOptions)
+                Firebase.messaging.subscribeToTopic("unauthorized")
+                    .addOnCompleteListener { task ->
+                        var msg = "Subscribed unauthorized"
+                        if (!task.isSuccessful) {
+                            msg = "Subscribe failed"
+                        }
+                        log(msg)
+                    }
             }
             llPrivacyPolicy.setOnClickListener {
                 binding.webView.openWebView(getString(R.string.privacy_policy_link), binding.ivLoading)

@@ -9,8 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.digeltech.discountone.R
 import com.digeltech.discountone.data.source.local.SharedPreferencesDataSource
 import com.digeltech.discountone.databinding.RvDealGridBinding
-import com.digeltech.discountone.ui.common.*
+import com.digeltech.discountone.ui.common.addToBookmarkCache
+import com.digeltech.discountone.ui.common.isAddedToBookmark
 import com.digeltech.discountone.ui.common.model.DealParcelable
+import com.digeltech.discountone.ui.common.removeFromBookmarkCache
 import com.digeltech.discountone.util.capitalizeFirstLetter
 import com.digeltech.discountone.util.copyTextToClipboard
 import com.digeltech.discountone.util.getDiscountText
@@ -77,18 +79,7 @@ class GridDealAdapter(
 
                 root.setOnClickListener { onClickListener(item) }
 
-                btnGetDeal.setOnClickListener {
-                    onClickListener(item)
-                    logShopNow(
-                        name = item.title,
-                        url = item.shopLink,
-                        shopName = item.shopName,
-                        categoryName = getCategoryNameById(item.categoryId),
-                        price = item.price.toString(),
-                        className = "DealFragment",
-                        logger = logger
-                    )
-                }
+                btnGetDeal.setOnClickListener { onClickListener(item) }
 
                 if (item.promocode.isNotNullAndNotEmpty()) {
                     btnCopy.visible()

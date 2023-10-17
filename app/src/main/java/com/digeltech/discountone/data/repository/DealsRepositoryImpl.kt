@@ -38,10 +38,10 @@ class DealsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getDealsByCategoryAndShopId(categoryId: Int?, shopId: Int?): Result<List<Deal>> =
+    override suspend fun getDealsByCategoryAndShopId(page: String, categoryId: Int?, shopId: Int?): Result<List<Deal>> =
         withContext(Dispatchers.IO) {
             runCatching {
-                DealsMapper().mapDeals(api.getSortingBestDeals(categoryId, shopId))
+                DealsMapper().mapDeals(api.getSortingBestDeals(page, categoryId, shopId))
             }
         }
 

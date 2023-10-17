@@ -10,10 +10,13 @@ import com.digeltech.discountone.R
 import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentLoginBinding
 import com.digeltech.discountone.ui.common.logLogin
+import com.digeltech.discountone.util.log
 import com.digeltech.discountone.util.validation.isValidEmail
 import com.digeltech.discountone.util.validation.isValidPassword
 import com.digeltech.discountone.util.view.*
 import com.facebook.appevents.AppEventsLogger
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -72,6 +75,14 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
         viewModel.success.observe(viewLifecycleOwner) {
             logLogin(binding.etEmail.text.toString(), logger)
             prefs.setLogin(true)
+            Firebase.messaging.subscribeToTopic("authorized")
+                .addOnCompleteListener { task ->
+                    var msg = "Subscribed authorized"
+                    if (!task.isSuccessful) {
+                        msg = "Subscribe failed"
+                    }
+                    log(msg)
+                }
             navigate(R.id.homeFragment)
         }
         viewModel.loginError.observe(viewLifecycleOwner) {

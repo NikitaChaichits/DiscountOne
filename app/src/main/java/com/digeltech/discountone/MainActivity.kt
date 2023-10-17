@@ -15,6 +15,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.ui.setupWithNavController
 import com.digeltech.discountone.data.source.local.SharedPreferencesDataSource
 import com.digeltech.discountone.databinding.ActivityMainBinding
+import com.digeltech.discountone.ui.common.getUserId
 import com.digeltech.discountone.ui.home.KEY_HOMEPAGE_DATA
 import com.digeltech.discountone.util.log
 import com.digeltech.discountone.util.view.toast
@@ -31,6 +32,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.ktx.messaging
 import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -97,7 +99,19 @@ class MainActivity : AppCompatActivity() {
 
             val token = task.result
             log("Firebase token $token")
+            Hawk.put("Firebase", token)
         })
+
+        if (getUserId().isNullOrEmpty()) {
+            Firebase.messaging.subscribeToTopic("unauthorized")
+                .addOnCompleteListener { task ->
+                    var msg = "Subscribed unauthorized"
+                    if (!task.isSuccessful) {
+                        msg = "Subscribe failed"
+                    }
+                    log(msg)
+                }
+        }
     }
 
     override fun onResume() {
@@ -152,46 +166,51 @@ class MainActivity : AppCompatActivity() {
 
         intent.apply {
             if (extras != null && extras!!.containsKey("fragment")) {
-                when (getStringExtra("fragment")) {
-                    "ShopsFragment" -> {
-                        navGraph.setStartDestination(R.id.shopsFragment)
-                    }
-                    "CategoriesFragment" -> {
-                        navGraph.setStartDestination(R.id.categoriesFragment)
-                    }
-                    "CategoryFragment", "ShopFragment" -> {
-                        val id = getIntExtra("id", 0)
-                        val title = getStringExtra("title")
-                        val slug = getStringExtra("slug")
-                        val isFromCategory = getStringExtra("isFromCategory").toBoolean()
-
-                        if (isFromCategory)
-                            navGraph.setStartDestination(R.id.categoriesFragment)
-                        else
+                val checkLogin = getStringExtra("checkLogin").toBoolean()
+                if (!checkLogin || (checkLogin && prefs.isLogin())) {
+                    when (getStringExtra("fragment")) {
+                        "ShopsFragment" -> {
                             navGraph.setStartDestination(R.id.shopsFragment)
+                        }
+                        "CategoriesFragment" -> {
+                            navGraph.setStartDestination(R.id.categoriesFragment)
+                        }
+                        "CategoryFragment", "ShopFragment" -> {
+                            val id = getIntExtra("id", 0)
+                            val title = getStringExtra("title")
+                            val slug = getStringExtra("slug")
+                            val isFromCategory = getStringExtra("isFromCategory").toBoolean()
 
-                        val bundle = Bundle().apply {
-                            putInt("id", id)
-                            putString("title", title)
-                            putString("slug", slug)
-                            putBoolean("isFromCategory", isFromCategory)
+                            if (isFromCategory)
+                                navGraph.setStartDestination(R.id.categoriesFragment)
+                            else
+                                navGraph.setStartDestination(R.id.shopsFragment)
+
+                            val bundle = Bundle().apply {
+                                putInt("id", id)
+                                putString("title", title)
+                                putString("slug", slug)
+                                putBoolean("isFromCategory", isFromCategory)
+                            }
+                            navController.graph = navGraph
+                            navController.navigate(R.id.categoryAndShopFragment, bundle)
                         }
-                        navController.graph = navGraph
-                        navController.navigate(R.id.categoryAndShopFragment, bundle)
-                    }
-                    "DealFragment" -> {
-                        val id = getStringExtra("id")?.toInt() ?: 0
-                        val bundle = Bundle().apply {
-                            putParcelable("deal", null)
-                            putInt("dealId", id)
+                        "DealFragment" -> {
+                            val id = getStringExtra("id")?.toInt() ?: 0
+                            val bundle = Bundle().apply {
+                                putParcelable("deal", null)
+                                putInt("dealId", id)
+                            }
+                            navGraph.setStartDestination(R.id.homeFragment)
+                            navController.graph = navGraph
+                            navController.navigate(R.id.dealFragment, bundle)
                         }
-                        navGraph.setStartDestination(R.id.homeFragment)
-                        navController.graph = navGraph
-                        navController.navigate(R.id.dealFragment, bundle)
+                        else -> {
+                            navGraph.setStartDestination(R.id.splashFragment)
+                        }
                     }
-                    else -> {
-                        navGraph.setStartDestination(R.id.splashFragment)
-                    }
+                } else {
+                    navGraph.setStartDestination(R.id.splashFragment)
                 }
             } else {
                 navGraph.setStartDestination(R.id.splashFragment)

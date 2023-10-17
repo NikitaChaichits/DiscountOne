@@ -98,7 +98,6 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
     private fun initAdapters() {
         // scrolling horizontal RV for banners
         bannerAdapter = BannerAdapter {
-//            viewModel.updateDealViewsClick(it.id.toString())
             navigate(
                 HomeFragmentDirections.toCategoryFragment(
                     id = getShopIdByName(it.shopName),

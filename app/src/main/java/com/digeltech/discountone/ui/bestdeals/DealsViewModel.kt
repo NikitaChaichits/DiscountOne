@@ -32,12 +32,15 @@ class DealsViewModel @Inject constructor(
     val shops: LiveData<List<Item>> = _shops
 
     private val allDeals = mutableListOf<DealParcelable>()
+    private val allDealsWithSorting = mutableListOf<DealParcelable>()
 
     private var categorySpinnerPosition = 0
     private var shopSpinnerPosition = 0
     private var selectedShopId = 0
     private var selectedCategoryId = 0
     private var currentPage = 3 // startup count of deal = 100, next loading loading per page = 50, so currentPage is 2
+    private var currentSortingPage =
+        3 // startup count of deal = 100, next loading loading per page = 50, so currentPage is 2
 
     init {
         initDeals()
@@ -68,18 +71,38 @@ class DealsViewModel @Inject constructor(
     }
 
     fun loadMoreDeals() {
-        viewModelScope.launchWithLoading {
-            dealsRepository.getAllDeals(currentPage.toString(), ITEMS_ON_PAGE)
-                .onSuccess { deals ->
-                    if (deals.isNotEmpty()) {
-                        allDeals.addAll(deals.toParcelableList())
-                        _deals.postValue(allDeals as List<DealParcelable>)
-                        currentPage++
+        if (shopSpinnerPosition == 0 && categorySpinnerPosition == 0) {
+            viewModelScope.launchWithLoading {
+                dealsRepository.getAllDeals(currentPage.toString(), ITEMS_ON_PAGE)
+                    .onSuccess { deals ->
+                        if (deals.isNotEmpty()) {
+                            allDeals.addAll(deals.toParcelableList())
+                            _deals.postValue(allDeals as List<DealParcelable>)
+                            currentPage++
+                        }
                     }
-                }
-                .onFailure {
-                    log(it.toString())
-                }
+                    .onFailure {
+                        log(it.toString())
+                    }
+            }
+        } else {
+            viewModelScope.launchWithLoading {
+                dealsRepository.getDealsByCategoryAndShopId(
+                    page = currentSortingPage.toString(),
+                    categoryId = selectedCategoryId.takeIf { categoryId -> categoryId != 0 },
+                    shopId = selectedShopId.takeIf { shopId -> shopId != 0 })
+                    .onSuccess { deals ->
+                        if (deals.isNotEmpty()) {
+                            allDealsWithSorting.addAll(deals.toParcelableList())
+                            _deals.postValue(allDealsWithSorting as List<DealParcelable>)
+                            currentSortingPage++
+                        }
+                    }
+                    .onFailure { e ->
+                        log(e.toString())
+                        error.postValue(e.toString())
+                    }
+            }
         }
     }
 
@@ -122,7 +145,10 @@ class DealsViewModel @Inject constructor(
                             categoryId = categoryId,
                             shopId = selectedShopId.takeIf { shopId -> shopId != 0 })
                             .onSuccess { deals ->
-                                _deals.postValue(deals.toParcelableList())
+                                allDealsWithSorting.clear()
+                                allDealsWithSorting.addAll(deals.toParcelableList())
+                                _deals.postValue(allDealsWithSorting as List<DealParcelable>)
+                                currentSortingPage = 3
                             }
                             .onFailure { e ->
                                 log(e.toString())
@@ -156,7 +182,10 @@ class DealsViewModel @Inject constructor(
                             shopId = shopId
                         )
                             .onSuccess { deals ->
-                                _deals.postValue(deals.toParcelableList())
+                                allDealsWithSorting.clear()
+                                allDealsWithSorting.addAll(deals.toParcelableList())
+                                _deals.postValue(allDealsWithSorting as List<DealParcelable>)
+                                currentSortingPage = 3
                             }
                             .onFailure { e ->
                                 log(e.toString())

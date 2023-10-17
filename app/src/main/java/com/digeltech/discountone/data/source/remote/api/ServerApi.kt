@@ -61,8 +61,9 @@ interface ServerApi {
         @Query("priceTo") priceTo: Int?
     ): List<DealDto>
 
-    @GET("/wp-json/theme/v1/list_categories?categories=categories&page=1&limit=100")
+    @GET("/wp-json/theme/v1/list_categories?categories=categories&limit=100")
     suspend fun getSortingBestDeals(
+        @Query("page") page: String,
         @Query("id_category") idCategory: Int?,
         @Query("id_shop") idShop: Int?
     ): List<DealDto>

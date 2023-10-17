@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="320dp"
+    android:layout_height="300dp"
     android:background="@drawable/bg_deal"
-    android:minWidth="154dp"
+    android:minWidth="150dp"
     android:padding="@dimen/common_offset_8dp"
     tools:ignore="ContentDescription">
 
@@ -83,7 +83,6 @@
         android:layout_marginTop="@dimen/common_offset_8dp"
         android:ellipsize="end"
         android:maxLines="2"
-
         android:textColor="@color/defaultColor"
         android:textSize="@dimen/common_textSize_12sp"
         app:layout_constraintStart_toStartOf="parent"

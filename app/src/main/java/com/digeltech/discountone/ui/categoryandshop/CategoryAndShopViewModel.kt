@@ -28,7 +28,8 @@ class CategoryAndShopViewModel @Inject constructor(
 
     val filteringError = MutableLiveData<String>()
 
-    private var currentPage = 2 // startup count of deal = 100, loading per page = 50, so currentPage is 2
+    private val allDeals = mutableListOf<DealParcelable>()
+    private var nextPage = 3 // startup count of deal = 100, loading per page = 50, so nextPage is 3
     private var currentCategoryType: CategoryType = CategoryType.SHOP
     private lateinit var taxSlug: String
     private var currentSortBySpinnerPosition = 0
@@ -60,6 +61,7 @@ class CategoryAndShopViewModel @Inject constructor(
                 interactor.getInitialDeals(currentCategoryType, id)
                     .onSuccess {
                         _deals.postValue(it.toParcelableList())
+                        allDeals.addAll(it.toParcelableList())
                     }
                     .onFailure {
                         error.postValue(it.toString())
@@ -105,14 +107,14 @@ class CategoryAndShopViewModel @Inject constructor(
                 sorting = Sorting.DESC
             }
         }
-        currentPage = 2
+        nextPage = 3
         getSortingDeals()
     }
 
     fun sortingByPrice(priceFrom: Int, priceTo: Int) {
         this.priceFrom = priceFrom
         this.priceTo = priceTo
-        currentPage = 2
+        nextPage = 3
         getSortingDeals()
     }
 
@@ -123,7 +125,7 @@ class CategoryAndShopViewModel @Inject constructor(
         } else {
             _categoryOrShopNames.value?.get(spinnerPosition - 1)?.slug ?: ""
         }
-        currentPage = 2
+        nextPage = 3
         getSortingDeals()
     }
 
@@ -135,12 +137,11 @@ class CategoryAndShopViewModel @Inject constructor(
     fun getCatOrShopSpinnerPosition(): Int = currentCatOrShopSpinnerPosition
 
     fun loadMoreDeals() {
-        currentPage++
         if (sortingJob?.isActive == true) sortingJob?.cancel()
 
         sortingJob = viewModelScope.launchWithLoading {
             interactor.getSortingDeals(
-                page = currentPage.toString(),
+                page = nextPage.toString(),
                 categoryType = currentCategoryType,
                 taxSlug = taxSlug,
                 sorting = sorting,
@@ -151,11 +152,9 @@ class CategoryAndShopViewModel @Inject constructor(
             )
                 .onSuccess { deals ->
                     if (deals.isNotEmpty()) {
-                        val mutableList = mutableListOf<DealParcelable>()
-                        _deals.value?.let(mutableList::addAll)
-                        mutableList.addAll(deals.toParcelableList())
-
-                        _deals.postValue(mutableList)
+                        allDeals.addAll(deals.toParcelableList())
+                        _deals.postValue(allDeals as List<DealParcelable>)
+                        nextPage++
                     }
                 }
                 .onFailure {
@@ -179,7 +178,11 @@ class CategoryAndShopViewModel @Inject constructor(
                 priceTo = priceTo
             )
                 .onSuccess { deals ->
-                    _deals.postValue(deals.toParcelableList())
+                    if (deals.isNotEmpty()) {
+                        allDeals.clear()
+                        allDeals.addAll(deals.toParcelableList())
+                        _deals.postValue(allDeals as List<DealParcelable>)
+                    }
                 }
                 .onFailure {
                     log(it.toString())

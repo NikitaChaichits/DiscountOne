@@ -178,6 +178,7 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
             dealAdapter.submitList(null)
             if (it.isNotEmpty()) {
                 dealAdapter.submitList(it)
+                dealAdapter.notifyDataSetChanged()
                 binding.tvFilteringResultEmpty.invisible()
                 binding.rvDeals.visible()
             } else {
