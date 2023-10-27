@@ -31,17 +31,17 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun updateProfileWithAvatar(
         id: String,
         login: String?,
-        city: String?,
         birthday: String?,
+        gender: String?,
         userAvatar: MultipartBody.Part?
     ) = withContext(Dispatchers.IO) {
         runCatching {
             UserMapper().map(
                 api.updateProfileWithAvatar(
                     id = id,
-                    city = city,
                     birthday = birthday,
                     nickname = login,
+                    gender = gender?.lowercase(),
                     file = userAvatar
                 )
             ).also {
@@ -53,15 +53,15 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun updateProfile(
         id: String,
         login: String?,
-        city: String?,
         birthday: String?,
+        gender: String?,
     ) = withContext(Dispatchers.IO) {
         runCatching {
             UserMapper().map(
                 api.updateProfile(
                     id = id,
-                    city = city,
                     birthday = birthday,
+                    gender = gender?.lowercase(),
                     nickname = login,
                 )
             ).also {

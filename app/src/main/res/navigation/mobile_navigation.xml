@@ -26,10 +26,14 @@
             app:destination="@id/profileFragment" />
         <action
             android:id="@+id/toDealFragment"
-            app:destination="@id/dealFragment" />
+            app:destination="@id/dealFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
         <action
             android:id="@+id/toCategoryFragment"
-            app:destination="@id/categoryAndShopFragment">
+            app:destination="@id/categoryAndShopFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left">
             <argument
                 android:name="id"
                 app:argType="integer" />
@@ -96,7 +100,9 @@
 
         <action
             android:id="@+id/toDealFragment"
-            app:destination="@id/dealFragment">
+            app:destination="@id/dealFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left">
             <argument
                 android:name="deal"
                 app:argType="com.digeltech.discountone.ui.common.model.DealParcelable" />
@@ -113,7 +119,9 @@
             app:destination="@id/profileFragment" />
         <action
             android:id="@+id/toDealFragment"
-            app:destination="@id/dealFragment">
+            app:destination="@id/dealFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left">
             <argument
                 android:name="deal"
                 app:argType="com.digeltech.discountone.ui.common.model.DealParcelable" />
@@ -139,10 +147,14 @@
 
         <action
             android:id="@+id/toCategoriesFragment"
-            app:destination="@id/categoriesFragment" />
+            app:destination="@id/categoriesFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
         <action
             android:id="@+id/toShopFragment"
-            app:destination="@id/categoryAndShopFragment">
+            app:destination="@id/categoryAndShopFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left">
             <argument
                 android:name="id"
                 app:argType="integer" />
@@ -156,7 +168,9 @@
         </action>
         <action
             android:id="@+id/toCategoryFragment"
-            app:destination="@id/categoryAndShopFragment">
+            app:destination="@id/categoryAndShopFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left">
             <argument
                 android:name="id"
                 app:argType="integer" />
@@ -179,7 +193,9 @@
             app:destination="@id/profileFragment" />
         <action
             android:id="@+id/toShopFragment"
-            app:destination="@id/categoryAndShopFragment">
+            app:destination="@id/categoryAndShopFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left">
             <argument
                 android:name="id"
                 app:argType="integer" />
@@ -209,7 +225,9 @@
             app:destination="@id/profileFragment" />
         <action
             android:id="@+id/toDealFragment"
-            app:destination="@id/dealFragment">
+            app:destination="@id/dealFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left">
             <argument
                 android:name="deal"
                 app:argType="com.digeltech.discountone.ui.common.model.DealParcelable" />
@@ -226,10 +244,14 @@
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/toForgotPasswordFragment"
-            app:destination="@id/forgotPasswordFragment" />
+            app:destination="@id/forgotPasswordFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
         <action
             android:id="@+id/toNewAccountFragment"
-            app:destination="@id/newAccountFragment" />
+            app:destination="@id/newAccountFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
     </fragment>
 
     <fragment
@@ -239,7 +261,9 @@
         tools:layout="@layout/fragment_new_account">
         <action
             android:id="@+id/toOnboardingFragment"
-            app:destination="@id/onboardingFragment" />
+            app:destination="@id/onboardingFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
     </fragment>
 
     <fragment
@@ -249,10 +273,14 @@
         tools:layout="@layout/fragment_start">
         <action
             android:id="@+id/toLoginFragment"
-            app:destination="@id/loginFragment" />
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
         <action
             android:id="@+id/toNewAccountFragment"
-            app:destination="@id/newAccountFragment" />
+            app:destination="@id/newAccountFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
     </fragment>
 
     <fragment
@@ -262,7 +290,9 @@
         tools:layout="@layout/fragment_forgot_password">
         <action
             android:id="@+id/toRecoveryPasswordFragment"
-            app:destination="@id/recoveryPasswordFragment">
+            app:destination="@id/recoveryPasswordFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left">
             <argument
                 android:name="email"
                 app:argType="string" />
@@ -276,7 +306,9 @@
         tools:layout="@layout/fragment_recovery_password">
         <action
             android:id="@+id/toLoginFragment"
-            app:destination="@id/loginFragment" />
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
         <argument
             android:name="email"
             app:argType="string" />
@@ -289,16 +321,24 @@
         tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/toStartFragment"
-            app:destination="@id/startFragment" />
+            app:destination="@id/startFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
         <action
             android:id="@+id/toProfileDataFragment"
-            app:destination="@id/profileDataFragment" />
+            app:destination="@id/profileDataFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
         <action
             android:id="@+id/toSavedPublicationsFragment"
-            app:destination="@id/savedPublicationsFragment" />
+            app:destination="@id/savedPublicationsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
         <action
             android:id="@+id/toNotificationsFragment"
-            app:destination="@id/notificationsFragment" />
+            app:destination="@id/notificationsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
     </fragment>
 
     <fragment
@@ -308,7 +348,9 @@
         tools:layout="@layout/fragment_onboarding">
         <action
             android:id="@+id/toHomeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
     </fragment>
 
     <fragment
@@ -324,7 +366,9 @@
         tools:layout="@layout/fragment_saved_publications">
         <action
             android:id="@+id/toDealFragment"
-            app:destination="@id/dealFragment">
+            app:destination="@id/dealFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left">
             <argument
                 android:name="deal"
                 app:argType="com.digeltech.discountone.ui.common.model.DealParcelable" />

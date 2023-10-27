@@ -27,17 +27,19 @@ interface AuthApi {
     @POST("/wp-json/theme/v1/user_upload")
     suspend fun updateProfileWithAvatar(
         @Query("id") id: String,
-        @Query("city") city: String?,
+//        @Query("city") city: String?,
         @Query("my_birthday") birthday: String?,
         @Query("nickname") nickname: String?,
+        @Query("gender") gender: String?,
         @Part file: MultipartBody.Part?
     ): UserDto
 
     @POST("/wp-json/theme/v1/user_upload")
     suspend fun updateProfile(
         @Query("id") id: String,
-        @Query("city") city: String?,
+//        @Query("city") city: String?,
         @Query("my_birthday") birthday: String?,
         @Query("nickname") nickname: String?,
+        @Query("gender") gender: String?,
     ): UserDto
 }

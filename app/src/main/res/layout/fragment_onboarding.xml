@@ -35,12 +35,73 @@
         app:layout_constraintTop_toBottomOf="@id/tvDescription"
         app:srcCompat="@drawable/ic_camera" />
 
+    <TextView
+        android:id="@+id/tvGenderTitle"
+        style="@style/TextRegular.Description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/common_offset_32dp"
+        android:layout_marginTop="@dimen/common_offset_12dp"
+        android:text="@string/gender"
+        app:layout_constraintTop_toBottomOf="@id/ivProfileImage" />
+
+    <TextView
+        android:id="@+id/tvGenderMale"
+        style="@style/TextRegular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/male"
+        android:layout_marginTop="@dimen/common_offset_12dp"
+        app:layout_constraintStart_toStartOf="@id/tvGenderTitle"
+        app:layout_constraintTop_toBottomOf="@id/tvGenderTitle" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivGenderMale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_offset_8dp"
+        app:layout_constraintStart_toEndOf="@id/tvGenderMale"
+        app:layout_constraintTop_toTopOf="@id/tvGenderMale"
+        app:layout_constraintBottom_toBottomOf="@id/tvGenderMale"
+        app:srcCompat="@drawable/ic_gender_not_selected" />
+
+    <TextView
+        android:id="@+id/tvGenderFemale"
+        style="@style/TextRegular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/female"
+        android:layout_marginStart="@dimen/common_offset_32dp"
+        android:layout_marginTop="@dimen/common_offset_16dp"
+        app:layout_constraintStart_toEndOf="@id/ivGenderMale"
+        app:layout_constraintTop_toBottomOf="@id/tvGenderTitle" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivGenderFemale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_offset_8dp"
+        app:layout_constraintStart_toEndOf="@id/tvGenderFemale"
+        app:layout_constraintTop_toTopOf="@id/tvGenderFemale"
+        app:layout_constraintBottom_toBottomOf="@id/tvGenderFemale"
+        app:srcCompat="@drawable/ic_gender_not_selected" />
+
+    <TextView
+        android:id="@+id/tvDateOfBirthTitle"
+        style="@style/TextRegular.Description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/common_offset_32dp"
+        android:layout_marginTop="@dimen/common_offset_16dp"
+        android:text="@string/date_of_birth"
+        app:layout_constraintTop_toBottomOf="@id/ivGenderMale" />
+
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvDateOfBirth"
         android:layout_width="match_parent"
         android:layout_height="@dimen/common_offset_40dp"
         android:layout_marginHorizontal="@dimen/common_offset_32dp"
-        android:layout_marginTop="@dimen/common_offset_40dp"
+        android:layout_marginTop="@dimen/common_offset_4dp"
         android:background="@drawable/shape_border"
         android:drawableEnd="@drawable/ic_calendar"
         android:hint="@string/date_of_birth"
@@ -48,7 +109,7 @@
         android:paddingVertical="@dimen/common_offset_8dp"
         android:textColor="@color/black"
         android:textSize="@dimen/common_textSize_16sp"
-        app:layout_constraintTop_toBottomOf="@+id/ivProfileImage"
+        app:layout_constraintTop_toBottomOf="@+id/tvDateOfBirthTitle"
         tools:layout_editor_absoluteX="16dp" />
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -65,6 +126,7 @@
         android:paddingVertical="@dimen/common_offset_8dp"
         android:textColor="@color/black"
         android:textSize="@dimen/common_textSize_16sp"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/tvDateOfBirth" />
 
     <com.google.android.material.button.MaterialButton

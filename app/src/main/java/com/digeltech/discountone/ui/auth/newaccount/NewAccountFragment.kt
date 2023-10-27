@@ -94,7 +94,8 @@ class NewAccountFragment : BaseFragment(R.layout.fragment_new_account) {
                 dateRegistration = getCurrentDateTime(requireContext()),
                 city = "",
                 birthdate = "",
-                avatarUrl = null
+                avatarUrl = null,
+                gender = null
             )
             Hawk.put(KEY_USER, user)
             navigate(R.id.onboardingFragment)

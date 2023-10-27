@@ -13,8 +13,10 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.discountone.R
 import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentProfileDataBinding
+import com.digeltech.discountone.domain.model.Gender
 import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.common.KEY_USER
+import com.digeltech.discountone.util.view.getImageDrawable
 import com.digeltech.discountone.util.view.setCircleImage
 import com.digeltech.discountone.util.view.setProfileImage
 import com.digeltech.discountone.util.view.showDatePickerDialog
@@ -33,6 +35,7 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
     override val viewModel: ProfileDataViewModel by viewModels()
 
     private var userPhotoUri: Uri? = null
+    private var gender: Gender? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -68,10 +71,21 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
             binding.tvProfileEmail.text = it.email
             binding.etProfileName.setText(it.login)
             binding.tvDateOfBirth.text = it.birthdate
-            binding.etCity.setText(it.city)
+//            binding.etCity.setText(it.city)
             binding.tvDateRegistration.text = getString(R.string.date_of_registration, it.dateRegistration)
             it.avatarUrl?.let { url ->
                 binding.ivProfileImage.setProfileImage(url)
+            }
+            gender = when (it.gender) {
+                Gender.MALE -> {
+                    binding.ivGenderMale.setImageDrawable(view?.getImageDrawable(R.drawable.ic_gender_selected))
+                    Gender.MALE
+                }
+                Gender.FEMALE -> {
+                    binding.ivGenderFemale.setImageDrawable(view?.getImageDrawable(R.drawable.ic_gender_selected))
+                    Gender.FEMALE
+                }
+                else -> null
             }
         }
     }
@@ -92,10 +106,20 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
         binding.btnSave.setOnClickListener {
             updateProfile()
         }
+        binding.ivGenderMale.setOnClickListener {
+            binding.ivGenderMale.setImageDrawable(view?.getImageDrawable(R.drawable.ic_gender_selected))
+            binding.ivGenderFemale.setImageDrawable(view?.getImageDrawable(R.drawable.ic_gender_not_selected))
+            gender = Gender.MALE
+        }
+        binding.ivGenderFemale.setOnClickListener {
+            binding.ivGenderFemale.setImageDrawable(view?.getImageDrawable(R.drawable.ic_gender_selected))
+            binding.ivGenderMale.setImageDrawable(view?.getImageDrawable(R.drawable.ic_gender_not_selected))
+            gender = Gender.FEMALE
+        }
     }
 
     private fun updateProfile() {
-        val city = binding.etCity.text.toString().trim()
+//        val city = binding.etCity.text.toString().trim()
         val dateOfBirth = binding.tvDateOfBirth.text.toString()
         val login = binding.etProfileName.text.toString()
         var userAvatarPart: MultipartBody.Part? = null
@@ -110,17 +134,17 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
         if (userAvatarPart != null)
             viewModel.updateProfileWithAvatar(
                 id = user.id,
-                city = city,
-                birthday = dateOfBirth,
                 login = login,
+                birthday = dateOfBirth,
+                gender = gender,
                 userAvatar = userAvatarPart
             )
         else
             viewModel.updateProfile(
                 id = user.id,
-                city = city,
-                birthday = dateOfBirth,
                 login = login,
+                birthday = dateOfBirth,
+                gender = gender,
             )
     }
 

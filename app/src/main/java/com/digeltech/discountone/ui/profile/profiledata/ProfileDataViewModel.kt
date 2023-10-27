@@ -2,6 +2,7 @@ package com.digeltech.discountone.ui.profile.profiledata
 
 import androidx.lifecycle.viewModelScope
 import com.digeltech.discountone.common.base.BaseViewModel
+import com.digeltech.discountone.domain.model.Gender
 import com.digeltech.discountone.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import okhttp3.MultipartBody
@@ -15,17 +16,17 @@ class ProfileDataViewModel @Inject constructor(
     fun updateProfileWithAvatar(
         id: String,
         login: String?,
-        city: String?,
         birthday: String?,
+        gender: Gender?,
         userAvatar: MultipartBody.Part?
     ) {
         viewModelScope.launchWithLoading {
             authRepository.updateProfileWithAvatar(
                 id = id,
-                city = city,
-                birthday = birthday,
                 login = login,
-                userAvatar = userAvatar
+                birthday = birthday,
+                userAvatar = userAvatar,
+                gender = gender?.name
             ).onSuccess {
                 success.postValue(true)
             }.onFailure {
@@ -34,13 +35,18 @@ class ProfileDataViewModel @Inject constructor(
         }
     }
 
-    fun updateProfile(id: String, login: String?, city: String?, birthday: String?) {
+    fun updateProfile(
+        id: String,
+        login: String?,
+        birthday: String?,
+        gender: Gender?,
+    ) {
         viewModelScope.launchWithLoading {
             authRepository.updateProfile(
                 id = id,
-                city = city,
-                birthday = birthday,
                 login = login,
+                birthday = birthday,
+                gender = gender?.name,
             ).onSuccess {
                 success.postValue(true)
             }.onFailure {

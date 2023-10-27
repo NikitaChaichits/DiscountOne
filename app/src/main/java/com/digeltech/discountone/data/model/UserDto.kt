@@ -19,6 +19,8 @@ data class UserMetaDataDto(
     val city: String?,
     @SerializedName("my_birthday")
     val birthdate: String?,
+    @SerializedName("gender")
+    val gender: String?,
 )
 
 data class DataDto(

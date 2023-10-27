@@ -9,18 +9,15 @@ import android.os.Bundle
 import android.view.View
 import android.widget.DatePicker
 import androidx.core.net.toFile
-import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.discountone.R
 import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentOnboardingBinding
+import com.digeltech.discountone.domain.model.Gender
 import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.common.KEY_USER
-import com.digeltech.discountone.util.view.disable
-import com.digeltech.discountone.util.view.enable
-import com.digeltech.discountone.util.view.setCircleImage
-import com.digeltech.discountone.util.view.showDatePickerDialog
+import com.digeltech.discountone.util.view.*
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,6 +34,7 @@ class OnboardingFragment : BaseFragment(R.layout.fragment_onboarding),
     override val viewModel: OnboardingViewModel by viewModels()
 
     private var userPhotoUri: Uri? = null
+    private var gender: Gender? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -75,9 +73,19 @@ class OnboardingFragment : BaseFragment(R.layout.fragment_onboarding),
         binding.tvDateOfBirth.setOnClickListener {
             showDatePickerDialog(requireContext(), this)
         }
-        binding.etCity.doAfterTextChanged {
-            checkIsContinueButtonEnable()
+        binding.ivGenderMale.setOnClickListener {
+            binding.ivGenderMale.setImageDrawable(view?.getImageDrawable(R.drawable.ic_gender_selected))
+            binding.ivGenderFemale.setImageDrawable(view?.getImageDrawable(R.drawable.ic_gender_not_selected))
+            gender = Gender.MALE
         }
+        binding.ivGenderFemale.setOnClickListener {
+            binding.ivGenderFemale.setImageDrawable(view?.getImageDrawable(R.drawable.ic_gender_selected))
+            binding.ivGenderMale.setImageDrawable(view?.getImageDrawable(R.drawable.ic_gender_not_selected))
+            gender = Gender.FEMALE
+        }
+//        binding.etCity.doAfterTextChanged {
+//            checkIsContinueButtonEnable()
+//        }
         binding.btnContinue.setOnClickListener {
             updateProfile()
             navigate(R.id.homeFragment)
@@ -90,21 +98,13 @@ class OnboardingFragment : BaseFragment(R.layout.fragment_onboarding),
     private fun observeData() {
         viewModel.success.observe(viewLifecycleOwner) {
             if (it) {
-                val user = Hawk.get<User>(KEY_USER)
-                Hawk.put(
-                    KEY_USER,
-                    user.copy(
-                        city = binding.etCity.text.toString().trim(),
-                        birthdate = binding.tvDateOfBirth.text.toString(),
-                    )
-                )
-                navigateBack()
+                navigate(R.id.homeFragment)
             }
         }
     }
 
     private fun updateProfile() {
-        val city = binding.etCity.text.toString().trim()
+//        val city = binding.etCity.text.toString().trim()
         val dateOfBirth = binding.tvDateOfBirth.text.toString()
         var userAvatarPart: MultipartBody.Part? = null
 
@@ -118,20 +118,20 @@ class OnboardingFragment : BaseFragment(R.layout.fragment_onboarding),
         if (userAvatarPart != null)
             viewModel.updateProfileWithAvatar(
                 id = user.id,
-                city = city,
                 birthday = dateOfBirth,
+                gender = gender,
                 userAvatar = userAvatarPart
             )
         else
             viewModel.updateProfile(
                 id = user.id,
-                city = city,
+                gender = gender,
                 birthday = dateOfBirth,
             )
     }
 
     private fun checkIsContinueButtonEnable() {
-        if (binding.tvDateOfBirth.text.isNotEmpty() && binding.etCity.text.toString().trim().isNotEmpty()) {
+        if (binding.tvDateOfBirth.text.isNotEmpty()) {
             binding.btnContinue.enable()
         } else {
             binding.btnContinue.disable()

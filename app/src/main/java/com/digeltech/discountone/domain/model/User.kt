@@ -8,4 +8,9 @@ data class User(
     val city: String,
     val birthdate: String,
     val avatarUrl: String?,
+    val gender: Gender?,
 )
+
+enum class Gender {
+    MALE, FEMALE
+}
