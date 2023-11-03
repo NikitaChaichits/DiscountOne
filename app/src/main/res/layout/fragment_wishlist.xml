@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/common_offset_16dp"
-        android:text="@string/fr_saved_publ_title"
+        android:text="@string/fr_wishlist_title"
         app:layout_constraintTop_toBottomOf="@id/searchView" />
 
     <TextView
@@ -73,4 +73,47 @@
         app:spanCount="2"
         tools:itemCount="8"
         tools:listitem="@layout/rv_deal_grid" />
+
+    <TextView
+        android:id="@+id/tvSorry"
+        style="@style/TextRegular.Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/common_offset_16dp"
+        android:text="@string/fr_wishlist_sorry"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvEmptyWishlist"
+        style="@style/TextRegular"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/common_offset_16dp"
+        android:layout_marginTop="@dimen/common_offset_4dp"
+        android:text="@string/fr_wishlist_empty"
+        android:textAlignment="center"
+        app:layout_constraintTop_toBottomOf="@id/tvSorry" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnGoToBestDeals"
+        style="@style/ButtonColored"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/common_offset_16dp"
+        android:layout_marginTop="@dimen/common_offset_16dp"
+        android:text="@string/fr_deals_title"
+        app:cornerRadius="@dimen/radius_12"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvEmptyWishlist" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/grEmptyWishlist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="tvSorry, tvEmptyWishlist, btnGoToBestDeals" />
 </androidx.constraintlayout.widget.ConstraintLayout>

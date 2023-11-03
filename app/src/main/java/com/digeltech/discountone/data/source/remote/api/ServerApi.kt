@@ -2,6 +2,7 @@ package com.digeltech.discountone.data.source.remote.api
 
 import com.digeltech.discountone.data.model.*
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -81,5 +82,17 @@ interface ServerApi {
     suspend fun saveOrDeleteFavoriteDeal(
         @Query("id") userId: String,
         @Query("id_coupons") dealId: String
+    )
+
+    @GET("/wp-json/theme/v1/subscription-preferences")
+    suspend fun getSubscriptionCategories(
+        @Query("id") userId: String
+    ): SubscriptionCategoriesDto
+
+    @POST("/wp-json/theme/v1/subscription-preferences_push")
+    suspend fun updateSubscriptionCategories(
+        @Query("id") userId: String,
+        @Query("notification") notification: Boolean?,
+        @Query("notification_cat") notificationCategoriesUnsubscribe: String?,
     )
 }

@@ -17,7 +17,7 @@ import com.digeltech.discountone.R
 class WaitDialogSettings {
     var orientation: Int = LinearLayout.HORIZONTAL
     val background: ColorDrawable = ColorDrawable(Color.parseColor("#B3444444"))
-    var cancelable: Boolean = false
+    var cancelable: Boolean = true
     var onCancelListener: (DialogInterface) -> Unit = {}
 }
 

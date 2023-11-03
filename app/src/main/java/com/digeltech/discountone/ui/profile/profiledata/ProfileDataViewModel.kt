@@ -15,7 +15,7 @@ class ProfileDataViewModel @Inject constructor(
 
     fun updateProfileWithAvatar(
         id: String,
-        login: String?,
+        nickname: String?,
         birthday: String?,
         gender: Gender?,
         userAvatar: MultipartBody.Part?
@@ -23,7 +23,7 @@ class ProfileDataViewModel @Inject constructor(
         viewModelScope.launchWithLoading {
             authRepository.updateProfileWithAvatar(
                 id = id,
-                login = login,
+                login = nickname,
                 birthday = birthday,
                 userAvatar = userAvatar,
                 gender = gender?.name
@@ -37,14 +37,14 @@ class ProfileDataViewModel @Inject constructor(
 
     fun updateProfile(
         id: String,
-        login: String?,
+        nickname: String?,
         birthday: String?,
         gender: Gender?,
     ) {
         viewModelScope.launchWithLoading {
             authRepository.updateProfile(
                 id = id,
-                login = login,
+                login = nickname,
                 birthday = birthday,
                 gender = gender?.name,
             ).onSuccess {

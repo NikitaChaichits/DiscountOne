@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.DatePicker
 import androidx.core.net.toFile
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.discountone.R
@@ -17,8 +18,8 @@ import com.digeltech.discountone.databinding.FragmentOnboardingBinding
 import com.digeltech.discountone.domain.model.Gender
 import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.common.KEY_USER
+import com.digeltech.discountone.util.imagepicker.ImagePicker
 import com.digeltech.discountone.util.view.*
-import com.github.dhaval2404.imagepicker.ImagePicker
 import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -27,8 +28,7 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 
 @AndroidEntryPoint
-class OnboardingFragment : BaseFragment(R.layout.fragment_onboarding),
-    DatePickerDialog.OnDateSetListener {
+class OnboardingFragment : BaseFragment(R.layout.fragment_onboarding), DatePickerDialog.OnDateSetListener {
 
     private val binding by viewBinding(FragmentOnboardingBinding::bind)
     override val viewModel: OnboardingViewModel by viewModels()
@@ -50,9 +50,11 @@ class OnboardingFragment : BaseFragment(R.layout.fragment_onboarding),
                 val uri = data?.data!!
                 binding.ivProfileImage.setCircleImage(uri)
                 userPhotoUri = uri
+                binding.loaderProfileImage.invisible()
             }
             ImagePicker.RESULT_ERROR -> {
                 toast(ImagePicker.getError(data))
+                binding.loaderProfileImage.invisible()
             }
         }
     }
@@ -68,7 +70,7 @@ class OnboardingFragment : BaseFragment(R.layout.fragment_onboarding),
             ImagePicker.with(this)
                 .compress(512)
                 .cropSquare()
-                .start()
+                .start(binding.loaderProfileImage)
         }
         binding.tvDateOfBirth.setOnClickListener {
             showDatePickerDialog(requireContext(), this)
@@ -87,8 +89,9 @@ class OnboardingFragment : BaseFragment(R.layout.fragment_onboarding),
 //            checkIsContinueButtonEnable()
 //        }
         binding.btnContinue.setOnClickListener {
-            updateProfile()
-            navigate(R.id.homeFragment)
+            if (!binding.loaderProfileImage.isVisible)
+                updateProfile()
+            else toast(getString(R.string.profile_photo_loading))
         }
         binding.btnSkip.setOnClickListener {
             navigate(R.id.homeFragment)

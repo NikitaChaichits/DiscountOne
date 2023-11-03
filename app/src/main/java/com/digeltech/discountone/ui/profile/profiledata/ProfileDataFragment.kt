@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.DatePicker
 import androidx.core.net.toFile
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.discountone.R
@@ -16,11 +17,8 @@ import com.digeltech.discountone.databinding.FragmentProfileDataBinding
 import com.digeltech.discountone.domain.model.Gender
 import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.common.KEY_USER
-import com.digeltech.discountone.util.view.getImageDrawable
-import com.digeltech.discountone.util.view.setCircleImage
-import com.digeltech.discountone.util.view.setProfileImage
-import com.digeltech.discountone.util.view.showDatePickerDialog
-import com.github.dhaval2404.imagepicker.ImagePicker
+import com.digeltech.discountone.util.imagepicker.ImagePicker
+import com.digeltech.discountone.util.view.*
 import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -59,9 +57,11 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
                 val uri: Uri = data?.data!!
                 binding.ivProfileImage.setCircleImage(uri)
                 userPhotoUri = uri
+                binding.loaderProfileImage.invisible()
             }
             ImagePicker.RESULT_ERROR -> {
                 toast(ImagePicker.getError(data))
+                binding.loaderProfileImage.invisible()
             }
         }
     }
@@ -98,13 +98,15 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
             ImagePicker.with(this)
                 .compress(512)
                 .cropSquare()
-                .start()
+                .start(binding.loaderProfileImage)
         }
         binding.tvDateOfBirth.setOnClickListener {
             showDatePickerDialog(requireContext(), this)
         }
         binding.btnSave.setOnClickListener {
-            updateProfile()
+            if (!binding.loaderProfileImage.isVisible)
+                updateProfile()
+            else toast(getString(R.string.profile_photo_loading))
         }
         binding.ivGenderMale.setOnClickListener {
             binding.ivGenderMale.setImageDrawable(view?.getImageDrawable(R.drawable.ic_gender_selected))
@@ -134,7 +136,7 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
         if (userAvatarPart != null)
             viewModel.updateProfileWithAvatar(
                 id = user.id,
-                login = login,
+                nickname = login,
                 birthday = dateOfBirth,
                 gender = gender,
                 userAvatar = userAvatarPart
@@ -142,7 +144,7 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
         else
             viewModel.updateProfile(
                 id = user.id,
-                login = login,
+                nickname = login,
                 birthday = dateOfBirth,
                 gender = gender,
             )

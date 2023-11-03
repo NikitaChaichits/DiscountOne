@@ -1,4 +1,4 @@
-package com.digeltech.discountone.ui.profile.savedpublications
+package com.digeltech.discountone.ui.profile.wishlist
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater

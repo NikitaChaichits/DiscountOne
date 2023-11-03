@@ -335,6 +335,11 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left" />
         <action
+            android:id="@+id/toSubscriptionFragment"
+            app:destination="@id/subscriptionFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+        <action
             android:id="@+id/toNotificationsFragment"
             app:destination="@id/notificationsFragment"
             app:enterAnim="@anim/slide_in_right"
@@ -361,9 +366,9 @@
 
     <fragment
         android:id="@+id/savedPublicationsFragment"
-        android:name="com.digeltech.discountone.ui.profile.savedpublications.SavedPublicationsFragment"
+        android:name="com.digeltech.discountone.ui.profile.wishlist.SavedPublicationsFragment"
         android:label="SavedPublicationsFragment"
-        tools:layout="@layout/fragment_saved_publications">
+        tools:layout="@layout/fragment_wishlist">
         <action
             android:id="@+id/toDealFragment"
             app:destination="@id/dealFragment"
@@ -380,5 +385,11 @@
         android:name="com.digeltech.discountone.ui.profile.notification.NotificationsFragment"
         android:label="NotificationsFragment"
         tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/subscriptionFragment"
+        android:name="com.digeltech.discountone.ui.profile.subscription.SubscriptionFragment"
+        android:label="SubscriptionFragment"
+        tools:layout="@layout/fragment_subscription" />
 
 </navigation>

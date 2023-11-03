@@ -14,9 +14,9 @@ class AuthRepositoryImpl @Inject constructor(
     private val api: AuthApi,
 ) : AuthRepository {
 
-    override suspend fun register(login: String, email: String, password: String) = withContext(Dispatchers.IO) {
+    override suspend fun register(email: String, password: String) = withContext(Dispatchers.IO) {
         runCatching {
-            api.registerAccount(login, email, password).id
+            api.registerAccount(email, password).id
         }
     }
 
@@ -30,7 +30,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun updateProfileWithAvatar(
         id: String,
-        login: String?,
+        nickname: String?,
         birthday: String?,
         gender: String?,
         userAvatar: MultipartBody.Part?
@@ -40,7 +40,7 @@ class AuthRepositoryImpl @Inject constructor(
                 api.updateProfileWithAvatar(
                     id = id,
                     birthday = birthday,
-                    nickname = login,
+                    nickname = nickname,
                     gender = gender?.lowercase(),
                     file = userAvatar
                 )
@@ -52,7 +52,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun updateProfile(
         id: String,
-        login: String?,
+        nickname: String?,
         birthday: String?,
         gender: String?,
     ) = withContext(Dispatchers.IO) {
@@ -62,7 +62,7 @@ class AuthRepositoryImpl @Inject constructor(
                     id = id,
                     birthday = birthday,
                     gender = gender?.lowercase(),
-                    nickname = login,
+                    nickname = nickname,
                 )
             ).also {
                 Hawk.put(KEY_USER, it)

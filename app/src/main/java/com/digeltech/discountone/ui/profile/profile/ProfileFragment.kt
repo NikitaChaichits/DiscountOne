@@ -67,6 +67,9 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
             llSavedPublication.setOnClickListener {
                 navigate(R.id.savedPublicationsFragment)
             }
+            llSubscription.setOnClickListener {
+                navigate(R.id.subscriptionFragment)
+            }
             llNotification.setOnClickListener {
                 navigate(R.id.notificationsFragment)
             }

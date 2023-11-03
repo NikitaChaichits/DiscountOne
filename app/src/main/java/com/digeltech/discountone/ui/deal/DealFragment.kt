@@ -233,7 +233,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
             tvRate.text = deal.rating.dec().toString()
         }
         btnGetDeal.setOnClickListener {
-            viewModel.updateDealViewsClick(it.id.toString())
+            viewModel.updateDealViewsClick(deal.id.toString())
             logShopNow(
                 name = deal.title,
                 url = deal.shopLink,

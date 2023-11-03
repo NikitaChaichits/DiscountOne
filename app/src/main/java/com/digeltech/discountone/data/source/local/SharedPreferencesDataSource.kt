@@ -29,8 +29,8 @@ class SharedPreferencesDataSource @Inject constructor(applicationContext: Contex
     /**
      * Хранение текущей темы Пользователя
      */
-    fun setTheme(isDarkTheme: Boolean) = sharedPrefs.put(THEME, isDarkTheme)
+    fun setSignUpPromo(isShown: Boolean) = sharedPrefs.put(SIGN_UP_PROMO, isShown)
 
-    fun getTheme(): Boolean = sharedPrefs.get(THEME, false)
+    fun getSignUpPromo(): Boolean = sharedPrefs.get(SIGN_UP_PROMO, false)
 
 }

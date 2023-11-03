@@ -1,4 +1,4 @@
-package com.digeltech.discountone.ui.profile.savedpublications
+package com.digeltech.discountone.ui.profile.wishlist
 
 import android.os.Bundle
 import android.view.View
@@ -7,7 +7,7 @@ import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.discountone.R
 import com.digeltech.discountone.common.base.BaseFragment
-import com.digeltech.discountone.databinding.FragmentSavedPublicationsBinding
+import com.digeltech.discountone.databinding.FragmentWishlistBinding
 import com.digeltech.discountone.ui.common.logSearch
 import com.digeltech.discountone.util.view.invisible
 import com.digeltech.discountone.util.view.px
@@ -18,9 +18,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SavedPublicationsFragment : BaseFragment(R.layout.fragment_saved_publications), SearchView.OnQueryTextListener {
+class SavedPublicationsFragment : BaseFragment(R.layout.fragment_wishlist), SearchView.OnQueryTextListener {
 
-    private val binding by viewBinding(FragmentSavedPublicationsBinding::bind)
+    private val binding by viewBinding(FragmentWishlistBinding::bind)
     override val viewModel: SavedPublicationsViewModel by viewModels()
 
     @Inject
@@ -76,12 +76,21 @@ class SavedPublicationsFragment : BaseFragment(R.layout.fragment_saved_publicati
             setOnQueryTextListener(this@SavedPublicationsFragment)
             queryHint = getString(R.string.search_by_deals)
         }
+        binding.btnGoToBestDeals.setOnClickListener {
+            navigate(R.id.dealsFragment)
+        }
     }
 
     private fun observeData() {
         viewModel.loadingError.observe(viewLifecycleOwner) {
             if (it)
                 binding.tvLoadingResultEmpty.visible()
+        }
+        viewModel.isGroupEmptyWishlistVisible.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.grEmptyWishlist.visible()
+                binding.rvDeals.invisible()
+            }
         }
         viewModel.deals.observe(viewLifecycleOwner) {
             adapter.submitList(it)

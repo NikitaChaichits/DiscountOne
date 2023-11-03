@@ -41,6 +41,18 @@
         app:layout_constraintTop_toBottomOf="@id/separator"
         app:srcCompat="@drawable/ic_avatar" />
 
+    <ProgressBar
+        android:id="@+id/loaderProfileImage"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:indeterminate="true"
+        android:indeterminateDrawable="@drawable/progress_wheel"
+        android:visibility="invisible"
+        android:layout_marginTop="@dimen/common_offset_4dp"
+        app:layout_constraintEnd_toEndOf="@id/ivProfileImage"
+        app:layout_constraintStart_toStartOf="@id/ivProfileImage"
+        app:layout_constraintTop_toBottomOf="@id/ivProfileImage" />
+
     <TextView
         android:id="@+id/tvProfileName"
         style="@style/TextRegular.Description"
@@ -58,7 +70,7 @@
         android:layout_marginHorizontal="@dimen/common_offset_16dp"
         android:layout_marginTop="@dimen/common_offset_4dp"
         android:background="@drawable/shape_border"
-        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
+        android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
         android:paddingHorizontal="@dimen/common_offset_12dp"
         android:paddingVertical="@dimen/common_offset_8dp"
         android:textColor="@color/defaultColor"
@@ -104,8 +116,8 @@
         style="@style/TextRegular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/male"
         android:layout_marginTop="@dimen/common_offset_12dp"
+        android:text="@string/male"
         app:layout_constraintStart_toStartOf="@id/tvGenderTitle"
         app:layout_constraintTop_toBottomOf="@id/tvGenderTitle" />
 
@@ -114,9 +126,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/common_offset_8dp"
+        app:layout_constraintBottom_toBottomOf="@id/tvGenderMale"
         app:layout_constraintStart_toEndOf="@id/tvGenderMale"
         app:layout_constraintTop_toTopOf="@id/tvGenderMale"
-        app:layout_constraintBottom_toBottomOf="@id/tvGenderMale"
         app:srcCompat="@drawable/ic_gender_not_selected" />
 
     <TextView
@@ -124,9 +136,9 @@
         style="@style/TextRegular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/female"
         android:layout_marginStart="@dimen/common_offset_32dp"
         android:layout_marginTop="@dimen/common_offset_16dp"
+        android:text="@string/female"
         app:layout_constraintStart_toEndOf="@id/ivGenderMale"
         app:layout_constraintTop_toBottomOf="@id/tvGenderTitle" />
 
@@ -135,9 +147,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/common_offset_8dp"
+        app:layout_constraintBottom_toBottomOf="@id/tvGenderFemale"
         app:layout_constraintStart_toEndOf="@id/tvGenderFemale"
         app:layout_constraintTop_toTopOf="@id/tvGenderFemale"
-        app:layout_constraintBottom_toBottomOf="@id/tvGenderFemale"
         app:srcCompat="@drawable/ic_gender_not_selected" />
 
     <TextView
@@ -185,12 +197,12 @@
         android:layout_marginTop="@dimen/common_offset_4dp"
         android:background="@drawable/shape_border"
         android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        android:inputType="textCapSentences"
         android:paddingHorizontal="@dimen/common_offset_12dp"
         android:paddingVertical="@dimen/common_offset_8dp"
         android:textColor="@color/defaultColor"
         android:textSize="@dimen/common_textSize_16sp"
         android:visibility="gone"
-        android:inputType="textCapSentences"
         app:layout_constraintTop_toBottomOf="@+id/tvCity"
         tools:text="Berlin" />
 

@@ -106,7 +106,7 @@
                 android:layout_height="18dp"
                 android:layout_marginStart="@dimen/common_offset_16dp"
                 android:layout_gravity="center_vertical"
-                app:srcCompat="@drawable/ic_bookmark_deal" />
+                app:srcCompat="@drawable/ic_wishlist" />
 
             <TextView
                 android:id="@+id/tvSavedPublication"
@@ -115,7 +115,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="@dimen/common_offset_16dp"
-                android:text="@string/saved_publications"
+                android:text="@string/wishlist"
                 android:paddingVertical="@dimen/common_offset_16dp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 

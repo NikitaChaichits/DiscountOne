@@ -37,6 +37,8 @@
     <string name="share_text">Look what I found in DiscouneOne %s</string>
     <string name="trow_off">Trow off</string>
     <string name="apply">Apply</string>
+    <string name="sign_up_promotion">Sign Up to receive personalized offers on exclusive, limited-time deals in categories that interest you!</string>
+    <string name="go_login">Go to Sign Up</string>
 
     <!-- Wildcard strings -->
     <string name="price_wildcard">₹%d</string>
@@ -95,7 +97,7 @@
     <!-- Profile -->
     <string name="profile">Profile</string>
     <string name="personal_data">Personal data</string>
-    <string name="saved_publications">Saved Publications</string>
+    <string name="wishlist">Wishlist</string>
     <string name="subscription">Subscription preferences</string>
     <string name="notifications">Notifications</string>
     <string name="privacy_policy">Privacy Policy</string>
@@ -109,6 +111,7 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="date_of_registration">Date of registration: %s</string>
+    <string name="profile_photo_loading">Wait for the profile photo loading</string>
 
     <!-- Fragment Home-->
     <string name="fr_home_title">Best Deals</string>
@@ -157,12 +160,20 @@
     <string name="shop_now">SEE MORE</string>
     <string name="get_deal">Get Deal</string>
 
-    <!-- Fragment Saved Publications-->
-    <string name="fr_saved_publ_title">Saved Publications</string>
+    <!-- Fragment Wishlist-->
+    <string name="fr_wishlist_title">Wishlist</string>
+    <string name="fr_wishlist_sorry">SORRY!</string>
+    <string name="fr_wishlist_empty">You haven\'t added any items yet</string>
 
     <!-- Fragment Notifications-->
     <string name="fr_notifications_title">Notifications</string>
     <string name="fr_notifications_today">Today</string>
     <string name="fr_notifications_other_days">Previously</string>
     <string name="fr_notifications_clear">Clear all notifications?</string>
+
+    <!-- Fragment Subscription-->
+    <string name="fr_subscription_description">Please choose categories you are interested in to receive only useful newsletters from us</string>
+    <string name="fr_subscription_email_notification_title">E-mail notifications settings</string>
+    <string name="fr_subscription_email_notification">Receive useful newsletters about new discounts and deals</string>
+
 </resources>

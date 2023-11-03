@@ -1,4 +1,4 @@
-package com.digeltech.discountone.ui.profile.savedpublications
+package com.digeltech.discountone.ui.profile.wishlist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -25,23 +25,28 @@ class SavedPublicationsViewModel @Inject constructor(
     val deals: LiveData<List<DealParcelable>> = _deals
 
     val loadingError = MutableLiveData<Boolean>()
+    val isGroupEmptyWishlistVisible = MutableLiveData<Boolean>()
 
     fun getSavedPublications() {
-        getListOfBookmarks()?.also { bookmarks ->
-            _deals.postValue(bookmarks.toMutableList())
+        if (getListOfBookmarks()?.isNotEmpty() == true) {
+            getListOfBookmarks()?.let { bookmarks ->
+                _deals.postValue(bookmarks.toMutableList())
 
-            getUserId()?.let { userId ->
-                viewModelScope.launch {
-                    dealsRepository.getBookmarksDeals(userId)
-                        .onSuccess {
-                            val bookmarksOnServer = it.toParcelableList().toSet()
-                            val uniqueBookmarks = bookmarks.toSet() - bookmarksOnServer
-                            uniqueBookmarks.forEach { deal ->
-                                dealsRepository.addDealToBookmark(userId, deal.id.toString())
+                getUserId()?.let { userId ->
+                    viewModelScope.launch {
+                        dealsRepository.getBookmarksDeals(userId)
+                            .onSuccess {
+                                val bookmarksOnServer = it.toParcelableList().toSet()
+                                val uniqueBookmarks = bookmarks.toSet() - bookmarksOnServer
+                                uniqueBookmarks.forEach { deal ->
+                                    dealsRepository.addDealToBookmark(userId, deal.id.toString())
+                                }
                             }
-                        }
+                    }
                 }
             }
+        } else {
+            isGroupEmptyWishlistVisible.postValue(true)
         }
     }
 
