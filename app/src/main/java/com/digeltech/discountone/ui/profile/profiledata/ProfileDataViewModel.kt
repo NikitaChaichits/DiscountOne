@@ -23,7 +23,7 @@ class ProfileDataViewModel @Inject constructor(
         viewModelScope.launchWithLoading {
             authRepository.updateProfileWithAvatar(
                 id = id,
-                login = nickname,
+                nickname = nickname,
                 birthday = birthday,
                 userAvatar = userAvatar,
                 gender = gender?.name
@@ -44,7 +44,7 @@ class ProfileDataViewModel @Inject constructor(
         viewModelScope.launchWithLoading {
             authRepository.updateProfile(
                 id = id,
-                login = nickname,
+                nickname = nickname,
                 birthday = birthday,
                 gender = gender?.name,
             ).onSuccess {

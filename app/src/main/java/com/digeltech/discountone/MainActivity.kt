@@ -67,13 +67,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         prefs = SharedPreferencesDataSource(baseContext)
-        if (prefs.isFirstLaunch()) {
-            Hawk.deleteAll()
-            prefs.setFirstLaunch(false)
-        }
         Hawk.delete(KEY_HOMEPAGE_DATA)
 
-        if (!prefs.getSignUpPromo() && !prefs.isLogin()) {
+        if (!prefs.isLogin()) {
             val handler = Handler(Looper.getMainLooper())
             handler.postDelayed({
                 MaterialDialog(this)
@@ -92,8 +88,7 @@ class MainActivity : AppCompatActivity() {
                     )
                     .cancelOnTouchOutside(cancelable = true)
                     .show()
-            }, 2 * 60 * 1000)
-            prefs.setSignUpPromo(true)
+            }, 3 * 60 * 1000) // 3 minute
         }
 
         appUpdateManager = AppUpdateManagerFactory.create(baseContext)

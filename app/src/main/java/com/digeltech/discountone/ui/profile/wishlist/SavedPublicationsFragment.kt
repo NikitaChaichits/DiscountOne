@@ -55,6 +55,10 @@ class SavedPublicationsFragment : BaseFragment(R.layout.fragment_wishlist), Sear
             {
                 navigate(SavedPublicationsFragmentDirections.toDealFragment(it))
             },
+            {
+                binding.grEmptyWishlist.visible()
+                binding.rvDeals.invisible()
+            },
             logger
         )
         binding.rvDeals.adapter = adapter
@@ -77,7 +81,7 @@ class SavedPublicationsFragment : BaseFragment(R.layout.fragment_wishlist), Sear
             queryHint = getString(R.string.search_by_deals)
         }
         binding.btnGoToBestDeals.setOnClickListener {
-            navigate(R.id.dealsFragment)
+            navigate(R.id.homeFragment)
         }
     }
 

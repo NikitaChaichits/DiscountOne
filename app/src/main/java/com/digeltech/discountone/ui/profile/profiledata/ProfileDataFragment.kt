@@ -57,13 +57,16 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
                 val uri: Uri = data?.data!!
                 binding.ivProfileImage.setCircleImage(uri)
                 userPhotoUri = uri
-                binding.loaderProfileImage.invisible()
             }
             ImagePicker.RESULT_ERROR -> {
                 toast(ImagePicker.getError(data))
-                binding.loaderProfileImage.invisible()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.loaderProfileImage.invisible()
     }
 
     private fun initUser() {

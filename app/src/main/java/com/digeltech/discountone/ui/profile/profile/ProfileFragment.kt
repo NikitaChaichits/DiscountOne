@@ -75,7 +75,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
             }
             llLogout.setOnClickListener {
                 Firebase.auth.signOut()
-                prefs.clear()
+                prefs.setLogin(false)
                 Hawk.deleteAll()
                 val navOptions = NavOptions.Builder()
                     .setPopUpTo(R.id.startFragment, false)

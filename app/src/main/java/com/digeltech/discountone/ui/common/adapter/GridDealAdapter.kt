@@ -94,9 +94,9 @@ class GridDealAdapter(
                 item.isAddedToBookmark = isAddedToBookmark(item.id)
 
                 if (item.isAddedToBookmark) {
-                    ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_bookmark_solid))
+                    ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_wishlist_on))
                 } else {
-                    ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_bookmark))
+                    ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_wishlist))
                 }
                 ivBookmark.setOnClickListener {
                     prefs = SharedPreferencesDataSource(it.context)
@@ -104,7 +104,7 @@ class GridDealAdapter(
                     if (item.isAddedToBookmark) {
                         item.isAddedToBookmark = false
                         removeFromBookmarkCache(item.id)
-                        ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_bookmark))
+                        ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_wishlist))
                         it.context.toast(it.getString(R.string.removed_from_bookmarks))
                     } else {
                         if (!prefs.isLogin()) {
@@ -112,7 +112,7 @@ class GridDealAdapter(
                         } else {
                             item.isAddedToBookmark = true
                             addToBookmarkCache(item)
-                            ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_bookmark_solid))
+                            ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_wishlist_on))
                             it.context.toast(it.getString(R.string.added_to_bookmarks))
                         }
                     }

@@ -15,9 +15,9 @@ class NewAccountViewModel @Inject constructor(
     val registerError = MutableLiveData<String>()
     val userId = MutableLiveData<String>()
 
-    fun register(email: String, password: String) {
+    fun register(nickname: String, email: String, password: String) {
         viewModelScope.launchWithLoading {
-            authRepository.register(email, password)
+            authRepository.register(nickname, email, password)
                 .onSuccess(userId::postValue)
                 .onFailure {
                     registerError.postValue("Failed to register. Email already exists")

@@ -5,13 +5,13 @@ import okhttp3.MultipartBody
 
 interface AuthRepository {
 
-    suspend fun register(email: String, password: String): Result<String>
+    suspend fun register(nickname: String, email: String, password: String): Result<String>
 
     suspend fun login(email: String, password: String): Result<User>
 
     suspend fun updateProfileWithAvatar(
         id: String,
-        login: String?,
+        nickname: String?,
 //        city: String?,
         birthday: String?,
         gender: String?,
@@ -20,7 +20,7 @@ interface AuthRepository {
 
     suspend fun updateProfile(
         id: String,
-        login: String?,
+        nickname: String?,
 //        city: String?,
         birthday: String?,
         gender: String?,

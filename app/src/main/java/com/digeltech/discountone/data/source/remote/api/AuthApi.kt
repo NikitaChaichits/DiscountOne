@@ -12,7 +12,7 @@ interface AuthApi {
 
     @POST("/wp-json/theme/v1/users/register")
     suspend fun registerAccount(
-//        @Query("login") login: String,
+        @Query("login") login: String,
         @Query("email") email: String,
         @Query("password") password: String
     ): UserIdDto

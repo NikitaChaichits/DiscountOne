@@ -31,6 +31,6 @@ class SharedPreferencesDataSource @Inject constructor(applicationContext: Contex
      */
     fun setSignUpPromo(isShown: Boolean) = sharedPrefs.put(SIGN_UP_PROMO, isShown)
 
-    fun getSignUpPromo(): Boolean = sharedPrefs.get(SIGN_UP_PROMO, false)
+    fun isSignUpPromoWasShown(): Boolean = sharedPrefs.get(SIGN_UP_PROMO, false)
 
 }

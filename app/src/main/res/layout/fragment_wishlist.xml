@@ -75,18 +75,6 @@
         tools:listitem="@layout/rv_deal_grid" />
 
     <TextView
-        android:id="@+id/tvSorry"
-        style="@style/TextRegular.Title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/common_offset_16dp"
-        android:text="@string/fr_wishlist_sorry"
-        android:textAlignment="center"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/tvEmptyWishlist"
         style="@style/TextRegular"
         android:layout_width="match_parent"
@@ -95,7 +83,8 @@
         android:layout_marginTop="@dimen/common_offset_4dp"
         android:text="@string/fr_wishlist_empty"
         android:textAlignment="center"
-        app:layout_constraintTop_toBottomOf="@id/tvSorry" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnGoToBestDeals"
@@ -104,7 +93,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/common_offset_16dp"
         android:layout_marginTop="@dimen/common_offset_16dp"
-        android:text="@string/fr_deals_title"
+        android:text="@string/fr_wishlist_btn"
         app:cornerRadius="@dimen/radius_12"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -115,5 +104,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:constraint_referenced_ids="tvSorry, tvEmptyWishlist, btnGoToBestDeals" />
+        app:constraint_referenced_ids="tvEmptyWishlist, btnGoToBestDeals" />
 </androidx.constraintlayout.widget.ConstraintLayout>

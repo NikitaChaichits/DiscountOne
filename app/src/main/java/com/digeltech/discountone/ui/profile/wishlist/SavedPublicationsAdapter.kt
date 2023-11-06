@@ -2,12 +2,13 @@ package com.digeltech.discountone.ui.profile.wishlist
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.digeltech.discountone.R
-import com.digeltech.discountone.databinding.RvDealGridBinding
+import com.digeltech.discountone.databinding.RvDealWishlistBinding
 import com.digeltech.discountone.ui.common.addToBookmarkCache
 import com.digeltech.discountone.ui.common.getCategoryNameById
 import com.digeltech.discountone.ui.common.logShopNow
@@ -25,11 +26,12 @@ import com.facebook.appevents.AppEventsLogger
  */
 class SavedPublicationsAdapter(
     private val onClickListener: (deal: DealParcelable) -> Unit,
+    private val emptyListCallback: () -> Unit,
     private val logger: AppEventsLogger
 ) : ListAdapter<DealParcelable, SavedPublicationsAdapter.ItemViewholder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewholder {
-        return RvDealGridBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return RvDealWishlistBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             .let(::ItemViewholder)
     }
 
@@ -41,7 +43,7 @@ class SavedPublicationsAdapter(
         holder.unbind()
     }
 
-    inner class ItemViewholder(val binding: RvDealGridBinding) :
+    inner class ItemViewholder(val binding: RvDealWishlistBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: DealParcelable) {
@@ -100,27 +102,17 @@ class SavedPublicationsAdapter(
                 }
 
                 if (item.isAddedToBookmark) {
-                    ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_bookmark_solid))
+                    ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_wishlist_on))
+                    tvWishlist.text = itemView.getString(R.string.fr_deal_remove_from_bookmarks)
                 } else {
-                    ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_bookmark))
+                    ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_wishlist))
+                    tvWishlist.text = itemView.getString(R.string.fr_deal_add_to_bookmarks)
                 }
                 ivBookmark.setOnClickListener {
-                    if (item.isAddedToBookmark) {
-                        item.isAddedToBookmark = false
-                        removeFromBookmarkCache(item.id)
-
-                        val list = currentList.toMutableList()
-                        list.removeAt(adapterPosition)
-                        submitList(list)
-
-                        ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_bookmark))
-                        it.context.toast(it.getString(R.string.removed_from_bookmarks))
-                    } else {
-                        item.isAddedToBookmark = true
-                        addToBookmarkCache(item)
-                        ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_bookmark_solid))
-                        it.context.toast(it.getString(R.string.added_to_bookmarks))
-                    }
+                    addToWishlist(item, this@ItemViewholder, this, it)
+                }
+                tvWishlist.setOnClickListener {
+                    addToWishlist(item, this@ItemViewholder, this, it)
                 }
             }
         }
@@ -129,6 +121,32 @@ class SavedPublicationsAdapter(
             binding.ivDealImage.setImageDrawable(null)
             binding.ivCouponCompanyLogo.setImageDrawable(null)
             binding.ivRateArrow.setImageDrawable(null)
+        }
+
+        private fun addToWishlist(
+            item: DealParcelable,
+            itemViewholder: ItemViewholder,
+            rvDealWishlistBinding: RvDealWishlistBinding,
+            it: View
+        ) {
+            if (item.isAddedToBookmark) {
+                item.isAddedToBookmark = false
+                removeFromBookmarkCache(item.id)
+
+                val list = currentList.toMutableList()
+                list.removeAt(itemViewholder.adapterPosition)
+                submitList(list)
+
+                if (list.isEmpty()) emptyListCallback()
+
+                rvDealWishlistBinding.ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_wishlist))
+                it.context.toast(it.getString(R.string.removed_from_bookmarks))
+            } else {
+                item.isAddedToBookmark = true
+                addToBookmarkCache(item)
+                rvDealWishlistBinding.ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_wishlist_on))
+                it.context.toast(it.getString(R.string.added_to_bookmarks))
+            }
         }
     }
 

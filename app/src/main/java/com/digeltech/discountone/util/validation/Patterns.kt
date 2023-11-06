@@ -8,7 +8,7 @@ const val EMAIL_PATTERN =
             "\\@" + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
             "(" + "\\." + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" + ")+"
 
-const val PASSWORD_MIN = 8
+const val PASSWORD_MIN = 6
 
 //const val PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#\$%^&+=!])(?=\\S+\$).{$PASSWORD_MIN,}\$"
 const val PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+\$).{$PASSWORD_MIN,}\$"

@@ -14,9 +14,9 @@ class AuthRepositoryImpl @Inject constructor(
     private val api: AuthApi,
 ) : AuthRepository {
 
-    override suspend fun register(email: String, password: String) = withContext(Dispatchers.IO) {
+    override suspend fun register(nickname: String, email: String, password: String) = withContext(Dispatchers.IO) {
         runCatching {
-            api.registerAccount(email, password).id
+            api.registerAccount(nickname, email, password).id
         }
     }
 

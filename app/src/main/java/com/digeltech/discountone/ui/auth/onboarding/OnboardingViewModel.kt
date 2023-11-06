@@ -22,8 +22,8 @@ class OnboardingViewModel @Inject constructor(
         viewModelScope.launchWithLoading {
             authRepository.updateProfileWithAvatar(
                 id = id,
+                nickname = null,
                 birthday = birthday,
-                login = null,
                 gender = gender?.name,
                 userAvatar = userAvatar
             ).onSuccess {
@@ -42,11 +42,10 @@ class OnboardingViewModel @Inject constructor(
         viewModelScope.launchWithLoading {
             authRepository.updateProfile(
                 id = id,
-                login = null,
+                nickname = null,
                 birthday = birthday,
                 gender = gender?.name,
-
-                ).onSuccess {
+            ).onSuccess {
                 success.postValue(true)
             }.onFailure {
                 error.postValue(it.toString())

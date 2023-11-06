@@ -15,10 +15,7 @@ import com.digeltech.discountone.util.time.getCurrentDateTime
 import com.digeltech.discountone.util.validation.PASSWORD_MIN
 import com.digeltech.discountone.util.validation.isValidEmail
 import com.digeltech.discountone.util.validation.isValidPassword
-import com.digeltech.discountone.util.view.disable
-import com.digeltech.discountone.util.view.enable
-import com.digeltech.discountone.util.view.invisible
-import com.digeltech.discountone.util.view.visible
+import com.digeltech.discountone.util.view.*
 import com.facebook.appevents.AppEventsLogger
 import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,6 +43,7 @@ class NewAccountFragment : BaseFragment(R.layout.fragment_new_account) {
         }
         binding.btnCreateAccount.setOnClickListener {
             viewModel.register(
+                binding.etName.text.toString().trim(),
                 binding.etEmail.text.toString().trim(),
                 binding.etPassword.text.toString().trim()
             )
@@ -55,8 +53,9 @@ class NewAccountFragment : BaseFragment(R.layout.fragment_new_account) {
         binding.etPassword.doAfterTextChanged {
             if (isValidPassword(it.toString().trim())) {
                 checkIsCreateButtonEnable()
-                binding.tvPasswordError.invisible()
-                binding.tvPasswordInfo.invisible()
+                binding.tilPassword.boxStrokeColor = resources.getColor(R.color.colorPrimary)
+                binding.tvPasswordError.gone()
+                binding.tvPasswordInfo.gone()
             } else {
                 if (it.toString().trim().length >= PASSWORD_MIN) {
                     binding.tvPasswordError.visible()

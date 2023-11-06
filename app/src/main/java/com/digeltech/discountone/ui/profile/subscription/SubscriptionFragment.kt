@@ -80,10 +80,10 @@ class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription) {
         viewModel.isEmailNotificationOn.observe(viewLifecycleOwner) {
             isEmailNotificationOn = if (it) {
                 binding.ivSwitch.setImageDrawable(view?.getImageDrawable(R.drawable.ic_switch_on))
-                false
+                true
             } else {
                 binding.ivSwitch.setImageDrawable(view?.getImageDrawable(R.drawable.ic_switch_off))
-                true
+                false
             }
         }
         viewModel.categories.observe(viewLifecycleOwner) {

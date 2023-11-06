@@ -125,9 +125,11 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
             deal.isAddedToBookmark = isAddedToBookmark(deal.id)
 
             if (deal.isAddedToBookmark) {
-                ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_bookmark_deal_solid))
+                ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_wishlist_on))
+                tvWishlist.text = getText(R.string.fr_deal_remove_from_bookmarks)
             } else {
-                ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_bookmark_deal))
+                ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_wishlist))
+                tvWishlist.text = getText(R.string.fr_deal_add_to_bookmarks)
             }
 
             if (deal.sale.isNotNullAndNotEmpty() && deal.sale != "0") {
@@ -182,27 +184,10 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
             it.shareText(shareText)
         }
         ivBookmark.setOnClickListener {
-            if (deal.isAddedToBookmark) {
-                deal.isAddedToBookmark = false
-                removeFromBookmarkCache(deal.id)
-                getUserId()?.let { userId ->
-                    viewModel.deleteBookmark(userId, deal.id.toString())
-                }
-                ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_bookmark_deal))
-                it.context.toast(it.getString(R.string.removed_from_bookmarks))
-            } else {
-                if (!prefs.isLogin()) {
-                    it.context.toast(R.string.toast_bookmark)
-                } else {
-                    deal.isAddedToBookmark = true
-                    getUserId()?.let { userId ->
-                        viewModel.addBookmark(userId, deal.id.toString())
-                    }
-                    addToBookmarkCache(deal)
-                    ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_bookmark_deal_solid))
-                    it.context.toast(it.getString(R.string.added_to_bookmarks))
-                }
-            }
+            addToBookmark(deal, it)
+        }
+        tvWishlist.setOnClickListener {
+            addToBookmark(deal, it)
         }
         ivCouponCompanyLogo.setOnClickListener {
             navigate(
@@ -250,6 +235,35 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
             it.context.toast(it.getString(R.string.copied))
         }
 
+    }
+
+    private fun FragmentDealBinding.addToBookmark(
+        deal: DealParcelable,
+        it: View
+    ) {
+        if (deal.isAddedToBookmark) {
+            deal.isAddedToBookmark = false
+            removeFromBookmarkCache(deal.id)
+            getUserId()?.let { userId ->
+                viewModel.deleteBookmark(userId, deal.id.toString())
+            }
+            ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_wishlist))
+            tvWishlist.text = getText(R.string.fr_deal_add_to_bookmarks)
+            it.context.toast(it.getString(R.string.removed_from_bookmarks))
+        } else {
+            if (!prefs.isLogin()) {
+                it.context.toast(R.string.toast_bookmark)
+            } else {
+                deal.isAddedToBookmark = true
+                getUserId()?.let { userId ->
+                    viewModel.addBookmark(userId, deal.id.toString())
+                }
+                addToBookmarkCache(deal)
+                ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_wishlist_on))
+                tvWishlist.text = getText(R.string.fr_deal_remove_from_bookmarks)
+                it.context.toast(it.getString(R.string.added_to_bookmarks))
+            }
+        }
     }
 
     private fun observeData() {
