@@ -41,7 +41,7 @@ class SavedPublicationsViewModel @Inject constructor(
                         }
                     }
                     .onFailure {
-                        error.postValue(it.toString())
+                        isGroupEmptyWishlistVisible.postValue(true)
                     }
             }
         }

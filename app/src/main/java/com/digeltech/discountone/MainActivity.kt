@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
             handler.postDelayed({
                 val dialogFragment = SignUpDialogFragment()
                 dialogFragment.show(supportFragmentManager, dialogFragment.tag)
-            }, 31 * 60 * 1000) // 3 minutes
+            }, 3 * 60 * 1000) // 3 minutes
         }
 
         appUpdateManager = AppUpdateManagerFactory.create(baseContext)

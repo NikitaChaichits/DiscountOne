@@ -17,7 +17,7 @@ class WishlistDialogFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.WishlistDialogStyle)
+        setStyle(STYLE_NORMAL, R.style.DialogStyle)
     }
 
     override fun onCreateView(

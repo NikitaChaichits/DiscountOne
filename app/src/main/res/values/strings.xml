@@ -37,7 +37,7 @@
     <string name="share_text">Look what I found in DiscouneOne %s</string>
     <string name="trow_off">Trow off</string>
     <string name="apply">Apply</string>
-    <string name="sign_up_promotion">Unlock access to exclusive, limited-time deals with huge discounts in categories that interest you!</string>
+    <string name="sign_up_promotion">Want to receive exclusive, limited-time deals with huge discounts in categories that interest you?</string>
     <string name="go_login">Go to Sign Up</string>
     <string name="sign_up">Sign Up</string>
 
@@ -57,7 +57,7 @@
     <string name="notifications_time_hour">hour</string>
 
     <!-- Start -->
-    <string name="fr_start_title">From fashion to food, we\'ve got discounts for every mood!</string>
+    <string name="fr_start_title">Unlock access to exclusive, limited-time deals with huge discounts in categories that interest you!</string>
     <string name="sign_in">Sign In</string>
 
     <!-- New account -->

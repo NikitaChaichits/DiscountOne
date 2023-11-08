@@ -40,6 +40,7 @@
         style="@style/TextRegular.Title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textAlignment="center"
         android:text="@string/fr_start_title"
         app:layout_constraintBottom_toTopOf="@+id/btnLogin"
         app:layout_constraintEnd_toEndOf="parent"
