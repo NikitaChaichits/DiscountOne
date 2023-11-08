@@ -90,4 +90,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun updateBookmark(dealId: String) {
+        getUserId()?.let { userId ->
+            viewModelScope.launch {
+                interactor.updateBookmark(userId, dealId)
+            }
+        }
+    }
+
 }

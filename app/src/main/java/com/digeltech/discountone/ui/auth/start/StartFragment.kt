@@ -26,5 +26,8 @@ class StartFragment : BaseFragment(R.layout.fragment_start) {
         binding.btnCreateAccount.setOnClickListener {
             navigate(R.id.newAccountFragment)
         }
+        binding.ivHome.setOnClickListener {
+            navigate(R.id.homeFragment)
+        }
     }
 }

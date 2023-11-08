@@ -7,6 +7,7 @@ import com.digeltech.discountone.common.base.BaseViewModel
 import com.digeltech.discountone.domain.model.CategoryShopFilterItem
 import com.digeltech.discountone.ui.categoryandshop.interactor.CategoryAndShopInteractor
 import com.digeltech.discountone.ui.common.SEARCH_DELAY
+import com.digeltech.discountone.ui.common.getUserId
 import com.digeltech.discountone.ui.common.model.*
 import com.digeltech.discountone.util.log
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -161,6 +162,14 @@ class CategoryAndShopViewModel @Inject constructor(
                     log(it.toString())
                     filteringError.postValue(it.toString())
                 }
+        }
+    }
+
+    fun updateBookmark(dealId: String) {
+        getUserId()?.let { userId ->
+            viewModelScope.launch {
+                interactor.updateBookmark(userId, dealId)
+            }
         }
     }
 

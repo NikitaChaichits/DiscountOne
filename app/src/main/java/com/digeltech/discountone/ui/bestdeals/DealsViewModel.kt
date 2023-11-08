@@ -7,6 +7,7 @@ import com.digeltech.discountone.common.base.BaseViewModel
 import com.digeltech.discountone.domain.model.Item
 import com.digeltech.discountone.domain.repository.DealsRepository
 import com.digeltech.discountone.ui.common.SEARCH_DELAY
+import com.digeltech.discountone.ui.common.getUserId
 import com.digeltech.discountone.ui.common.model.DealParcelable
 import com.digeltech.discountone.ui.common.model.toParcelableList
 import com.digeltech.discountone.util.log
@@ -200,4 +201,12 @@ class DealsViewModel @Inject constructor(
     fun getCategoriesFilterPosition(): Int = categorySpinnerPosition
 
     fun getShopFilterPosition(): Int = shopSpinnerPosition
+
+    fun updateBookmark(dealId: String) {
+        getUserId()?.let { userId ->
+            viewModelScope.launch {
+                dealsRepository.updateBookmark(userId, dealId)
+            }
+        }
+    }
 }

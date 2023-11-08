@@ -46,7 +46,5 @@ interface DealsRepository {
 
     suspend fun getBookmarksDeals(userId: String): Result<List<Deal>>
 
-    suspend fun addDealToBookmark(userId: String, dealId: String)
-
-    suspend fun deleteDealFromBookmark(userId: String, dealId: String)
+    suspend fun updateBookmark(userId: String, dealId: String)
 }

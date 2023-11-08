@@ -7,6 +7,7 @@ import com.digeltech.discountone.common.base.BaseViewModel
 import com.digeltech.discountone.domain.model.Category
 import com.digeltech.discountone.ui.categories.interactor.CategoriesInteractor
 import com.digeltech.discountone.ui.common.SEARCH_DELAY
+import com.digeltech.discountone.ui.common.getUserId
 import com.digeltech.discountone.ui.common.model.toParcelableList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -15,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoriesViewModel @Inject constructor(
-    private val categoriesInteractor: CategoriesInteractor,
+    private val interactor: CategoriesInteractor,
 ) : BaseViewModel() {
 
     private val _categories: MutableLiveData<List<Pair<Category, Category?>>> = MutableLiveData()
@@ -23,7 +24,7 @@ class CategoriesViewModel @Inject constructor(
 
     fun getCategoriesList() {
         viewModelScope.launchWithLoading {
-            categoriesInteractor.getCategoriesList()
+            interactor.getCategoriesList()
                 .onSuccess {
                     val list = mutableListOf<Pair<Category, Category?>>()
                     for (i in 1..it.size step 2) {
@@ -45,8 +46,16 @@ class CategoriesViewModel @Inject constructor(
             delay(SEARCH_DELAY)
 
             launchWithLoading {
-                val deals = categoriesInteractor.searchDeals(searchText)
+                val deals = interactor.searchDeals(searchText)
                 searchResult.value = deals.toParcelableList()
+            }
+        }
+    }
+
+    fun updateBookmark(dealId: String) {
+        getUserId()?.let { userId ->
+            viewModelScope.launch {
+                interactor.updateBookmark(userId, dealId)
             }
         }
     }

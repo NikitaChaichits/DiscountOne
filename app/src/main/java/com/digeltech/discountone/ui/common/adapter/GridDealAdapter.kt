@@ -3,12 +3,14 @@ package com.digeltech.discountone.ui.common.adapter
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.digeltech.discountone.R
 import com.digeltech.discountone.data.source.local.SharedPreferencesDataSource
 import com.digeltech.discountone.databinding.RvDealGridBinding
+import com.digeltech.discountone.ui.common.WishlistDialogFragment
 import com.digeltech.discountone.ui.common.addToBookmarkCache
 import com.digeltech.discountone.ui.common.isAddedToBookmark
 import com.digeltech.discountone.ui.common.model.DealParcelable
@@ -23,7 +25,8 @@ import com.facebook.appevents.AppEventsLogger
 
 class GridDealAdapter(
     private val onClickListener: (deal: DealParcelable) -> Unit,
-//    private val onBookmarkClickListener: (dealId: Int) -> Unit,
+    private val onBookmarkClickListener: (dealId: Int) -> Unit,
+    private val fragmentManager: FragmentManager,
     private val logger: AppEventsLogger,
 ) : ListAdapter<DealParcelable, GridDealAdapter.ItemViewholder>(DiffCallback()) {
 
@@ -96,7 +99,7 @@ class GridDealAdapter(
                 if (item.isAddedToBookmark) {
                     ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_wishlist_on))
                 } else {
-                    ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_wishlist))
+                    ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_wishlist_colored))
                 }
                 ivBookmark.setOnClickListener {
                     prefs = SharedPreferencesDataSource(it.context)
@@ -104,14 +107,17 @@ class GridDealAdapter(
                     if (item.isAddedToBookmark) {
                         item.isAddedToBookmark = false
                         removeFromBookmarkCache(item.id)
-                        ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_wishlist))
+                        onBookmarkClickListener(item.id)
+                        ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_wishlist_colored))
                         it.context.toast(it.getString(R.string.removed_from_bookmarks))
                     } else {
                         if (!prefs.isLogin()) {
-                            it.context.toast(R.string.toast_bookmark)
+                            val dialogFragment = WishlistDialogFragment()
+                            dialogFragment.show(fragmentManager, dialogFragment.tag)
                         } else {
                             item.isAddedToBookmark = true
                             addToBookmarkCache(item)
+                            onBookmarkClickListener(item.id)
                             ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_wishlist_on))
                             it.context.toast(it.getString(R.string.added_to_bookmarks))
                         }

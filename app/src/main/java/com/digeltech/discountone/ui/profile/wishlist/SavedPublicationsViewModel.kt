@@ -5,12 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.digeltech.discountone.common.base.BaseViewModel
 import com.digeltech.discountone.domain.repository.DealsRepository
+import com.digeltech.discountone.ui.common.KEY_SAVED_DEALS
 import com.digeltech.discountone.ui.common.SEARCH_DELAY
-import com.digeltech.discountone.ui.common.getListOfBookmarks
 import com.digeltech.discountone.ui.common.getUserId
 import com.digeltech.discountone.ui.common.model.DealParcelable
 import com.digeltech.discountone.ui.common.model.toParcelableList
 import com.digeltech.discountone.util.log
+import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -28,25 +29,21 @@ class SavedPublicationsViewModel @Inject constructor(
     val isGroupEmptyWishlistVisible = MutableLiveData<Boolean>()
 
     fun getSavedPublications() {
-        if (getListOfBookmarks()?.isNotEmpty() == true) {
-            getListOfBookmarks()?.let { bookmarks ->
-                _deals.postValue(bookmarks.toMutableList())
-
-                getUserId()?.let { userId ->
-                    viewModelScope.launch {
-                        dealsRepository.getBookmarksDeals(userId)
-                            .onSuccess {
-                                val bookmarksOnServer = it.toParcelableList().toSet()
-                                val uniqueBookmarks = bookmarks.toSet() - bookmarksOnServer
-                                uniqueBookmarks.forEach { deal ->
-                                    dealsRepository.addDealToBookmark(userId, deal.id.toString())
-                                }
-                            }
+        viewModelScope.launchWithLoading {
+            getUserId()?.let {
+                dealsRepository.getBookmarksDeals(it)
+                    .onSuccess { list ->
+                        if (list.isNotEmpty()) {
+                            Hawk.put(KEY_SAVED_DEALS, list.toParcelableList())
+                            _deals.postValue(list.toParcelableList())
+                        } else {
+                            isGroupEmptyWishlistVisible.postValue(true)
+                        }
                     }
-                }
+                    .onFailure {
+                        error.postValue(it.toString())
+                    }
             }
-        } else {
-            isGroupEmptyWishlistVisible.postValue(true)
         }
     }
 
@@ -65,6 +62,14 @@ class SavedPublicationsViewModel @Inject constructor(
                     }
                 }
                 searchResult.value = searchResults
+            }
+        }
+    }
+
+    fun updateBookmark(dealId: String) {
+        getUserId()?.let { userId ->
+            viewModelScope.launch {
+                dealsRepository.updateBookmark(userId, dealId)
             }
         }
     }

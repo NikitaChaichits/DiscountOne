@@ -87,11 +87,14 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
 
     private fun initAdapters() {
         dealAdapter = GridDealAdapter(
-            {
-//                viewModel.updateDealViewsClick(it.id.toString())
+            onClickListener = {
                 navigate(CouponsFragmentDirections.toDealFragment(it))
             },
-            logger
+            onBookmarkClickListener = {
+                viewModel.updateBookmark(it.toString())
+            },
+            fragmentManager = requireActivity().supportFragmentManager,
+            logger = logger,
         )
         binding.rvDeals.addItemDecoration(
             GridOffsetDecoration(
@@ -116,12 +119,15 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
         }
 
         searchAdapter = GridDealAdapter(
-            {
-//                viewModel.updateDealViewsClick(it.id.toString())
+            onClickListener = {
                 navigate(CouponsFragmentDirections.toDealFragment(it))
                 binding.searchView.setQuery("", false)
             },
-            logger
+            onBookmarkClickListener = {
+                viewModel.updateBookmark(it.toString())
+            },
+            fragmentManager = requireActivity().supportFragmentManager,
+            logger = logger,
         )
         binding.rvSearchDeals.addItemDecoration(
             GridOffsetDecoration(

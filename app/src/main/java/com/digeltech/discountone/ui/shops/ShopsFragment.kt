@@ -81,10 +81,14 @@ class ShopsFragment : BaseFragment(R.layout.fragment_shops), SearchView.OnQueryT
         )
 
         searchDealAdapter = GridDealAdapter(
-            {
+            onClickListener = {
                 navigate(HomeFragmentDirections.toDealFragment(it))
             },
-            logger
+            onBookmarkClickListener = {
+                viewModel.updateBookmark(it.toString())
+            },
+            fragmentManager = requireActivity().supportFragmentManager,
+            logger = logger,
         )
         binding.rvSearchDeals.addItemDecoration(
             GridOffsetDecoration(

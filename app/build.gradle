@@ -140,6 +140,8 @@ dependencies {
     implementation 'com.facebook.android:facebook-android-sdk:15.2.0'
     // don't update to 16.0.0 version
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
+
+    implementation 'com.github.prolificinteractive:material-calendarview:2.0.0'
 }
 
 android.applicationVariants.all { variant ->

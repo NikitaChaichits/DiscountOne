@@ -14,4 +14,6 @@ interface HomeInteractor {
     suspend fun updateDealViewsClick(id: String)
 
     suspend fun getFetchListOfBookmarks(userId: String): Result<List<Deal>>
+
+    suspend fun updateBookmark(userId: String, dealId: String)
 }

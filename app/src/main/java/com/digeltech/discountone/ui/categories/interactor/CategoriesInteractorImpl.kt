@@ -14,4 +14,6 @@ internal class CategoriesInteractorImpl @Inject constructor(
     override suspend fun getCategoriesList(): Result<List<Category>> = categoriesRepository.getAllCategories()
 
     override suspend fun searchDeals(searchText: String): List<Deal> = dealsRepository.searchDeals(searchText)
+
+    override suspend fun updateBookmark(userId: String, dealId: String) = dealsRepository.updateBookmark(userId, dealId)
 }

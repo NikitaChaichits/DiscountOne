@@ -14,4 +14,6 @@ internal class ShopsInteractorImpl @Inject constructor(
     override suspend fun getShopsList(): Result<List<Shop>> = shopsRepository.getAllShops()
 
     override suspend fun searchDeals(searchText: String): List<Deal> = dealsRepository.searchDeals(searchText)
+
+    override suspend fun updateBookmark(userId: String, dealId: String) = dealsRepository.updateBookmark(userId, dealId)
 }

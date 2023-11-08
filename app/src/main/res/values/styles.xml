@@ -76,4 +76,17 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <!-- Dialog Fragment -->
+
+    <style name="SignUpDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="WishlistDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowMinWidthMinor">90%</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
 </resources>

@@ -35,7 +35,7 @@
         app:layout_constraintBottom_toBottomOf="@id/ivBack"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/ivBack"
-        app:srcCompat="@drawable/ic_wishlist" />
+        app:srcCompat="@drawable/ic_wishlist_colored" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView"

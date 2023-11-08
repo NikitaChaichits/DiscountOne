@@ -27,6 +27,7 @@ import com.facebook.appevents.AppEventsLogger
 class SavedPublicationsAdapter(
     private val onClickListener: (deal: DealParcelable) -> Unit,
     private val emptyListCallback: () -> Unit,
+    private val onBookmarkClickListener: (dealId: Int) -> Unit,
     private val logger: AppEventsLogger
 ) : ListAdapter<DealParcelable, SavedPublicationsAdapter.ItemViewholder>(DiffCallback()) {
 
@@ -105,14 +106,14 @@ class SavedPublicationsAdapter(
                     ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_wishlist_on))
                     tvWishlist.text = itemView.getString(R.string.fr_deal_remove_from_bookmarks)
                 } else {
-                    ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_wishlist))
+                    ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_wishlist_colored))
                     tvWishlist.text = itemView.getString(R.string.fr_deal_add_to_bookmarks)
                 }
                 ivBookmark.setOnClickListener {
-                    addToWishlist(item, this@ItemViewholder, this, it)
+                    updateWishlist(item, this@ItemViewholder, this, it)
                 }
                 tvWishlist.setOnClickListener {
-                    addToWishlist(item, this@ItemViewholder, this, it)
+                    updateWishlist(item, this@ItemViewholder, this, it)
                 }
             }
         }
@@ -123,7 +124,7 @@ class SavedPublicationsAdapter(
             binding.ivRateArrow.setImageDrawable(null)
         }
 
-        private fun addToWishlist(
+        private fun updateWishlist(
             item: DealParcelable,
             itemViewholder: ItemViewholder,
             rvDealWishlistBinding: RvDealWishlistBinding,
@@ -132,6 +133,7 @@ class SavedPublicationsAdapter(
             if (item.isAddedToBookmark) {
                 item.isAddedToBookmark = false
                 removeFromBookmarkCache(item.id)
+                onBookmarkClickListener(item.id)
 
                 val list = currentList.toMutableList()
                 list.removeAt(itemViewholder.adapterPosition)
@@ -139,11 +141,12 @@ class SavedPublicationsAdapter(
 
                 if (list.isEmpty()) emptyListCallback()
 
-                rvDealWishlistBinding.ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_wishlist))
+                rvDealWishlistBinding.ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_wishlist_colored))
                 it.context.toast(it.getString(R.string.removed_from_bookmarks))
             } else {
                 item.isAddedToBookmark = true
                 addToBookmarkCache(item)
+                onBookmarkClickListener(item.id)
                 rvDealWishlistBinding.ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_wishlist_on))
                 it.context.toast(it.getString(R.string.added_to_bookmarks))
             }

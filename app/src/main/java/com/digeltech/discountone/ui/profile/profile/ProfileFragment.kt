@@ -58,7 +58,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
                     binding.tvTitle.text = getString(R.string.profile)
                     bottomNavMenu.visible()
                 } else {
-                    navigateBack()
+                    navigate(R.id.homeFragment)
                 }
             }
             llPersonalData.setOnClickListener {

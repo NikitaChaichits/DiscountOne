@@ -15,7 +15,6 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import androidx.navigation.ui.setupWithNavController
-import com.afollestad.materialdialogs.MaterialDialog
 import com.digeltech.discountone.data.source.local.SharedPreferencesDataSource
 import com.digeltech.discountone.databinding.ActivityMainBinding
 import com.digeltech.discountone.ui.common.getUserId
@@ -72,23 +71,9 @@ class MainActivity : AppCompatActivity() {
         if (!prefs.isLogin()) {
             val handler = Handler(Looper.getMainLooper())
             handler.postDelayed({
-                MaterialDialog(this)
-                    .message(res = R.string.sign_up_promotion)
-                    .cornerRadius(res = R.dimen.radius_12)
-                    .positiveButton(
-                        res = R.string.go_login,
-                        click = {
-                            val navController = Navigation.findNavController(this, R.id.navHostFragment)
-                            navController.navigate(R.id.loginFragment)
-                        }
-                    )
-                    .negativeButton(
-                        res = R.string.cancel,
-                        click = MaterialDialog::dismiss
-                    )
-                    .cancelOnTouchOutside(cancelable = true)
-                    .show()
-            }, 3 * 60 * 1000) // 3 minute
+                val dialogFragment = SignUpDialogFragment()
+                dialogFragment.show(supportFragmentManager, dialogFragment.tag)
+            }, 31 * 60 * 1000) // 3 minutes
         }
 
         appUpdateManager = AppUpdateManagerFactory.create(baseContext)

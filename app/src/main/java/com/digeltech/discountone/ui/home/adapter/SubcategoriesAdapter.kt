@@ -3,6 +3,7 @@ package com.digeltech.discountone.ui.home.adapter
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +20,8 @@ import com.facebook.appevents.AppEventsLogger
 class SubcategoriesAdapter(
     private val onMoreDealsClick: (category: CategoryWithDealsParcelable) -> Unit,
     private val onDealClick: (deal: DealParcelable) -> Unit,
+    private val onBookmarkClickListener: (dealId: Int) -> Unit,
+    private val fragmentManager: FragmentManager,
     private val logger: AppEventsLogger
 ) : ListAdapter<CategoryWithDeals, SubcategoriesAdapter.ItemViewholder>(DiffCallback()) {
 
@@ -50,7 +53,12 @@ class SubcategoriesAdapter(
                     onMoreDealsClick(item.toParcelableList())
                 }
 
-                val dealsAdapter = LinearDealAdapter({ onDealClick(it) }, logger)
+                val dealsAdapter = LinearDealAdapter(
+                    onClickListener = { onDealClick(it) },
+                    onBookmarkClickListener = { onBookmarkClickListener },
+                    fragmentManager = fragmentManager,
+                    logger = logger,
+                )
 
                 dealsAdapter.submitList(item.items.take(5).toParcelableList())
                 rvDeals.adapter = dealsAdapter

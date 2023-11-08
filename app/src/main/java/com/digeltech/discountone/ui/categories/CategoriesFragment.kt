@@ -85,10 +85,14 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories), SearchVie
         )
 
         searchDealAdapter = GridDealAdapter(
-            {
+            onClickListener = {
                 navigate(HomeFragmentDirections.toDealFragment(it))
             },
-            logger
+            onBookmarkClickListener = {
+                viewModel.updateBookmark(it.toString())
+            },
+            fragmentManager = requireActivity().supportFragmentManager,
+            logger = logger,
         )
         binding.rvSearchDeals.addItemDecoration(
             GridOffsetDecoration(

@@ -50,4 +50,5 @@ internal class CategoryAndShopInteractorImpl @Inject constructor(
     override suspend fun getInitialDeals(categoryType: CategoryType, id: String): Result<List<Deal>> =
         dealsRepository.getInitialDeals(categoryType, id)
 
+    override suspend fun updateBookmark(userId: String, dealId: String) = dealsRepository.updateBookmark(userId, dealId)
 }

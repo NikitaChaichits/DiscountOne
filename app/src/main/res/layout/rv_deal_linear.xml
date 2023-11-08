@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_ic_bookmark"
         android:padding="@dimen/common_offset_8dp"
-        android:src="@drawable/ic_wishlist"
+        android:src="@drawable/ic_wishlist_colored"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

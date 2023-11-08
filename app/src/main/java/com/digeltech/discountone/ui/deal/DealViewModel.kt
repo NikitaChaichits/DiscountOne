@@ -11,6 +11,7 @@ import com.digeltech.discountone.domain.repository.DealsRepository
 import com.digeltech.discountone.domain.repository.ShopsRepository
 import com.digeltech.discountone.ui.common.KEY_CATEGORIES
 import com.digeltech.discountone.ui.common.KEY_SHOPS
+import com.digeltech.discountone.ui.common.getUserId
 import com.digeltech.discountone.ui.common.model.DealParcelable
 import com.digeltech.discountone.ui.common.model.toParcelable
 import com.digeltech.discountone.ui.common.model.toParcelableList
@@ -111,15 +112,11 @@ class DealViewModel @Inject constructor(
         }
     }
 
-    fun addBookmark(userId: String, dealId: String) {
-        viewModelScope.launch {
-            dealsRepository.addDealToBookmark(userId, dealId)
-        }
-    }
-
-    fun deleteBookmark(userId: String, dealId: String) {
-        viewModelScope.launch {
-            dealsRepository.deleteDealFromBookmark(userId, dealId)
+    fun updateBookmark(dealId: String) {
+        getUserId()?.let { userId ->
+            viewModelScope.launch {
+                dealsRepository.updateBookmark(userId, dealId)
+            }
         }
     }
 }

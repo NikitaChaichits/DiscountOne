@@ -72,20 +72,28 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
 
     private fun initAdapters() {
         categoryDealsAdapter = LinearDealAdapter(
-            {
+            onClickListener = {
                 initCoupon(it)
                 binding.scrollView.scrollTo(0, 0)
             },
-            logger
+            onBookmarkClickListener = {
+                viewModel.updateBookmark(it.toString())
+            },
+            fragmentManager = requireActivity().supportFragmentManager,
+            logger = logger,
         )
         binding.rvSimilarCategoryDeals.adapter = categoryDealsAdapter
 
         shopDealsAdapter = LinearDealAdapter(
-            {
+            onClickListener = {
                 initCoupon(it)
                 binding.scrollView.scrollTo(0, 0)
             },
-            logger
+            onBookmarkClickListener = {
+                viewModel.updateBookmark(it.toString())
+            },
+            fragmentManager = requireActivity().supportFragmentManager,
+            logger = logger,
         )
         binding.rvSimilarShopDeals.adapter = shopDealsAdapter
     }
@@ -128,7 +136,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
                 ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_wishlist_on))
                 tvWishlist.text = getText(R.string.fr_deal_remove_from_bookmarks)
             } else {
-                ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_wishlist))
+                ivBookmark.setImageDrawable(ivBookmark.getImageDrawable(R.drawable.ic_wishlist_colored))
                 tvWishlist.text = getText(R.string.fr_deal_add_to_bookmarks)
             }
 
@@ -244,20 +252,17 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
         if (deal.isAddedToBookmark) {
             deal.isAddedToBookmark = false
             removeFromBookmarkCache(deal.id)
-            getUserId()?.let { userId ->
-                viewModel.deleteBookmark(userId, deal.id.toString())
-            }
-            ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_wishlist))
+            viewModel.updateBookmark(deal.id.toString())
+            ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_wishlist_colored))
             tvWishlist.text = getText(R.string.fr_deal_add_to_bookmarks)
             it.context.toast(it.getString(R.string.removed_from_bookmarks))
         } else {
             if (!prefs.isLogin()) {
-                it.context.toast(R.string.toast_bookmark)
+                val dialogFragment = WishlistDialogFragment()
+                dialogFragment.show(requireActivity().supportFragmentManager, dialogFragment.tag)
             } else {
                 deal.isAddedToBookmark = true
-                getUserId()?.let { userId ->
-                    viewModel.addBookmark(userId, deal.id.toString())
-                }
+                viewModel.updateBookmark(deal.id.toString())
                 addToBookmarkCache(deal)
                 ivBookmark.setImageDrawable(it.getImageDrawable(R.drawable.ic_wishlist_on))
                 tvWishlist.text = getText(R.string.fr_deal_remove_from_bookmarks)

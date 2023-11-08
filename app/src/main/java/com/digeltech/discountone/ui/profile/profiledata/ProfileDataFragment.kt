@@ -18,13 +18,18 @@ import com.digeltech.discountone.domain.model.Gender
 import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.common.KEY_USER
 import com.digeltech.discountone.util.imagepicker.ImagePicker
-import com.digeltech.discountone.util.view.*
+import com.digeltech.discountone.util.view.getImageDrawable
+import com.digeltech.discountone.util.view.invisible
+import com.digeltech.discountone.util.view.setCircleImage
+import com.digeltech.discountone.util.view.setProfileImage
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import java.util.*
 
 @AndroidEntryPoint
 class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePickerDialog.OnDateSetListener {
@@ -104,7 +109,24 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
                 .start(binding.loaderProfileImage)
         }
         binding.tvDateOfBirth.setOnClickListener {
-            showDatePickerDialog(requireContext(), this)
+//            showDatePickerDialog(requireContext(), this)
+            val builder = MaterialDatePicker.Builder.datePicker()
+                .setTheme(R.style.ThemeOverlay_MaterialComponents_MaterialCalendar)
+            val picker = builder.build()
+
+            picker.addOnPositiveButtonClickListener { selection ->
+                val calendar = Calendar.getInstance(TimeZone.getTimeZone(TimeZone.getDefault().id))
+                calendar.timeInMillis = selection
+                val year = calendar.get(Calendar.YEAR)
+                val month = calendar.get(Calendar.MONTH)
+                val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+
+                val _month = if (month < 9) "0${month + 1}" else month + 1
+                val _dayOfMonth = if (dayOfMonth < 10) "0$dayOfMonth" else dayOfMonth
+
+                binding.tvDateOfBirth.text = "$year-$_month-$_dayOfMonth"
+            }
+            picker.show(parentFragmentManager, picker.toString())
         }
         binding.btnSave.setOnClickListener {
             if (!binding.loaderProfileImage.isVisible)

@@ -93,7 +93,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/common_offset_16dp"
         android:layout_marginTop="@dimen/common_offset_16dp"
-        android:text="@string/fr_wishlist_btn"
+        android:text="@string/search_by_deals"
         app:cornerRadius="@dimen/radius_12"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

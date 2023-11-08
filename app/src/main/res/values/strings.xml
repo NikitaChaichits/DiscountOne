@@ -37,8 +37,9 @@
     <string name="share_text">Look what I found in DiscouneOne %s</string>
     <string name="trow_off">Trow off</string>
     <string name="apply">Apply</string>
-    <string name="sign_up_promotion">Want to receive exclusive, limited-time deals with huge discounts in categories that interest you?</string>
+    <string name="sign_up_promotion">Unlock access to exclusive, limited-time deals with huge discounts in categories that interest you!</string>
     <string name="go_login">Go to Sign Up</string>
+    <string name="sign_up">Sign Up</string>
 
     <!-- Wildcard strings -->
     <string name="price_wildcard">₹%d</string>
@@ -57,7 +58,7 @@
 
     <!-- Start -->
     <string name="fr_start_title">From fashion to food, we\'ve got discounts for every mood!</string>
-    <string name="sign_in">Sign in</string>
+    <string name="sign_in">Sign In</string>
 
     <!-- New account -->
     <string name="new_account">New Account</string>
@@ -165,7 +166,7 @@
     <!-- Fragment Wishlist-->
     <string name="fr_wishlist_title">Wishlist</string>
     <string name="fr_wishlist_empty">You haven\'t added any offers to your Wishlist yet.</string>
-    <string name="fr_wishlist_btn">Search deal</string>
+    <string name="fr_wishlist_unauthorized">To add a product to your wishlist please log in or register.</string>
 
     <!-- Fragment Notifications-->
     <string name="fr_notifications_title">Notifications</string>

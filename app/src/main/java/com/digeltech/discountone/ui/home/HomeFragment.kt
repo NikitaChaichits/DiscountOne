@@ -116,18 +116,22 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
 
         // Linear horizontal RV for best deals
         bestDealsAdapter = LinearDealAdapter(
-            {
+            onClickListener = {
 //                viewModel.updateDealViewsClick(it.id.toString())
                 navigate(HomeFragmentDirections.toDealFragment(it))
             },
-            logger
+            onBookmarkClickListener = {
+                viewModel.updateBookmark(it.toString())
+            },
+            fragmentManager = requireActivity().supportFragmentManager,
+            logger = logger,
         )
         binding.rvBestDeals.adapter = bestDealsAdapter
 
         // Linear vertical RV for Categories with subcategories with Linear horizontal RV for deals
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         categoriesAdapter = SubcategoriesAdapter(
-            {
+            onMoreDealsClick = {
                 navigate(
                     HomeFragmentDirections.toCategoryFragment(
                         id = it.id,
@@ -136,11 +140,14 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
                     )
                 )
             },
-            {
-//                viewModel.updateDealViewsClick(it.id.toString())
+            onDealClick = {
                 navigate(HomeFragmentDirections.toDealFragment(it))
             },
-            logger
+            onBookmarkClickListener = {
+                viewModel.updateBookmark(it.toString())
+            },
+            fragmentManager = requireActivity().supportFragmentManager,
+            logger = logger,
         )
         binding.rvCategories.apply {
             adapter = categoriesAdapter
@@ -168,10 +175,14 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
 
         //Grid RV for searching results
         searchDealAdapter = GridDealAdapter(
-            {
+            onClickListener = {
                 navigate(HomeFragmentDirections.toDealFragment(it))
             },
-            logger
+            onBookmarkClickListener = {
+                viewModel.updateBookmark(it.toString())
+            },
+            fragmentManager = requireActivity().supportFragmentManager,
+            logger = logger,
         )
         binding.rvSearchDeals.addItemDecoration(
             GridOffsetDecoration(

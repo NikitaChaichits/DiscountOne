@@ -52,14 +52,17 @@ class SavedPublicationsFragment : BaseFragment(R.layout.fragment_wishlist), Sear
 
     private fun initAdapter() {
         adapter = SavedPublicationsAdapter(
-            {
+            onClickListener = {
                 navigate(SavedPublicationsFragmentDirections.toDealFragment(it))
             },
-            {
+            emptyListCallback = {
                 binding.grEmptyWishlist.visible()
                 binding.rvDeals.invisible()
             },
-            logger
+            onBookmarkClickListener = {
+                viewModel.updateBookmark(it.toString())
+            },
+            logger = logger,
         )
         binding.rvDeals.adapter = adapter
         binding.rvDeals.addItemDecoration(

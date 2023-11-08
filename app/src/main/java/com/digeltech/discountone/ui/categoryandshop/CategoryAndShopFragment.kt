@@ -76,10 +76,14 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
 
     private fun initAdapters() {
         dealAdapter = GridDealAdapter(
-            {
+            onClickListener = {
                 navigate(CategoryAndShopFragmentDirections.toDealFragment(it))
             },
-            logger
+            onBookmarkClickListener = {
+                viewModel.updateBookmark(it.toString())
+            },
+            fragmentManager = requireActivity().supportFragmentManager,
+            logger = logger,
         )
         binding.rvDeals.addItemDecoration(
             GridOffsetDecoration(
@@ -91,11 +95,15 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
         binding.rvDeals.adapter = dealAdapter
 
         searchAdapter = GridDealAdapter(
-            {
+            onClickListener = {
                 navigate(CategoryAndShopFragmentDirections.toDealFragment(it))
                 binding.searchView.setQuery("", false)
             },
-            logger
+            onBookmarkClickListener = {
+                viewModel.updateBookmark(it.toString())
+            },
+            fragmentManager = requireActivity().supportFragmentManager,
+            logger = logger,
         )
         binding.rvSearchDeals.addItemDecoration(
             GridOffsetDecoration(

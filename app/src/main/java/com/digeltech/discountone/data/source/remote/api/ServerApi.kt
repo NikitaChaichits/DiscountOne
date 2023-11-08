@@ -79,7 +79,7 @@ interface ServerApi {
     suspend fun getFavoritesDeals(@Query("id") userId: String): List<DealDto>
 
     @GET("/wp-json/theme/v1/users/upload_save_coupons")
-    suspend fun saveOrDeleteFavoriteDeal(
+    suspend fun saveOrDeleteBookmark(
         @Query("id") userId: String,
         @Query("id_coupons") dealId: String
     )

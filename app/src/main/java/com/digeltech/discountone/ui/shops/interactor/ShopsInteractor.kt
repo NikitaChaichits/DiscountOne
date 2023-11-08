@@ -8,4 +8,6 @@ interface ShopsInteractor {
     suspend fun getShopsList(): Result<List<Shop>>
 
     suspend fun searchDeals(searchText: String): List<Deal>
+
+    suspend fun updateBookmark(userId: String, dealId: String)
 }

@@ -45,10 +45,10 @@
         android:id="@+id/loaderProfileImage"
         android:layout_width="24dp"
         android:layout_height="24dp"
+        android:layout_marginTop="@dimen/common_offset_4dp"
         android:indeterminate="true"
         android:indeterminateDrawable="@drawable/progress_wheel"
         android:visibility="invisible"
-        android:layout_marginTop="@dimen/common_offset_4dp"
         app:layout_constraintEnd_toEndOf="@id/ivProfileImage"
         app:layout_constraintStart_toStartOf="@id/ivProfileImage"
         app:layout_constraintTop_toBottomOf="@id/ivProfileImage" />
@@ -137,7 +137,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/common_offset_32dp"
-        android:layout_marginTop="@dimen/common_offset_16dp"
+        android:layout_marginTop="@dimen/common_offset_12dp"
         android:text="@string/female"
         app:layout_constraintStart_toEndOf="@id/ivGenderMale"
         app:layout_constraintTop_toBottomOf="@id/tvGenderTitle" />

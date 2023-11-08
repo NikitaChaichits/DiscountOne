@@ -126,15 +126,9 @@ class DealsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun addDealToBookmark(userId: String, dealId: String): Unit = withContext(Dispatchers.IO) {
+    override suspend fun updateBookmark(userId: String, dealId: String): Unit = withContext(Dispatchers.IO) {
         runCatching {
-            api.saveOrDeleteFavoriteDeal(userId = userId, dealId = dealId)
-        }
-    }
-
-    override suspend fun deleteDealFromBookmark(userId: String, dealId: String): Unit = withContext(Dispatchers.IO) {
-        runCatching {
-            api.saveOrDeleteFavoriteDeal(userId = userId, dealId = dealId)
+            api.saveOrDeleteBookmark(userId = userId, dealId = dealId)
         }
     }
 

@@ -29,4 +29,6 @@ interface CategoryAndShopInteractor {
         categoryType: CategoryType,
         id: String
     ): Result<List<Deal>>
+
+    suspend fun updateBookmark(userId: String, dealId: String)
 }
