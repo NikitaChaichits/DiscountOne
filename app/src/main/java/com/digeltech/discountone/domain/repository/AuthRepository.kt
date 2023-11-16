@@ -26,4 +26,8 @@ interface AuthRepository {
         gender: String?,
     ): Result<User>
 
+    suspend fun resetPasswordFirstStep(email: String): Result<Unit>
+
+    suspend fun resetPasswordSecondStep(userId: String, password: String): Result<Unit>
+
 }

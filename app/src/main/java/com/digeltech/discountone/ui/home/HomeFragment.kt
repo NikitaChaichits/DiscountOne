@@ -26,7 +26,6 @@ import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-
 @AndroidEntryPoint
 class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTextListener {
 

@@ -51,6 +51,7 @@ class OnboardingFragment : BaseFragment(R.layout.fragment_onboarding), DatePicke
                 binding.ivProfileImage.setCircleImage(uri)
                 userPhotoUri = uri
                 binding.loaderProfileImage.invisible()
+                checkIsContinueButtonEnable()
             }
             ImagePicker.RESULT_ERROR -> {
                 toast(ImagePicker.getError(data))
@@ -74,17 +75,19 @@ class OnboardingFragment : BaseFragment(R.layout.fragment_onboarding), DatePicke
         }
         binding.tvDateOfBirth.setOnClickListener {
 //            showDatePickerDialog(requireContext(), this)
-            showMaterialDatePickerDialog(binding.tvDateOfBirth, parentFragmentManager)
+            showMaterialDatePickerDialog(binding.tvDateOfBirth, parentFragmentManager) { checkIsContinueButtonEnable() }
         }
         binding.ivGenderMale.setOnClickListener {
             binding.ivGenderMale.setImageDrawable(view?.getImageDrawable(R.drawable.ic_gender_selected))
             binding.ivGenderFemale.setImageDrawable(view?.getImageDrawable(R.drawable.ic_gender_not_selected))
             gender = Gender.MALE
+            checkIsContinueButtonEnable()
         }
         binding.ivGenderFemale.setOnClickListener {
             binding.ivGenderFemale.setImageDrawable(view?.getImageDrawable(R.drawable.ic_gender_selected))
             binding.ivGenderMale.setImageDrawable(view?.getImageDrawable(R.drawable.ic_gender_not_selected))
             gender = Gender.FEMALE
+            checkIsContinueButtonEnable()
         }
 //        binding.etCity.doAfterTextChanged {
 //            checkIsContinueButtonEnable()
@@ -135,7 +138,7 @@ class OnboardingFragment : BaseFragment(R.layout.fragment_onboarding), DatePicke
     }
 
     private fun checkIsContinueButtonEnable() {
-        if (binding.tvDateOfBirth.text.isNotEmpty()) {
+        if (binding.tvDateOfBirth.text.isNotEmpty() && gender != null) {
             binding.btnContinue.enable()
         } else {
             binding.btnContinue.disable()

@@ -70,4 +70,18 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun resetPasswordFirstStep(email: String): Result<Unit> = withContext(Dispatchers.IO) {
+        runCatching {
+            api.resetPasswordFirstStep(email)
+        }
+    }
+
+    override suspend fun resetPasswordSecondStep(userId: String, password: String): Result<Unit> =
+        withContext(Dispatchers.IO) {
+            runCatching {
+                api.resetPasswordSecondStep(userId, password)
+            }
+        }
+
+
 }

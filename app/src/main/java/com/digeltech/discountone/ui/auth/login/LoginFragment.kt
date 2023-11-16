@@ -11,7 +11,10 @@ import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentLoginBinding
 import com.digeltech.discountone.ui.common.logLogin
 import com.digeltech.discountone.util.validation.isValidEmail
-import com.digeltech.discountone.util.view.*
+import com.digeltech.discountone.util.view.disable
+import com.digeltech.discountone.util.view.enable
+import com.digeltech.discountone.util.view.invisible
+import com.digeltech.discountone.util.view.visible
 import com.facebook.appevents.AppEventsLogger
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -48,13 +51,9 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
             navigate(R.id.newAccountFragment)
         }
         binding.tvForgotPassword.setOnClickListener {
-            binding.grContent.invisible()
-            binding.tvPasswordError.gone()
-            binding.tvForgotPassword.gone()
-            binding.webView.openWebView("https://discount.one/forgot-password", binding.ivLoading)
+            navigate(R.id.forgotPasswordFragment)
         }
         binding.etEmail.doAfterTextChanged { checkLoginButtonEnable() }
-//        binding.etPassword.doAfterTextChanged { checkLoginButtonEnable() }
     }
 
     private fun checkLoginButtonEnable() {

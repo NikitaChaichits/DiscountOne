@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/common_offset_4dp"
         android:textColor="@color/defaultColor"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,8 +30,8 @@
 
     <ImageView
         android:id="@+id/ivIcon"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         app:layout_constraintBottom_toBottomOf="@id/bg"
         app:layout_constraintStart_toStartOf="@id/bg"
         app:layout_constraintTop_toTopOf="@id/bg"

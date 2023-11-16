@@ -58,16 +58,18 @@ class CategoryAndShopViewModel @Inject constructor(
                         _categoryOrShopNames.value = it
                     }
             }
-            launchWithLoading {
-                interactor.getInitialDeals(currentCategoryType, id)
-                    .onSuccess {
-                        _deals.postValue(it.toParcelableList())
-                        allDeals.addAll(it.toParcelableList())
-                    }
-                    .onFailure {
-                        error.postValue(it.toString())
-                    }
-            }
+
+            if (allDeals.isEmpty())
+                launchWithLoading {
+                    interactor.getInitialDeals(currentCategoryType, id)
+                        .onSuccess {
+                            _deals.postValue(it.toParcelableList())
+                            allDeals.addAll(it.toParcelableList())
+                        }
+                        .onFailure {
+                            error.postValue(it.toString())
+                        }
+                }
         }
     }
 

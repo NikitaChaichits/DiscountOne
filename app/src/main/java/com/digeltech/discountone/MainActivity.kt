@@ -3,7 +3,9 @@ package com.digeltech.discountone
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -12,12 +14,13 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import androidx.navigation.ui.setupWithNavController
 import com.digeltech.discountone.data.source.local.SharedPreferencesDataSource
 import com.digeltech.discountone.databinding.ActivityMainBinding
-import com.digeltech.discountone.ui.common.getUserId
 import com.digeltech.discountone.ui.home.KEY_HOMEPAGE_DATA
 import com.digeltech.discountone.util.log
 import com.digeltech.discountone.util.view.toast
@@ -34,7 +37,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
-import com.google.firebase.messaging.ktx.messaging
 import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -107,17 +109,6 @@ class MainActivity : AppCompatActivity() {
             log("Firebase token $token")
             Hawk.put("Firebase", token)
         })
-
-        if (getUserId().isNullOrEmpty()) {
-            Firebase.messaging.subscribeToTopic("unauthorized")
-                .addOnCompleteListener { task ->
-                    var msg = "Subscribed unauthorized"
-                    if (!task.isSuccessful) {
-                        msg = "Subscribe failed"
-                    }
-                    log(msg)
-                }
-        }
     }
 
     override fun onResume() {
@@ -171,56 +162,8 @@ class MainActivity : AppCompatActivity() {
         val navGraph = navController.navInflater.inflate(R.navigation.mobile_navigation)
 
         intent.apply {
-            if (extras != null && extras!!.containsKey("fragment")) {
-                val checkLogin = getStringExtra("checkLogin").toBoolean()
-                if (!checkLogin || (checkLogin && prefs.isLogin())) {
-                    when (getStringExtra("fragment")) {
-                        "ShopsFragment" -> {
-                            navGraph.setStartDestination(R.id.shopsFragment)
-                        }
-                        "CategoriesFragment" -> {
-                            navGraph.setStartDestination(R.id.categoriesFragment)
-                        }
-                        "CategoryFragment", "ShopFragment" -> {
-                            val id = getIntExtra("id", 0)
-                            val title = getStringExtra("title")
-                            val slug = getStringExtra("slug")
-                            val isFromCategory = getStringExtra("isFromCategory").toBoolean()
-
-                            if (isFromCategory)
-                                navGraph.setStartDestination(R.id.categoriesFragment)
-                            else
-                                navGraph.setStartDestination(R.id.shopsFragment)
-
-                            val bundle = Bundle().apply {
-                                putInt("id", id)
-                                putString("title", title)
-                                putString("slug", slug)
-                                putBoolean("isFromCategory", isFromCategory)
-                            }
-                            navController.graph = navGraph
-                            navController.navigate(R.id.categoryAndShopFragment, bundle)
-                        }
-                        "DealFragment" -> {
-                            val id = getStringExtra("id")?.toInt() ?: 0
-                            val bundle = Bundle().apply {
-                                putParcelable("deal", null)
-                                putInt("dealId", id)
-                            }
-                            navGraph.setStartDestination(R.id.homeFragment)
-                            navController.graph = navGraph
-                            navController.navigate(R.id.dealFragment, bundle)
-                        }
-                        else -> {
-                            navGraph.setStartDestination(R.id.splashFragment)
-                        }
-                    }
-                } else {
-                    navGraph.setStartDestination(R.id.splashFragment)
-                }
-            } else {
-                navGraph.setStartDestination(R.id.splashFragment)
-            }
+            checkNotification(navGraph, navController)
+            checkDeeplink(navGraph, navController)
             navController.graph = navGraph
         }
 
@@ -272,6 +215,83 @@ class MainActivity : AppCompatActivity() {
                     }
                     else -> false
                 }
+            }
+        }
+    }
+
+    private fun Intent.checkNotification(
+        navGraph: NavGraph,
+        navController: NavController
+    ) {
+        if (extras != null && extras!!.containsKey("fragment")) {
+            val checkLogin = getStringExtra("checkLogin").toBoolean()
+            if (!checkLogin || (checkLogin && prefs.isLogin())) {
+                when (getStringExtra("fragment")) {
+                    "ShopsFragment" -> {
+                        navGraph.setStartDestination(R.id.shopsFragment)
+                    }
+                    "CategoriesFragment" -> {
+                        navGraph.setStartDestination(R.id.categoriesFragment)
+                    }
+                    "CategoryFragment", "ShopFragment" -> {
+                        val id = getIntExtra("id", 0)
+                        val title = getStringExtra("title")
+                        val slug = getStringExtra("slug")
+                        val isFromCategory = getStringExtra("isFromCategory").toBoolean()
+
+                        if (isFromCategory)
+                            navGraph.setStartDestination(R.id.categoriesFragment)
+                        else
+                            navGraph.setStartDestination(R.id.shopsFragment)
+
+                        val bundle = Bundle().apply {
+                            putInt("id", id)
+                            putString("title", title)
+                            putString("slug", slug)
+                            putBoolean("isFromCategory", isFromCategory)
+                        }
+                        navController.graph = navGraph
+                        navController.navigate(R.id.categoryAndShopFragment, bundle)
+                    }
+                    "DealFragment" -> {
+                        val id = getStringExtra("id")?.toInt() ?: 0
+                        val bundle = Bundle().apply {
+                            putParcelable("deal", null)
+                            putInt("dealId", id)
+                        }
+                        navGraph.setStartDestination(R.id.homeFragment)
+                        navController.graph = navGraph
+                        navController.navigate(R.id.dealFragment, bundle)
+                    }
+                    else -> {
+                        navGraph.setStartDestination(R.id.splashFragment)
+                    }
+                }
+            } else {
+                navGraph.setStartDestination(R.id.splashFragment)
+            }
+        } else {
+            navGraph.setStartDestination(R.id.splashFragment)
+        }
+    }
+
+    private fun checkDeeplink(navGraph: NavGraph, navController: NavController) {
+        val appLinkData: Uri? = intent.data
+        if (Intent.ACTION_VIEW == intent.action && appLinkData != null) {
+            val pathSegments = appLinkData.pathSegments
+            val userId = appLinkData.pathSegments.lastOrNull()
+
+            if (pathSegments.contains("user_update_password") && !prefs.isLogin()) {
+                navGraph.setStartDestination(R.id.homeFragment)
+                navController.graph = navGraph
+
+                val bundle = Bundle().apply {
+                    putString("userId", userId)
+                }
+                navController.graph = navGraph
+                navController.navigate(R.id.recoveryPasswordFragment, bundle)
+            } else {
+                navGraph.setStartDestination(R.id.splashFragment)
             }
         }
     }

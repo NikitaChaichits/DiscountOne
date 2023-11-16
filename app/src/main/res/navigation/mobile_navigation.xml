@@ -293,9 +293,6 @@
             app:destination="@id/recoveryPasswordFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left">
-            <argument
-                android:name="email"
-                app:argType="string" />
         </action>
     </fragment>
 
@@ -304,13 +301,11 @@
         android:name="com.digeltech.discountone.ui.auth.recovery.RecoveryPasswordFragment"
         android:label="RecoveryPasswordFragment"
         tools:layout="@layout/fragment_recovery_password">
-        <action
-            android:id="@+id/toLoginFragment"
-            app:destination="@id/loginFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left" />
+        <deepLink
+            android:id="@+id/deepLinkToRecoveryPassword"
+            app:uri="https://link.discount.one/user_update_password/{userId}" />
         <argument
-            android:name="email"
+            android:name="userId"
             app:argType="string" />
     </fragment>
 

@@ -24,7 +24,7 @@ ext {
 
     def appVersionMajor = 1
     def appVersionPatch = 2
-    def appVersionBuild = 2
+    def appVersionBuild = 5
 
     appConfig = [
             applicationId: 'com.digeltech.discountone',

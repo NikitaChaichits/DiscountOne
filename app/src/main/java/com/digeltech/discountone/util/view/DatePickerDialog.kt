@@ -22,7 +22,7 @@ fun showDatePickerDialog(context: Context, listener: DatePickerDialog.OnDateSetL
     dpd.show()
 }
 
-fun showMaterialDatePickerDialog(textview: TextView, fragmentManager: FragmentManager) {
+fun showMaterialDatePickerDialog(textview: TextView, fragmentManager: FragmentManager, checkIsBtnEnable: () -> Unit) {
     val constraints = CalendarConstraints.Builder()
         .setValidator(DateValidatorPointBackward.now())
         .build()
@@ -44,6 +44,7 @@ fun showMaterialDatePickerDialog(textview: TextView, fragmentManager: FragmentMa
         val _dayOfMonth = if (dayOfMonth < 10) "0$dayOfMonth" else dayOfMonth
 
         textview.text = "$year-$_month-$_dayOfMonth"
+        checkIsBtnEnable()
     }
     picker.show(fragmentManager, picker.toString())
 }

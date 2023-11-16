@@ -24,18 +24,6 @@ class MyWebViewClient(private val loader: View, private val webView: WebView) : 
         loader.gone()
         webView.visible()
     }
-
-//    override fun onPageFinished(view: WebView, url: String) {
-//        super.onPageFinished(view, url)
-//        view.evaluateJavascript(
-//            "(function() { return navigator.userAgent; })();"
-//        ) { userAgent ->
-//            val deviceId = getAndroidID(webView.context)
-//            val newUserAgent = "$userAgent DiscountApp/$deviceId"
-//            view.settings.userAgentString = newUserAgent
-//            log(newUserAgent)
-//        }
-//    }
 }
 
 fun getAndroidID(context: Context): String? {

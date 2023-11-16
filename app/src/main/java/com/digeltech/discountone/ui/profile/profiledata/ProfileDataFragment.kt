@@ -105,7 +105,7 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
         }
         binding.tvDateOfBirth.setOnClickListener {
 //            showDatePickerDialog(requireContext(), this)
-            showMaterialDatePickerDialog(binding.tvDateOfBirth, parentFragmentManager)
+            showMaterialDatePickerDialog(binding.tvDateOfBirth, parentFragmentManager) {}
         }
         binding.btnSave.setOnClickListener {
             if (!binding.loaderProfileImage.isVisible)

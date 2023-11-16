@@ -69,7 +69,7 @@
     <string name="password_info">The password must be at least six characters long. It must contain at least one capital letter and one number.</string>
     <string name="password_error">The password must be at least six characters long. It must contain at least one capital letter and one number.</string>
     <string name="create_new_account">Create new account</string>
-    <string name="agree_text">By clicking on the "Register" button, you agree with the personal data processing policy and the rules for using the service.</string>
+    <string name="agree_text">I am agree with the personal data processing policy and the rules for using the service.</string>
 
     <!-- Log In -->
     <string name="log_in_title">My account</string>
@@ -84,8 +84,13 @@
     <!-- Recovery password -->
     <string name="recovery_pass_title">We\'ve sent you an email with a link to reset your password</string>
     <string name="recovery_pass_description">Check your spam and promotions folder if it doesn\'t appear in your main mailbox</string>
-    <string name="btn_go_to_sign_in">Back to sign in</string>
-    <string name="btn_resend_email">Didn’t receive the email?</string>
+    <string name="btn_go_to_sign_in">Back to Sign In</string>
+    <string name="btn_resend_email">Didn\'t receive the email?</string>
+    <string name="new_password">New password</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="enter_new_password">Enter a new password</string>
+    <string name="error_password_repeat">Passwords don\'t match</string>
+    <string name="reset">Reset</string>
 
     <!-- Additional info -->
     <string name="additional_information_title">Additional Information</string>

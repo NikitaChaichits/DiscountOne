@@ -68,6 +68,10 @@ class NewAccountFragment : BaseFragment(R.layout.fragment_new_account) {
                 }
             }
         }
+        binding.tvAgree.setOnClickListener {
+            it.openLink(getString(R.string.privacy_policy_link))
+        }
+        binding.cbAgree.setOnClickListener { checkIsCreateButtonEnable() }
     }
 
     private fun observeData() {
@@ -95,6 +99,7 @@ class NewAccountFragment : BaseFragment(R.layout.fragment_new_account) {
             if (!etName.text.isNullOrEmpty()
                 && isValidEmail(etEmail.text.toString().trim())
                 && isValidPassword(etPassword.text.toString().trim())
+                && cbAgree.isChecked
             ) {
                 btnCreateAccount.enable()
             } else {

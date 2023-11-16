@@ -42,4 +42,15 @@ interface AuthApi {
         @Query("nickname") nickname: String?,
         @Query("gender") gender: String?,
     ): UserDto
+
+    @POST("/wp-json/theme/v1/forget_password")
+    suspend fun resetPasswordFirstStep(
+        @Query("mail") email: String,
+    )
+
+    @POST("/wp-json/theme/v1/upload_user_password")
+    suspend fun resetPasswordSecondStep(
+        @Query("id") id: String,
+        @Query("password") password: String
+    )
 }

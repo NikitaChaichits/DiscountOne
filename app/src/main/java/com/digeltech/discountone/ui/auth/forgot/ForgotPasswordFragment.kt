@@ -8,13 +8,12 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.discountone.R
 import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentForgotPasswordBinding
-import com.digeltech.discountone.util.log
 import com.digeltech.discountone.util.validation.isValidEmail
 import com.digeltech.discountone.util.view.disable
 import com.digeltech.discountone.util.view.enable
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ForgotPasswordFragment : BaseFragment(R.layout.fragment_forgot_password) {
 
     private val binding by viewBinding(FragmentForgotPasswordBinding::bind)
@@ -24,6 +23,7 @@ class ForgotPasswordFragment : BaseFragment(R.layout.fragment_forgot_password) {
         super.onViewCreated(view, savedInstanceState)
 
         initListeners()
+        observeData()
     }
 
     private fun initListeners() {
@@ -38,20 +38,16 @@ class ForgotPasswordFragment : BaseFragment(R.layout.fragment_forgot_password) {
             }
         }
         binding.btnSendReset.setOnClickListener {
-            sendPasswordReset(binding.etEmail.text.toString().trim())
+            viewModel.resetPassword(binding.etEmail.text.toString().trim())
         }
     }
 
-    private fun sendPasswordReset(email: String) {
-        Firebase.auth.sendPasswordResetEmail(email)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val action = ForgotPasswordFragmentDirections.toRecoveryPasswordFragment(email)
-                    navigate(action)
-                } else {
-                    toast("Failed to recovery password. Try again later")
-                    log("recovery password:failure ${task.exception}")
-                }
-            }
+    private fun observeData() {
+        viewModel.success.observe(viewLifecycleOwner) {
+            if (it)
+                showDialog(getString(R.string.recovery_pass_title))
+            else
+                showDialog("${binding.etEmail.text.toString().trim()} user does not exist")
+        }
     }
 }

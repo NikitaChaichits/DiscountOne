@@ -42,8 +42,8 @@
             android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
-            android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ " />
+            android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
+            android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -60,8 +60,8 @@
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890@.-_" />
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890@.-_"
+            android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -103,24 +103,37 @@
         android:visibility="invisible"
         app:layout_constraintTop_toBottomOf="@id/tilPassword" />
 
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/cbAgree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_offset_16dp"
+        android:layout_marginStart="@dimen/common_offset_24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvPasswordInfo" />
+
+    <TextView
+        android:id="@+id/tvAgree"
+        style="@style/TextRegular.Description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/common_offset_32dp"
+        android:text="@string/agree_text"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/cbAgree"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/cbAgree"
+        app:layout_constraintBottom_toBottomOf="@id/cbAgree" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCreateAccount"
         style="@style/ButtonColored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_offset_24dp"
-        android:text="@string/create_new_account"
         android:enabled="false"
+        android:text="@string/create_new_account"
         app:cornerRadius="@dimen/radius_12"
-        app:layout_constraintTop_toBottomOf="@id/tvPasswordInfo" />
-
-    <TextView
-        android:id="@+id/tvAgree"
-        style="@style/TextRegular.Description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_offset_24dp"
-        android:text="@string/agree_text"
-        app:layout_constraintTop_toBottomOf="@id/btnCreateAccount" />
+        app:layout_constraintTop_toBottomOf="@id/tvAgree" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
