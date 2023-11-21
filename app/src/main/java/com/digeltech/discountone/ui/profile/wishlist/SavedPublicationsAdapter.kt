@@ -11,13 +11,9 @@ import com.digeltech.discountone.R
 import com.digeltech.discountone.databinding.RvDealWishlistBinding
 import com.digeltech.discountone.ui.common.addToBookmarkCache
 import com.digeltech.discountone.ui.common.getCategoryNameById
-import com.digeltech.discountone.ui.common.logShopNow
 import com.digeltech.discountone.ui.common.model.DealParcelable
 import com.digeltech.discountone.ui.common.removeFromBookmarkCache
-import com.digeltech.discountone.util.capitalizeFirstLetter
-import com.digeltech.discountone.util.copyTextToClipboard
-import com.digeltech.discountone.util.getDiscountText
-import com.digeltech.discountone.util.isNotNullAndNotEmpty
+import com.digeltech.discountone.util.*
 import com.digeltech.discountone.util.view.*
 import com.facebook.appevents.AppEventsLogger
 

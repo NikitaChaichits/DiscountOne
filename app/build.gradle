@@ -141,7 +141,7 @@ dependencies {
     // don't update to 16.0.0 version
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
 
-    implementation 'com.github.prolificinteractive:material-calendarview:2.0.0'
+    implementation 'com.android.installreferrer:installreferrer:2.2'
 }
 
 android.applicationVariants.all { variant ->

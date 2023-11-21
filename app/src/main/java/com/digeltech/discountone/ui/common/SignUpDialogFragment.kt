@@ -1,4 +1,4 @@
-package com.digeltech.discountone
+package com.digeltech.discountone.ui.common
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.digeltech.discountone.R
 import com.digeltech.discountone.databinding.DialogFragmentSignUpBinding
 
 class SignUpDialogFragment : DialogFragment() {

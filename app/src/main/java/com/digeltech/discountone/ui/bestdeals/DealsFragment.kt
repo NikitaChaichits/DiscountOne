@@ -15,8 +15,8 @@ import com.digeltech.discountone.domain.model.Item
 import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.common.KEY_USER
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
-import com.digeltech.discountone.ui.common.logSearch
 import com.digeltech.discountone.ui.coupons.CouponsFragmentDirections
+import com.digeltech.discountone.util.logSearch
 import com.digeltech.discountone.util.view.*
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
 import com.facebook.appevents.AppEventsLogger

@@ -1,4 +1,4 @@
-package com.digeltech.discountone.ui.common
+package com.digeltech.discountone.util
 
 import android.os.Bundle
 import com.facebook.appevents.AppEventsLogger
@@ -7,22 +7,23 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 
 const val ANALYTICS_SHOP_NOW = "shop_now"
+const val PARAMETER_URL = "show_now_url"
 const val ANALYTICS_SHOW_CATEGORY_DEALS = "show_category_deals"
 const val ANALYTICS_SHOW_SHOP_DEALS = "show_shop_deals"
 const val ANALYTICS_OPEN_DEAL = "open_deal"
-
-const val PARAMETER_URL = "url"
+const val PARAMETER_EMAIL_LOGIN = "email_login"
+const val PARAMETER_EMAIL_REGISTER = "email_register"
 
 fun logSignUp(
     email: String,
     logger: AppEventsLogger
 ) {
     val params = Bundle()
-    params.putString("email", email)
+    params.putString(PARAMETER_EMAIL_REGISTER, email)
     Firebase.analytics.logEvent("complete_registration", params)
 
     val facebookParams = Bundle()
-    params.putString("email", email)
+    params.putString(PARAMETER_EMAIL_REGISTER, email)
     logger.logEvent("complete_registration", facebookParams)
 }
 
@@ -31,11 +32,11 @@ fun logLogin(
     logger: AppEventsLogger
 ) {
     val params = Bundle()
-    params.putString("email", email)
+    params.putString(PARAMETER_EMAIL_LOGIN, email)
     Firebase.analytics.logEvent("login", params)
 
     val facebookParams = Bundle()
-    params.putString("email", email)
+    params.putString(PARAMETER_EMAIL_LOGIN, email)
     logger.logEvent("login", facebookParams)
 }
 
@@ -69,7 +70,7 @@ fun logOpenShopDeals(
     logger: AppEventsLogger
 ) {
     val params = Bundle()
-    params.putString(FirebaseAnalytics.Param.ITEM_NAME, shopName)
+    params.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, shopName)
     Firebase.analytics.logEvent(ANALYTICS_SHOW_SHOP_DEALS, params)
 
     val facebookParams = Bundle()
@@ -82,7 +83,7 @@ fun logOpenCategoryDeals(
     logger: AppEventsLogger
 ) {
     val params = Bundle()
-    params.putString(FirebaseAnalytics.Param.ITEM_NAME, categoryName)
+    params.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, categoryName)
     Firebase.analytics.logEvent(ANALYTICS_SHOW_CATEGORY_DEALS, params)
 
     val facebookParams = Bundle()
@@ -117,7 +118,7 @@ fun logSearch(
     logger: AppEventsLogger
 ) {
     val params = Bundle()
-    params.putString(FirebaseAnalytics.Param.ITEM_NAME, searchText)
+    params.putString(FirebaseAnalytics.Param.SEARCH_TERM, searchText)
     Firebase.analytics.logEvent(FirebaseAnalytics.Event.SEARCH, params)
 
     val facebookParams = Bundle()

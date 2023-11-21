@@ -9,7 +9,7 @@ import com.digeltech.discountone.R
 import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentCouponsBinding
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
-import com.digeltech.discountone.ui.common.logSearch
+import com.digeltech.discountone.util.logSearch
 import com.digeltech.discountone.util.view.invisible
 import com.digeltech.discountone.util.view.px
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration

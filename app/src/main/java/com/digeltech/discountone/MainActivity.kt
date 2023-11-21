@@ -19,8 +19,12 @@ import androidx.navigation.NavGraph
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import androidx.navigation.ui.setupWithNavController
+import com.android.installreferrer.api.InstallReferrerClient
+import com.android.installreferrer.api.InstallReferrerStateListener
+import com.android.installreferrer.api.ReferrerDetails
 import com.digeltech.discountone.data.source.local.SharedPreferencesDataSource
 import com.digeltech.discountone.databinding.ActivityMainBinding
+import com.digeltech.discountone.ui.common.SignUpDialogFragment
 import com.digeltech.discountone.ui.home.KEY_HOMEPAGE_DATA
 import com.digeltech.discountone.util.log
 import com.digeltech.discountone.util.view.toast
@@ -49,6 +53,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var prefs: SharedPreferencesDataSource
     private lateinit var appUpdateManager: AppUpdateManager
+    private lateinit var referrerClient: InstallReferrerClient
 
     @Inject
     lateinit var logger: AppEventsLogger
@@ -84,6 +89,40 @@ class MainActivity : AppCompatActivity() {
         checkForUpdates()
         setupNavigation()
         setupFCM()
+        registerReceiver()
+    }
+
+    private fun registerReceiver() {
+        referrerClient = InstallReferrerClient.newBuilder(this).build()
+        referrerClient.startConnection(object : InstallReferrerStateListener {
+            override fun onInstallReferrerSetupFinished(responseCode: Int) {
+                when (responseCode) {
+                    InstallReferrerClient.InstallReferrerResponse.OK -> {
+                        val response: ReferrerDetails = referrerClient.installReferrer
+                        val referrerUrl: String = response.installReferrer
+
+                        val uri = Uri.parse(referrerUrl)
+                        val referrerCode = uri.getQueryParameter("referrer")
+
+                        log("Referrer code: $referrerCode")
+
+                        if (referrerCode != null) {
+                            val bundle = Bundle()
+                            bundle.putString("referrer", referrerCode)
+                            Firebase.analytics.logEvent("install_referrer", bundle)
+                        }
+                    }
+                    InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED -> {
+                        toast("Referrer feature not supported.")
+                    }
+                }
+            }
+
+            override fun onInstallReferrerServiceDisconnected() {
+                // Try to restart the connection on the next request to
+                // Google Play by calling the startConnection() method.
+            }
+        })
     }
 
     private fun setupFCM() {
@@ -107,7 +146,6 @@ class MainActivity : AppCompatActivity() {
 
             val token = task.result
             log("Firebase token $token")
-            Hawk.put("Firebase", token)
         })
     }
 

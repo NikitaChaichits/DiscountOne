@@ -11,9 +11,9 @@ import com.digeltech.discountone.databinding.FragmentShopsBinding
 import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.common.KEY_USER
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
-import com.digeltech.discountone.ui.common.logOpenShopDeals
 import com.digeltech.discountone.ui.home.HomeFragmentDirections
 import com.digeltech.discountone.ui.shops.adapter.ShopAdapter
+import com.digeltech.discountone.util.logOpenShopDeals
 import com.digeltech.discountone.util.view.*
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
 import com.facebook.appevents.AppEventsLogger

@@ -9,7 +9,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.discountone.R
 import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentLoginBinding
-import com.digeltech.discountone.ui.common.logLogin
+import com.digeltech.discountone.util.logLogin
 import com.digeltech.discountone.util.validation.isValidEmail
 import com.digeltech.discountone.util.view.disable
 import com.digeltech.discountone.util.view.enable

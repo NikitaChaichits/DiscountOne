@@ -17,10 +17,7 @@ import com.digeltech.discountone.databinding.FragmentDealBinding
 import com.digeltech.discountone.ui.common.*
 import com.digeltech.discountone.ui.common.adapter.LinearDealAdapter
 import com.digeltech.discountone.ui.common.model.DealParcelable
-import com.digeltech.discountone.util.capitalizeFirstLetter
-import com.digeltech.discountone.util.copyTextToClipboard
-import com.digeltech.discountone.util.getDiscountText
-import com.digeltech.discountone.util.isNotNullAndNotEmpty
+import com.digeltech.discountone.util.*
 import com.digeltech.discountone.util.time.formatDate
 import com.digeltech.discountone.util.view.*
 import com.facebook.appevents.AppEventsLogger

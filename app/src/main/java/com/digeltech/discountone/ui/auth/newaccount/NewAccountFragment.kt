@@ -10,7 +10,7 @@ import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentNewAccountBinding
 import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.common.KEY_USER
-import com.digeltech.discountone.ui.common.logSignUp
+import com.digeltech.discountone.util.logSignUp
 import com.digeltech.discountone.util.time.getCurrentDateTime
 import com.digeltech.discountone.util.validation.PASSWORD_MIN
 import com.digeltech.discountone.util.validation.isValidEmail

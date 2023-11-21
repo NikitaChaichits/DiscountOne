@@ -22,9 +22,19 @@
         android:layout_marginEnd="@dimen/common_offset_16dp"
         android:background="@drawable/shape_border"
         android:queryHint="Search by ads"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/ivProfile"
         app:layout_constraintStart_toEndOf="@id/ivBack"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivProfile"
+        android:layout_width="@dimen/common_offset_40dp"
+        android:layout_height="@dimen/common_offset_40dp"
+        android:layout_marginTop="@dimen/common_offset_8dp"
+        android:layout_marginEnd="@dimen/common_offset_16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_avatar" />
 
     <TextView
         android:id="@+id/tvSearchResultEmpty"

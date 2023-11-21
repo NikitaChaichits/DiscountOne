@@ -14,9 +14,9 @@ import com.digeltech.discountone.ui.common.KEY_USER
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
 import com.digeltech.discountone.ui.common.adapter.LinearDealAdapter
 import com.digeltech.discountone.ui.common.getShopIdByName
-import com.digeltech.discountone.ui.common.logSearch
 import com.digeltech.discountone.ui.home.adapter.BannerAdapter
 import com.digeltech.discountone.ui.home.adapter.SubcategoriesAdapter
+import com.digeltech.discountone.util.logSearch
 import com.digeltech.discountone.util.view.*
 import com.digeltech.discountone.util.view.recycler.AutoScrollHelper
 import com.digeltech.discountone.util.view.recycler.CyclicScrollHelper

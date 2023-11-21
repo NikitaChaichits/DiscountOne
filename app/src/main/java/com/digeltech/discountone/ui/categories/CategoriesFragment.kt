@@ -12,9 +12,9 @@ import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.categories.adapter.CategoryAdapter
 import com.digeltech.discountone.ui.common.KEY_USER
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
-import com.digeltech.discountone.ui.common.logOpenCategoryDeals
-import com.digeltech.discountone.ui.common.logSearch
 import com.digeltech.discountone.ui.home.HomeFragmentDirections
+import com.digeltech.discountone.util.logOpenCategoryDeals
+import com.digeltech.discountone.util.logSearch
 import com.digeltech.discountone.util.view.*
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
 import com.facebook.appevents.AppEventsLogger
