@@ -12,14 +12,14 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.discountone.R
 import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentCategoryAndShopBinding
+import com.digeltech.discountone.domain.model.User
+import com.digeltech.discountone.ui.common.KEY_USER
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
 import com.digeltech.discountone.util.logSearch
-import com.digeltech.discountone.util.view.gone
-import com.digeltech.discountone.util.view.invisible
-import com.digeltech.discountone.util.view.px
+import com.digeltech.discountone.util.view.*
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
-import com.digeltech.discountone.util.view.visible
 import com.facebook.appevents.AppEventsLogger
+import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -49,6 +49,7 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
         else getString(R.string.fr_deals_filter_categories)
         viewModel.initScreenData(args.slug, args.isFromCategory, args.id.toString())
 
+        loadProfileImage()
         observeData()
         initAdapters()
         initListeners()
@@ -128,6 +129,13 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
             setOnClickListener { onActionViewExpanded() }
             setOnQueryTextListener(this@CategoryAndShopFragment)
             queryHint = getString(R.string.search_by_deals)
+        }
+        binding.ivProfile.setOnClickListener {
+            if (prefs.isLogin()) {
+                navigate(R.id.profileFragment)
+            } else {
+                navigate(R.id.startFragment)
+            }
         }
         binding.spinnerSortingType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -211,6 +219,14 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
         viewModel.filteringError.observe(viewLifecycleOwner) {
             binding.tvFilteringResultEmpty.visible()
             binding.rvDeals.invisible()
+        }
+    }
+
+    private fun loadProfileImage() {
+        Hawk.get<User>(KEY_USER)?.let {
+            it.avatarUrl?.let { url ->
+                binding.ivProfile.setProfileImage(url)
+            }
         }
     }
 }

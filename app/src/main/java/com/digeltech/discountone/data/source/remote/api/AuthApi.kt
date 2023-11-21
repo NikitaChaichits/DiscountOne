@@ -53,4 +53,9 @@ interface AuthApi {
         @Query("id") id: String,
         @Query("password") password: String
     )
+
+    @POST("/wp-json/theme/v1/referrerCode")
+    suspend fun newUserWithReferrerCode(
+        @Query("link") referrerCode: String
+    )
 }

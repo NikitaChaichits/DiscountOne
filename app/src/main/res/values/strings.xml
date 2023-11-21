@@ -11,7 +11,7 @@
 
     <string name="nav_home">Home</string>
     <string name="nav_categories">Categories</string>
-    <string name="nav_deals">Best Deals</string>
+    <string name="nav_deals">All Deals</string>
     <string name="nav_shops">Stores</string>
     <string name="nav_coupons">Coupons</string>
 
@@ -120,14 +120,14 @@
     <string name="profile_photo_loading">Wait for the profile photo loading</string>
 
     <!-- Fragment Home-->
-    <string name="fr_home_title">Best Deals</string>
+    <string name="fr_home_title">All Deals</string>
 
     <!-- Fragment Categories-->
     <string name="fr_cat_title">Categories</string>
     <string name="fr_cat_publications">%d publications</string>
 
     <!-- Fragment Best deals-->
-    <string name="fr_deals_title">Best Deals</string>
+    <string name="fr_deals_title">All Deals</string>
     <string name="fr_deals_filter_categories">Categories</string>
     <string name="fr_deals_filter_shops">Stores</string>
     <string name="fr_deals_sorting_price">Price</string>

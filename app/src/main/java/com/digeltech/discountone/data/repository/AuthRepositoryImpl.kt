@@ -83,5 +83,8 @@ class AuthRepositoryImpl @Inject constructor(
             }
         }
 
+    override suspend fun newUserWithReferrerLink(referrerCode: String) = withContext(Dispatchers.IO) {
+        api.newUserWithReferrerCode(referrerCode)
+    }
 
 }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.discountone.R
@@ -97,14 +98,13 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
     private fun initAdapters() {
         // scrolling horizontal RV for banners
         bannerAdapter = BannerAdapter {
-            navigate(
-                HomeFragmentDirections.toCategoryFragment(
-                    id = getShopIdByName(it.shopName),
-                    title = it.shopName,
-                    slug = it.shopSlug,
-                    isFromCategory = false
-                )
-            )
+            val args = Bundle().apply {
+                putInt("id", getShopIdByName(it.shopName))
+                putString("title", it.shopName)
+                putString("slug", it.shopSlug)
+                putBoolean("isFromCategory", false)
+            }
+            findNavController().navigate(R.id.categoryAndShopFragment, args)
         }
         binding.rvBanners.adapter = bannerAdapter
 

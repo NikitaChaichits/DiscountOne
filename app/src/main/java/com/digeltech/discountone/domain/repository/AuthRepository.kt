@@ -30,4 +30,6 @@ interface AuthRepository {
 
     suspend fun resetPasswordSecondStep(userId: String, password: String): Result<Unit>
 
+    suspend fun newUserWithReferrerLink(referrerCode: String)
+
 }
