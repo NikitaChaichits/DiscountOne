@@ -292,8 +292,7 @@
             android:id="@+id/toRecoveryPasswordFragment"
             app:destination="@id/recoveryPasswordFragment"
             app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left">
-        </action>
+            app:exitAnim="@anim/slide_out_left"></action>
     </fragment>
 
     <fragment

@@ -104,15 +104,31 @@
                 tools:text="€65.00" />
 
             <TextView
+                android:id="@+id/tvExpirationDate"
+                style="@style/TextRegular.Bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/common_offset_16dp"
+                android:drawablePadding="@dimen/common_offset_4dp"
+                android:textColor="@color/red"
+                android:visibility="gone"
+                app:drawableStartCompat="@drawable/ic_time"
+                app:layout_constraintBottom_toBottomOf="@id/tvPrice"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tvPrice"
+                tools:text="12/12/2020"
+                tools:visibility="visible" />
+
+            <TextView
                 android:id="@+id/tvWishlist"
                 style="@style/TextRegular.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/common_offset_16dp"
                 android:layout_marginTop="@dimen/common_offset_16dp"
+                android:text="@string/fr_deal_add_to_bookmarks"
                 android:textColor="@color/colorPrimary"
                 android:textSize="18sp"
-                android:text="@string/fr_deal_add_to_bookmarks"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvPrice" />
 
@@ -123,9 +139,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/common_offset_16dp"
                 android:layout_marginTop="@dimen/common_offset_8dp"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvWishlist"
-                tools:text="Published today at 10:30 PM" />
+                tools:text="Published today at 10:30 PM"
+                tools:visibility="visible" />
 
             <TextView
                 android:id="@+id/tvDealName"
@@ -161,30 +179,6 @@
                 app:layout_constraintStart_toEndOf="@id/ivCouponCompanyLogo"
                 app:layout_constraintTop_toTopOf="@id/ivCouponCompanyLogo"
                 tools:text="Nike" />
-
-            <ImageView
-                android:id="@+id/ivTimeValid"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/common_offset_16dp"
-                android:layout_marginTop="@dimen/common_offset_24dp"
-                android:src="@drawable/ic_time_valid"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ivCouponCompanyLogo" />
-
-            <TextView
-                android:id="@+id/tvTimeValid"
-                style="@style/TextRegular.Description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/common_offset_16dp"
-                android:textSize="@dimen/common_textSize_12sp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@id/ivTimeValid"
-                app:layout_constraintStart_toEndOf="@id/ivTimeValid"
-                app:layout_constraintTop_toTopOf="@id/ivTimeValid"
-                tools:text="Valid until 23.02.23" />
 
             <ImageView
                 android:id="@+id/ivRateArrowUp"
@@ -230,33 +224,34 @@
                 android:layout_marginHorizontal="@dimen/common_offset_16dp"
                 android:layout_marginTop="@dimen/common_offset_16dp"
                 android:text="@string/get_deal"
-                app:layout_constraintEnd_toStartOf="@id/btnCopy"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ivTimeValid" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btnCopy"
+                app:layout_constraintTop_toBottomOf="@id/ivCouponCompanyLogo" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/btnCopy"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_marginEnd="@dimen/common_offset_16dp"
-                android:background="@drawable/shape_grey_border"
+                android:layout_marginStart="@dimen/common_offset_16dp"
+                android:background="@drawable/shape_violet_border"
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/btnGetDeal"
+                app:layout_constraintEnd_toStartOf="@id/btnGetDeal"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/btnGetDeal">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/common_offset_12dp"
-                    android:src="@drawable/ic_copy" />
+                    android:src="@drawable/ic_copy"
+                    app:tint="@color/colorPrimary" />
 
                 <TextView
                     android:id="@+id/tvCouponText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/defaultColor"
+                    android:textColor="@color/colorPrimary"
                     android:textStyle="bold"
                     tools:text="GIZ700" />
             </androidx.appcompat.widget.LinearLayoutCompat>

@@ -148,18 +148,20 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
                     saleSize = deal.saleSize,
                 )
             }
-            tvPublishedDate.text = getString(R.string.fr_deal_published, formatDate(deal.lastUpdateDate))
+
+            if (deal.expirationDate.isNotNullAndNotEmpty()) {
+                tvExpirationDate.text = deal.expirationDate
+                tvExpirationDate.visible()
+            } else {
+                tvPublishedDate.text = getString(R.string.fr_deal_published, formatDate(deal.lastUpdateDate))
+                tvPublishedDate.visible()
+            }
+
             tvDealName.text = deal.title
 
             deal.shopImageUrl.let { ivCouponCompanyLogo.setImageWithRadius(it, R.dimen.radius_10) }
             if (deal.shopName.isNotEmpty()) {
                 tvCouponCompany.text = deal.shopName.capitalizeFirstLetter()
-            }
-
-            if (deal.expirationDate.isNotNullAndNotEmpty()) {
-                tvTimeValid.text = deal.expirationDate
-                ivTimeValid.visible()
-                tvTimeValid.visible()
             }
 
             tvRate.text = deal.rating.toString()

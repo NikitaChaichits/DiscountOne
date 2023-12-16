@@ -13,9 +13,9 @@ import com.digeltech.discountone.databinding.FragmentHomeBinding
 import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.common.KEY_USER
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
-import com.digeltech.discountone.ui.common.adapter.LinearDealAdapter
 import com.digeltech.discountone.ui.common.getShopIdByName
 import com.digeltech.discountone.ui.home.adapter.BannerAdapter
+import com.digeltech.discountone.ui.home.adapter.HomeLinearDealAdapter
 import com.digeltech.discountone.ui.home.adapter.SubcategoriesAdapter
 import com.digeltech.discountone.util.logSearch
 import com.digeltech.discountone.util.view.*
@@ -37,7 +37,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
     lateinit var logger: AppEventsLogger
 
     private lateinit var bannerAdapter: BannerAdapter
-    private lateinit var bestDealsAdapter: LinearDealAdapter
+    private lateinit var bestDealsAdapter: HomeLinearDealAdapter
     private lateinit var categoriesAdapter: SubcategoriesAdapter
     private lateinit var searchDealAdapter: GridDealAdapter
     private lateinit var autoScrollHelper: AutoScrollHelper
@@ -114,7 +114,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         autoScrollHelper.startAutoScroll()
 
         // Linear horizontal RV for best deals
-        bestDealsAdapter = LinearDealAdapter(
+        bestDealsAdapter = HomeLinearDealAdapter(
             onClickListener = {
 //                viewModel.updateDealViewsClick(it.id.toString())
                 navigate(HomeFragmentDirections.toDealFragment(it))

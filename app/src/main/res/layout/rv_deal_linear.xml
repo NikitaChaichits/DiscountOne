@@ -30,11 +30,39 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/tvPublishedDate"
+        style="@style/TextRegular.Description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="@dimen/common_offset_8dp"
+        android:textSize="10sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivDealImage"
+        tools:text="Published today at 10:30 PM" />
+
+    <TextView
+        android:id="@+id/tvExpirationDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_offset_8dp"
+        android:layout_marginEnd="@dimen/common_offset_16dp"
+        android:drawablePadding="@dimen/common_offset_4dp"
+        android:textColor="@color/red"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:drawableStartCompat="@drawable/ic_time"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivDealImage"
+        tools:text="12/12/2020" />
+
+    <TextView
         android:id="@+id/tvPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_offset_8dp"
-        android:layout_marginEnd="@dimen/common_offset_8dp"
+        android:layout_marginEnd="@dimen/common_offset_4dp"
         android:gravity="center_vertical"
         android:textColor="@color/defaultColor"
         android:textStyle="bold"
@@ -44,7 +72,7 @@
         app:autoSizeTextType="uniform"
         app:layout_constraintEnd_toStartOf="@id/tvPriceWithDiscount"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivDealImage"
+        app:layout_constraintTop_toBottomOf="@id/tvPublishedDate"
         tools:text="€130.00" />
 
     <TextView

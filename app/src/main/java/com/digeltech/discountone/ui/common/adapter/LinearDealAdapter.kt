@@ -19,6 +19,7 @@ import com.digeltech.discountone.util.capitalizeFirstLetter
 import com.digeltech.discountone.util.copyTextToClipboard
 import com.digeltech.discountone.util.getDiscountText
 import com.digeltech.discountone.util.isNotNullAndNotEmpty
+import com.digeltech.discountone.util.time.formatDate
 import com.digeltech.discountone.util.view.*
 import com.facebook.appevents.AppEventsLogger
 
@@ -50,6 +51,14 @@ class LinearDealAdapter(
         fun bind(item: DealParcelable) {
             with(binding) {
                 item.imageUrl.let(ivDealImage::setImageWithRadius)
+
+                if (item.expirationDate.isNotNullAndNotEmpty()) {
+                    tvExpirationDate.text = item.expirationDate
+                    tvExpirationDate.visible()
+                } else {
+                    tvPublishedDate.text = "Updated: ${formatDate(item.lastUpdateDate)}"
+                    tvPublishedDate.visible()
+                }
 
                 if (item.sale.isNotNullAndNotEmpty() && item.sale != "0") {
                     tvPriceWithDiscount.text = item.sale

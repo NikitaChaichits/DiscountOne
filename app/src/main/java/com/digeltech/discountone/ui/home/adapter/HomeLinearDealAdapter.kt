@@ -1,4 +1,4 @@
-package com.digeltech.discountone.ui.common.adapter
+package com.digeltech.discountone.ui.home.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.digeltech.discountone.R
 import com.digeltech.discountone.data.source.local.SharedPreferencesDataSource
-import com.digeltech.discountone.databinding.RvDealGridBinding
+import com.digeltech.discountone.databinding.RvDealLinearBinding
 import com.digeltech.discountone.ui.common.WishlistDialogFragment
 import com.digeltech.discountone.ui.common.addToBookmarkCache
 import com.digeltech.discountone.ui.common.isAddedToBookmark
@@ -19,21 +19,20 @@ import com.digeltech.discountone.util.capitalizeFirstLetter
 import com.digeltech.discountone.util.copyTextToClipboard
 import com.digeltech.discountone.util.getDiscountText
 import com.digeltech.discountone.util.isNotNullAndNotEmpty
-import com.digeltech.discountone.util.time.formatDate
 import com.digeltech.discountone.util.view.*
 import com.facebook.appevents.AppEventsLogger
 
-class GridDealAdapter(
+class HomeLinearDealAdapter(
     private val onClickListener: (deal: DealParcelable) -> Unit,
     private val onBookmarkClickListener: (dealId: Int) -> Unit,
     private val fragmentManager: FragmentManager,
     private val logger: AppEventsLogger,
-) : ListAdapter<DealParcelable, GridDealAdapter.ItemViewholder>(DiffCallback()) {
+) : ListAdapter<DealParcelable, HomeLinearDealAdapter.ItemViewholder>(DiffCallback()) {
 
     private lateinit var prefs: SharedPreferencesDataSource
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewholder {
-        return RvDealGridBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return RvDealLinearBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             .let(::ItemViewholder)
     }
 
@@ -45,20 +44,12 @@ class GridDealAdapter(
         holder.unbind()
     }
 
-    inner class ItemViewholder(val binding: RvDealGridBinding) :
+    inner class ItemViewholder(val binding: RvDealLinearBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: DealParcelable) {
             with(binding) {
                 item.imageUrl.let(ivDealImage::setImageWithRadius)
-
-                if (item.expirationDate.isNotNullAndNotEmpty()) {
-                    tvExpirationDate.text = item.expirationDate
-                    tvExpirationDate.visible()
-                } else {
-                    tvPublishedDate.text = "Updated: ${formatDate(item.lastUpdateDate)}"
-                    tvPublishedDate.visible()
-                }
 
                 if (item.sale.isNotNullAndNotEmpty() && item.sale != "0") {
                     tvPriceWithDiscount.text = item.sale
