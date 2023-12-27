@@ -11,6 +11,7 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/defaultColorReverse</item>
+        <item name="android:scrollbarThumbVertical">@color/colorPrimary</item>
     </style>
 
     <style name="Theme.DiscountOne.TranslucentStatus">

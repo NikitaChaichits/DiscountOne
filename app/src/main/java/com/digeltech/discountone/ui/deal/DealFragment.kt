@@ -1,5 +1,6 @@
 package com.digeltech.discountone.ui.deal
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
@@ -17,6 +18,7 @@ import com.digeltech.discountone.databinding.FragmentDealBinding
 import com.digeltech.discountone.ui.common.*
 import com.digeltech.discountone.ui.common.adapter.LinearDealAdapter
 import com.digeltech.discountone.ui.common.model.DealParcelable
+import com.digeltech.discountone.ui.common.model.DealType
 import com.digeltech.discountone.util.*
 import com.digeltech.discountone.util.time.formatDate
 import com.digeltech.discountone.util.view.*
@@ -111,6 +113,36 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
             viewModel.getSimilarDealsByShop(deal.shopName, deal.id)
 
             scrollView.visible()
+
+            if (deal.dealType == DealType.COUPONS) {
+                deal.shopImageUrl?.let(ivCouponShopImage::setImageWithRadius)
+                tvCouponCategoryName.text = deal.couponsCategory
+
+                tvPrice.gone()
+                tvPriceWithDiscount.gone()
+                tvCouponPrice.visible()
+                btnGetDeal.backgroundTintList = ColorStateList.valueOf(btnGetDeal.getColorValue(R.color.green))
+
+                if (deal.price != 0) {
+                    tvCouponPrice.background = tvCouponPrice.getImageDrawable(R.color.couponPriceColor)
+                    tvCouponPrice.text = "Rs ${deal.price} OFF"
+
+                }
+                if (deal.saleSize != 0) {
+                    tvCouponPrice.text = "${deal.saleSize}% OFF"
+                    tvCouponPrice.background = tvCouponPrice.getImageDrawable(R.color.couponDiscountColor)
+                }
+
+                if (deal.price == 0 && deal.saleSize == 0) {
+                    if (deal.couponsTypeSlug == "free_trial") {
+                        tvCouponPrice.background = tvCouponPrice.getImageDrawable(R.color.couponFreeTrialColor)
+                    } else {
+                        tvCouponPrice.background = tvCouponPrice.getImageDrawable(R.color.couponFreeGiftColor)
+                    }
+                    tvCouponPrice.text = deal.couponsTypeName
+                }
+            }
+
             if (!deal.imagesUrl.isNullOrEmpty()) {
                 val listOfDealImages = mutableListOf<String>()
                 listOfDealImages.addAll(deal.imagesUrl!!)
@@ -143,8 +175,8 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
             } else {
                 tvPrice.setStrikethrough(deal.priceCurrency + deal.oldPrice)
                 tvPriceWithDiscount.text = getDiscountText(
-                    price = deal.oldPrice?.toDouble() ?: 0.0,
-                    discountPrice = deal.price?.toDouble() ?: 0.0,
+                    price = deal.oldPrice,
+                    discountPrice = deal.price,
                     saleSize = deal.saleSize,
                 )
             }
@@ -153,15 +185,15 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
                 tvExpirationDate.text = deal.expirationDate
                 tvExpirationDate.visible()
             } else {
-                tvPublishedDate.text = getString(R.string.fr_deal_published, formatDate(deal.lastUpdateDate))
+                tvPublishedDate.text = getString(R.string.fr_deal_published, formatDate(deal.lastUpdateDate.toString()))
                 tvPublishedDate.visible()
             }
 
             tvDealName.text = deal.title
 
-            deal.shopImageUrl.let { ivCouponCompanyLogo.setImageWithRadius(it, R.dimen.radius_10) }
-            if (deal.shopName.isNotEmpty()) {
-                tvCouponCompany.text = deal.shopName.capitalizeFirstLetter()
+            deal.shopImageUrl?.let { ivShopLogo.setImageWithRadius(it, R.dimen.radius_10) }
+            if (deal.shopName.isNotNullAndNotEmpty()) {
+                tvShopName.text = deal.shopName.capitalizeFirstLetter()
             }
 
             tvRate.text = deal.rating.toString()
@@ -196,7 +228,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
         tvWishlist.setOnClickListener {
             addToBookmark(deal, it)
         }
-        ivCouponCompanyLogo.setOnClickListener {
+        ivShopLogo.setOnClickListener {
             navigate(
                 DealFragmentDirections.toShopFragment(
                     id = getShopIdByName(deal.shopName),
@@ -205,7 +237,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
                 )
             )
         }
-        tvCouponCompany.setOnClickListener {
+        tvShopName.setOnClickListener {
             navigate(
                 DealFragmentDirections.toShopFragment(
                     id = getShopIdByName(deal.shopName),
@@ -228,7 +260,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
             viewModel.updateDealViewsClick(deal.id.toString())
             logShopNow(
                 name = deal.title,
-                url = deal.shopLink,
+                url = deal.shopLink.toString(),
                 shopName = deal.shopName,
                 categoryName = getCategoryNameById(deal.categoryId),
                 price = deal.price.toString(),

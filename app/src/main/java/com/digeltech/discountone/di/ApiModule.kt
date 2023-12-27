@@ -2,6 +2,8 @@ package com.digeltech.discountone.di
 
 import com.digeltech.discountone.data.constants.RemoteConstants.BASE_URL
 import com.digeltech.discountone.data.source.remote.api.AuthApi
+import com.digeltech.discountone.data.source.remote.api.CouponsApi
+import com.digeltech.discountone.data.source.remote.api.DiscountApi
 import com.digeltech.discountone.data.source.remote.api.ServerApi
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -46,4 +48,14 @@ object ApiModule {
     @Singleton
     fun provideAuthApi(retrofit: Retrofit): AuthApi =
         retrofit.create(AuthApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideDiscountApi(retrofit: Retrofit): DiscountApi =
+        retrofit.create(DiscountApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideCouponApi(retrofit: Retrofit): CouponsApi =
+        retrofit.create(CouponsApi::class.java)
 }

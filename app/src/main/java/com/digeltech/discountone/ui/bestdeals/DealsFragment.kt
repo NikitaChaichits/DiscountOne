@@ -11,11 +11,9 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.discountone.R
 import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentBestDealsBinding
-import com.digeltech.discountone.domain.model.Item
 import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.common.KEY_USER
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
-import com.digeltech.discountone.ui.coupons.CouponsFragmentDirections
 import com.digeltech.discountone.util.logSearch
 import com.digeltech.discountone.util.view.*
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
@@ -41,7 +39,6 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
 
         initAdapters()
         initListeners()
-
         loadProfileImage()
         observeData()
 
@@ -65,12 +62,12 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
 
     override fun onResume() {
         super.onResume()
-        viewModel.getCategoriesFilterPosition().let {
+        viewModel.currentCategorySpinnerPosition.let {
             if (it > 0) {
                 binding.spinnerCategories.setSelection(it)
             }
         }
-        viewModel.getShopFilterPosition().let {
+        viewModel.currentShopSpinnerPosition.let {
             if (it > 0) {
                 binding.spinnerShops.setSelection(it)
             }
@@ -88,7 +85,10 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
     private fun initAdapters() {
         dealAdapter = GridDealAdapter(
             onClickListener = {
-                navigate(CouponsFragmentDirections.toDealFragment(it))
+                val bundle = Bundle().apply {
+                    putParcelable("deal", it)
+                }
+                navigate(R.id.dealFragment, bundle)
             },
             onBookmarkClickListener = {
                 viewModel.updateBookmark(it.toString())
@@ -120,7 +120,10 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
 
         searchAdapter = GridDealAdapter(
             onClickListener = {
-                navigate(CouponsFragmentDirections.toDealFragment(it))
+                val bundle = Bundle().apply {
+                    putParcelable("deal", it)
+                }
+                navigate(R.id.dealFragment, bundle)
                 binding.searchView.setQuery("", false)
             },
             onBookmarkClickListener = {
@@ -137,6 +140,11 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
             )
         )
         binding.rvSearchDeals.adapter = searchAdapter
+
+        val dealsTypeArray = resources.getStringArray(R.array.fr_deals_type)
+        val dealsTypeAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, dealsTypeArray)
+        dealsTypeAdapter.setDropDownViewResource(R.layout.spinner_item_dropdown)
+        binding.spinnerDealType.adapter = dealsTypeAdapter
     }
 
     private fun initListeners() {
@@ -152,26 +160,71 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
             setOnQueryTextListener(this@DealsFragment)
             queryHint = getString(R.string.search_by_deals)
         }
-        binding.spinnerCategories.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.spinnerDealType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                if (position == viewModel.getCategoriesFilterPosition()) {
+                if (position == viewModel.currentDealTypeSpinnerPosition) {
                     return
                 }
-                viewModel.loadCategoryDeals(position)
+                viewModel.filteringCategories.value?.let {
+                    when (position) {
+                        1 -> { // DealType.DISCOUNTS chosen
+                            //setting only coupons categories for category spinner
+                            val filteredCategories = it.filter { item -> item.taxonomy != "categories-coupons" }
+                            val adapterCategories = ArrayAdapter(
+                                requireContext(),
+                                R.layout.spinner_item,
+                                getNamesWithFirstAllString(filteredCategories)
+                            )
+                            adapterCategories.setDropDownViewResource(R.layout.spinner_item_dropdown)
+                            binding.spinnerCategories.adapter = adapterCategories
+                        }
+                        2 -> { // DealType.COUPONS chosen
+                            //setting only discounts categories for category spinner
+
+                            val filteredCategories = it.filter { item -> item.taxonomy == "categories-coupons" }
+                            val adapterCategories = ArrayAdapter(
+                                requireContext(),
+                                R.layout.spinner_item,
+                                getNamesWithFirstAllString(filteredCategories)
+                            )
+                            adapterCategories.setDropDownViewResource(R.layout.spinner_item_dropdown)
+                            binding.spinnerCategories.adapter = adapterCategories
+                        }
+                        else -> {// DealType.ALL chosen
+                            val adapterCategories = categoriesStyledAdapter(requireContext(), it)
+                            adapterCategories.setDropDownViewResource(R.layout.spinner_item_dropdown)
+                            binding.spinnerCategories.adapter = adapterCategories
+                        }
+                    }
+                }
+
+                viewModel.sortingByDealType(position, viewModel::getFilteringDeals)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) = Unit
         }
-        binding.spinnerShops.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                if (position == viewModel.getShopFilterPosition()) {
-                    return
+        binding.spinnerCategories.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    if (position == viewModel.currentCategorySpinnerPosition) {
+                        return
+                    }
+                    viewModel.sortingByCategory(position, viewModel::getFilteringDeals)
                 }
-                viewModel.loadShopDeals(position)
-            }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) = Unit
-        }
+                override fun onNothingSelected(parent: AdapterView<*>?) = Unit
+            }
+        binding.spinnerShops.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    if (position == viewModel.currentShopSpinnerPosition) {
+                        return
+                    }
+                    viewModel.sortingByShop(position, viewModel::getFilteringDeals)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) = Unit
+            }
     }
 
     private fun observeData() {
@@ -184,23 +237,23 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
         }
         viewModel.deals.observe(viewLifecycleOwner) {
             if (it.isEmpty()) {
-                binding.tvSortingResultEmpty.visible()
+                binding.tvFilteringResultEmpty.visible()
                 binding.rvDeals.invisible()
             } else {
                 dealAdapter.submitList(it)
                 dealAdapter.notifyDataSetChanged()
-                binding.tvSortingResultEmpty.invisible()
+                binding.tvFilteringResultEmpty.invisible()
                 binding.grContent.visible()
                 binding.rvDeals.visible()
             }
         }
-        viewModel.shops.observe(viewLifecycleOwner) {
-            val adapterShops = ArrayAdapter(requireContext(), R.layout.spinner_item, getFilteredNames(it))
+        viewModel.filteringShops.observe(viewLifecycleOwner) {
+            val adapterShops = ArrayAdapter(requireContext(), R.layout.spinner_item, getNamesWithFirstAllString(it))
             adapterShops.setDropDownViewResource(R.layout.spinner_item_dropdown)
             binding.spinnerShops.adapter = adapterShops
         }
-        viewModel.categories.observe(viewLifecycleOwner) {
-            val adapterCategories = ArrayAdapter(requireContext(), R.layout.spinner_item, getFilteredNames(it))
+        viewModel.filteringCategories.observe(viewLifecycleOwner) {
+            val adapterCategories = categoriesStyledAdapter(requireContext(), it)
             adapterCategories.setDropDownViewResource(R.layout.spinner_item_dropdown)
             binding.spinnerCategories.adapter = adapterCategories
         }
@@ -217,12 +270,9 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
             binding.rvSearchDeals.visible()
             binding.grContent.invisible()
         }
-    }
-
-    private fun getFilteredNames(data: List<Item>): List<String> {
-        val names: List<String> = data.map(Item::name)
-        val mutableList = mutableListOf("All")
-        mutableList.addAll(names)
-        return mutableList
+        viewModel.filteringError.observe(viewLifecycleOwner) {
+            binding.tvFilteringResultEmpty.visible()
+            binding.rvDeals.invisible()
+        }
     }
 }

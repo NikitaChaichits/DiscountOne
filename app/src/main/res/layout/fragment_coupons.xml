@@ -5,6 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/ivLoading"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="300dp"
+        android:foregroundGravity="top"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivAppIcon"
         android:layout_width="@dimen/common_offset_24dp"
@@ -29,8 +39,8 @@
         android:id="@+id/searchView"
         android:layout_width="0dp"
         android:layout_height="@dimen/common_offset_40dp"
-        android:layout_marginTop="@dimen/common_offset_8dp"
         android:layout_marginHorizontal="@dimen/common_offset_16dp"
+        android:layout_marginTop="@dimen/common_offset_8dp"
         android:background="@drawable/shape_border"
         android:queryHint="Search by ads"
         app:layout_constraintEnd_toStartOf="@id/ivProfile"
@@ -38,54 +48,144 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tvTitle"
-        style="@style/TextRegular.Title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/common_offset_16dp"
-        android:text="@string/fr_coupons_title"
-        app:layout_constraintTop_toBottomOf="@id/searchView" />
-
-    <TextView
         android:id="@+id/tvSearchResultEmpty"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/common_offset_16dp"
         android:layout_marginTop="@dimen/common_offset_24dp"
-        android:textColor="@color/defaultColor"
-        android:textAlignment="center"
-        android:visibility="gone"
         android:text="@string/empty_search_result"
+        android:textAlignment="center"
+        android:textColor="@color/defaultColor"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/searchView" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvDeals"
-        android:layout_width="wrap_content"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nsvContent"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/common_offset_20dp"
-        android:paddingBottom="@dimen/common_offset_8dp"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        android:layout_marginTop="@dimen/common_offset_8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle"
-        app:spanCount="2"
-        tools:itemCount="8"
-        tools:listitem="@layout/rv_deal_grid" />
+        app:layout_constraintTop_toBottomOf="@id/searchView">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvSearchDeals"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/common_offset_20dp"
-        android:paddingBottom="@dimen/common_offset_8dp"
-        android:visibility="invisible"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle"
-        app:spanCount="2"
-        tools:itemCount="8"
-        tools:listitem="@layout/rv_deal_grid" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tvTitle"
+                style="@style/TextRegular.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/common_offset_16dp"
+                android:text="@string/fr_coupons_title"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Spinner
+                android:id="@+id/spinnerSortingType"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_marginHorizontal="@dimen/common_offset_16dp"
+                android:layout_marginTop="@dimen/common_offset_8dp"
+                android:background="@drawable/bg_deal"
+                app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+            <TextView
+                android:id="@+id/tvFilterCategories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/common_offset_8dp"
+                android:text="@string/fr_deals_filter_categories"
+                android:textStyle="bold"
+                android:textColor="@color/defaultColor"
+                app:layout_constraintStart_toStartOf="@id/spinnerCategories"
+                app:layout_constraintTop_toBottomOf="@id/spinnerSortingType" />
+
+            <Spinner
+                android:id="@+id/spinnerCategories"
+                android:layout_width="0dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="@dimen/common_offset_16dp"
+                android:layout_marginTop="@dimen/common_offset_4dp"
+                android:layout_marginEnd="@dimen/common_offset_8dp"
+                android:background="@drawable/bg_deal"
+                app:layout_constraintEnd_toStartOf="@id/spinnerShops"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvFilterCategories" />
+
+            <TextView
+                android:id="@+id/tvFilterShops"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/common_offset_8dp"
+                android:text="@string/fr_deals_filter_shops"
+                android:textStyle="bold"
+                android:textColor="@color/defaultColor"
+                app:layout_constraintStart_toStartOf="@id/spinnerShops"
+                app:layout_constraintTop_toBottomOf="@id/spinnerSortingType" />
+
+            <Spinner
+                android:id="@+id/spinnerShops"
+                android:layout_width="0dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="@dimen/common_offset_8dp"
+                android:layout_marginTop="@dimen/common_offset_4dp"
+                android:layout_marginEnd="@dimen/common_offset_16dp"
+                android:background="@drawable/bg_deal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/spinnerCategories"
+                app:layout_constraintTop_toBottomOf="@id/tvFilterShops" />
+
+            <TextView
+                android:id="@+id/tvFilteringResultEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/common_offset_16dp"
+                android:layout_marginTop="@dimen/common_offset_24dp"
+                android:text="@string/empty_sorting_result"
+                android:textAlignment="center"
+                android:textColor="@color/defaultColor"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/spinnerCategories" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvDeals"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/common_offset_8dp"
+                android:paddingBottom="@dimen/common_offset_8dp"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/spinnerCategories"
+                app:spanCount="2"
+                tools:itemCount="8"
+                tools:listitem="@layout/rv_deal_grid" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvSearchDeals"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/common_offset_20dp"
+                android:paddingBottom="@dimen/common_offset_8dp"
+                android:visibility="invisible"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvTitle"
+                app:spanCount="2"
+                tools:itemCount="8"
+                tools:listitem="@layout/rv_deal_grid" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/grFilters"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                app:constraint_referenced_ids="spinnerSortingType, tvFilterCategories, tvFilterShops, spinnerShops, spinnerCategories"
+                tools:visibility="visible" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,6 +15,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.digeltech.discountone.R
+import com.digeltech.discountone.util.log
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory as DCFF
 
 val glideFactory: DCFF = DCFF.Builder().setCrossFadeEnabled(true).build()
@@ -56,6 +57,27 @@ fun ImageView.setImageWithRadius(
         .diskCacheStrategy(DiskCacheStrategy.ALL)
         .transform(FitCenter(), RoundedCorners(radius))
         .transition(glideTransitionOption)
+        .listener(object : RequestListener<Drawable> {
+            override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: Target<Drawable>?,
+                isFirstResource: Boolean
+            ): Boolean {
+                log(e)
+                return false
+            }
+
+            override fun onResourceReady(
+                resource: Drawable?,
+                model: Any?,
+                target: Target<Drawable>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+            ): Boolean {
+                return false
+            }
+        })
         .into(this)
 }
 

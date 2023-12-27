@@ -14,7 +14,7 @@ interface ServerApi {
     @GET("/wp-json/theme/v1/categories")
     suspend fun getAllCategories(): List<CategoryDto>
 
-    @GET("/wp-json/theme/v1/homepage")
+    @GET("/wp-json/theme/v1/homepage-new")
     suspend fun getHomepage(): HomepageDto
 
     @GET("/wp-json/theme/v1/promocodes/page=1&limit=1000")
@@ -26,7 +26,7 @@ interface ServerApi {
         @Query("limit") limit: String
     ): List<DealDto>
 
-    @GET("/wp-json/theme/v1/best_deals")
+    @GET("/wp-json/theme/v1/best_deals_new")
     suspend fun getBestDeals(): AllDealsDto
 
     @GET("/wp-json/theme/v1/products/id/{id}")
@@ -50,16 +50,14 @@ interface ServerApi {
         @Query("id") id: String
     ): List<DealDto>
 
-    @GET("/wp-json/theme/v1/filter_cat")
+    @GET("/wp-json/theme/v1/filter_new_cat")
     suspend fun getSortingDeals(
         @Query("page") page: String,
-        @Query("cat") categoryType: String,
-        @Query("tax_slug") taxSlug: String,
-        @Query("sort") sorting: String,
-        @Query("sortBy") sortBy: String,
-        @Query("cat_or_shop") catOrShopSlug: String?,
-        @Query("priceFrom") priceFrom: Int?,
-        @Query("priceTo") priceTo: Int?
+        @Query("sort_by") sortBy: String?,
+        @Query("category_slug") categorySlug: String?,
+        @Query("shop_slug") shopSlug: String?,
+        @Query("deal_type") dealType: String?,
+        @Query("taxonomy") taxonomy: String?,
     ): List<DealDto>
 
     @GET("/wp-json/theme/v1/list_categories?categories=categories&limit=100")

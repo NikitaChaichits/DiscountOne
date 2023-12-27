@@ -2,17 +2,19 @@ package com.digeltech.discountone.data.mapper
 
 import com.digeltech.discountone.data.model.*
 import com.digeltech.discountone.domain.model.CategoryWithDeals
-import com.digeltech.discountone.domain.model.CategoryWithSubcategories
 import com.digeltech.discountone.domain.model.Deal
+import com.digeltech.discountone.domain.model.HomeShop
 import com.digeltech.discountone.domain.model.Homepage
+import com.digeltech.discountone.ui.common.model.DealType
 import com.digeltech.discountone.ui.home.adapter.Banner
 
 class HomepageMapper {
 
     fun map(data: HomepageDto) = Homepage(
         listOfBanners = DealsMapper().mapDeals(data.listOfBanners),
-//        soloBanner = data.soloBanner.first().mapBanner(),
-        bestDeals = data.bestDeals.first().mapCategories("Best Deals"),
+        discounts = data.discounts.first().mapCategories(),
+        coupons = data.coupons.first().mapCategories(),
+        shops = data.shops.map { it.mapToHomeShop() },
         categories = data.categories.map { it.mapCategories() }
     )
 
@@ -22,18 +24,11 @@ class HomepageMapper {
         categoryId = categoryId
     )
 
-    private fun CategoryWithItemsDto.mapCategories(categoryName: String) = CategoryWithDeals(
+    private fun CategoryWithItemsDto.mapCategories() = CategoryWithDeals(
         id = id,
-        name = name,
+        name = name.toString(),
         slug = slug.toString(),
-        parentName = categoryName,
         items = items.map { it.mapToDeal(id) }
-    )
-
-    private fun CategoryWithSubcategoriesDto.mapCategories() = CategoryWithSubcategories(
-        id = id,
-        name = name,
-        subcategories = subcategories.map { it.mapCategories(name) }
     )
 
     private fun DealDto.mapToDeal(categoryId: Int): Deal {
@@ -47,18 +42,32 @@ class HomepageMapper {
             shopName = shopName.toString(),
             shopSlug = shopSlug.toString(),
             shopImageUrl = shopImageUrl.toString(),
-            oldPrice = oldPrice,
-            price = price,
+            oldPrice = oldPrice ?: 0,
+            price = price ?: 0,
             promocode = promocode,
             shopLink = shopLink.toString(),
-            rating = rating.toString(),
+            rating = rating ?: 0,
             publishedDate = publishedDate.toString(),
             expirationDate = expirationDate,
             lastUpdateDate = lastUpdateDate,
             sale = sale,
             saleSize = saleSize ?: 0,
             viewsClick = viewsClick ?: 0,
-            webLink = webLink
+            webLink = webLink,
+            dealType = if (dealType == "coupons") DealType.COUPONS
+            else DealType.DISCOUNTS,
+            couponsTypeName = couponsTypeName,
+            couponsTypeSlug = couponsTypeSlug,
+            couponsCategory = couponsCategory
+        )
+    }
+
+    private fun HomeShopDto.mapToHomeShop(): HomeShop {
+        return HomeShop(
+            id = id.toString(),
+            name = name.toString(),
+            icon = icon,
+            slug = slug.toString()
         )
     }
 

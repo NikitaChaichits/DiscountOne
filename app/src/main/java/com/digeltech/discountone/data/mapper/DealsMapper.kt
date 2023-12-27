@@ -5,6 +5,7 @@ import com.digeltech.discountone.domain.model.AllDeals
 import com.digeltech.discountone.domain.model.Deal
 import com.digeltech.discountone.domain.model.Item
 import com.digeltech.discountone.domain.model.ItemWithChild
+import com.digeltech.discountone.ui.common.model.DealType
 
 class DealsMapper {
 
@@ -30,11 +31,11 @@ class DealsMapper {
             shopName = data.shopName.toString(),
             shopSlug = data.shopSlug.toString(),
             shopImageUrl = data.shopImageUrl.toString(),
-            oldPrice = data.oldPrice,
-            price = data.price,
+            oldPrice = data.oldPrice ?: 0,
+            price = data.price ?: 0,
             promocode = data.promocode,
             shopLink = data.shopLink.toString(),
-            rating = data.rating.toString(),
+            rating = data.rating ?: 0,
             publishedDate = data.publishedDate.toString(),
             expirationDate = data.expirationDate,
             lastUpdateDate = data.lastUpdateDate,
@@ -42,6 +43,11 @@ class DealsMapper {
             saleSize = data.saleSize ?: 0,
             viewsClick = data.viewsClick ?: 0,
             webLink = data.webLink,
+            dealType = if (data.dealType == "coupons") DealType.COUPONS
+            else DealType.DISCOUNTS,
+            couponsTypeName = data.couponsTypeName,
+            couponsTypeSlug = data.couponsTypeSlug,
+            couponsCategory = data.couponsCategory
         )
     }
 
@@ -63,11 +69,11 @@ class DealsMapper {
             shopName = data.shopName.toString(),
             shopSlug = data.shopSlug.toString(),
             shopImageUrl = data.shopImageUrl.toString(),
-            oldPrice = data.oldPrice,
-            price = data.price,
+            oldPrice = data.oldPrice ?: 0,
+            price = data.price ?: 0,
             promocode = data.promocode,
             shopLink = data.shopLink.toString(),
-            rating = data.rating.toString(),
+            rating = data.rating ?: 0,
             publishedDate = data.publishedDate.toString(),
             expirationDate = data.expirationDate,
             lastUpdateDate = data.lastUpdateDate,
@@ -75,15 +81,20 @@ class DealsMapper {
             saleSize = data.saleSize ?: 0,
             viewsClick = data.viewsClick ?: 0,
             webLink = data.webLink,
-            isAddedToBookmark = true
+            isAddedToBookmark = true,
+            dealType = if (data.dealType == "coupons") DealType.COUPONS
+            else DealType.DISCOUNTS,
+            couponsTypeName = data.couponsTypeName,
+            couponsTypeSlug = data.couponsTypeSlug,
+            couponsCategory = data.couponsCategory
         )
     }
 
     private fun List<ItemWithChildDto>.mapChildItems(): List<ItemWithChild> {
-        return map { ItemWithChild(it.id, it.name, it.child.mapItems()) }
+        return map { ItemWithChild(it.id, it.name, it.slug, it.taxonomy, it.child.mapItems()) }
     }
 
     private fun List<ItemDto>.mapItems(): List<Item> {
-        return map { Item(it.id, it.name) }
+        return map { Item(it.id, it.name, it.slug, it.taxonomy) }
     }
 }

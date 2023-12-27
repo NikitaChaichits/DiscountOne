@@ -12,6 +12,7 @@
     <color name="light">#DFE1E5</color>
 
     <color name="grey">#A5ABB8</color>
+    <color name="dark_grey">#7E7E7E</color>
     <color name="light_description">#7B818C</color>
     <color name="grey_border">#DFE1E5</color>
 
@@ -25,4 +26,9 @@
     <color name="bgCategories">#ECEDEF</color>
     <color name="bgSubcategories">#F3F4F6</color>
     <color name="bgBookmark">#FFF</color>
+
+    <color name="couponPriceColor">#E46204</color>
+    <color name="couponDiscountColor">#E404B3</color>
+    <color name="couponFreeGiftColor">#04BFCE</color>
+    <color name="couponFreeTrialColor">#0428E4</color>
 </resources>

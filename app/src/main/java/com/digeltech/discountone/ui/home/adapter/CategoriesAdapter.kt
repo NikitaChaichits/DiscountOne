@@ -7,8 +7,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.digeltech.discountone.databinding.RvHomeSubcategoriesBinding
+import com.digeltech.discountone.databinding.RvHomeCategoriesBinding
 import com.digeltech.discountone.domain.model.CategoryWithDeals
+import com.digeltech.discountone.ui.common.adapter.LinearDealAdapter
 import com.digeltech.discountone.ui.common.model.CategoryWithDealsParcelable
 import com.digeltech.discountone.ui.common.model.DealParcelable
 import com.digeltech.discountone.ui.common.model.toParcelableList
@@ -16,16 +17,16 @@ import com.digeltech.discountone.util.view.gone
 import com.digeltech.discountone.util.view.visible
 import com.facebook.appevents.AppEventsLogger
 
-class SubcategoriesAdapter(
+class CategoriesAdapter(
     private val onMoreDealsClick: (category: CategoryWithDealsParcelable) -> Unit,
     private val onDealClick: (deal: DealParcelable) -> Unit,
     private val onBookmarkClickListener: (dealId: Int) -> Unit,
     private val fragmentManager: FragmentManager,
     private val logger: AppEventsLogger
-) : ListAdapter<CategoryWithDeals, SubcategoriesAdapter.ItemViewholder>(DiffCallback()) {
+) : ListAdapter<CategoryWithDeals, CategoriesAdapter.ItemViewholder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewholder {
-        return RvHomeSubcategoriesBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return RvHomeCategoriesBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             .let(::ItemViewholder)
     }
 
@@ -37,7 +38,7 @@ class SubcategoriesAdapter(
         holder.unbind()
     }
 
-    inner class ItemViewholder(val binding: RvHomeSubcategoriesBinding) :
+    inner class ItemViewholder(val binding: RvHomeCategoriesBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: CategoryWithDeals) {
@@ -47,12 +48,12 @@ class SubcategoriesAdapter(
                     tvCategoryTitle.visible()
                 }
 
-                tvSubcategoryTitle.text = item.name
+                tvCategoryTitle.text = item.name
                 tvMoreDeals.setOnClickListener {
                     onMoreDealsClick(item.toParcelableList())
                 }
 
-                val dealsAdapter = HomeLinearDealAdapter(
+                val dealsAdapter = LinearDealAdapter(
                     onClickListener = { onDealClick(it) },
                     onBookmarkClickListener = { onBookmarkClickListener },
                     fragmentManager = fragmentManager,

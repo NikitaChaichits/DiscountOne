@@ -4,10 +4,13 @@ import com.digeltech.discountone.domain.model.AllDeals
 import com.digeltech.discountone.domain.model.Deal
 import com.digeltech.discountone.domain.model.Homepage
 import com.digeltech.discountone.ui.common.model.CategoryType
+import com.digeltech.discountone.ui.common.model.DealType
 import com.digeltech.discountone.ui.common.model.SortBy
-import com.digeltech.discountone.ui.common.model.Sorting
 
 interface DealsRepository {
+
+    suspend fun getDiscounts(): Result<AllDeals>
+
     suspend fun getBestDeals(): Result<AllDeals>
 
     suspend fun getAllDeals(page: String, limit: String): Result<List<Deal>>
@@ -29,14 +32,12 @@ interface DealsRepository {
     suspend fun getSimilarDealsByShop(shopName: String): List<Deal>
 
     suspend fun getSortingDeals(
-        page: String,
-        categoryType: CategoryType,
-        taxSlug: String,
-        sorting: Sorting,
-        sortBy: SortBy,
-        catOrShopSlug: String?,
-        priceFrom: Int?,
-        priceTo: Int?
+        page: String = "1",
+        dealType: DealType? = null,
+        sortBy: SortBy? = null,
+        categorySlug: String? = null,
+        shopSlug: String? = null,
+        taxonomy: String? = null,
     ): Result<List<Deal>>
 
     suspend fun getInitialDeals(

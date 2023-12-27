@@ -47,12 +47,13 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
          */
         binding.tvSortingCatOrShop.text = if (args.isFromCategory) getString(R.string.fr_deals_filter_shops)
         else getString(R.string.fr_deals_filter_categories)
-        viewModel.initScreenData(args.slug, args.isFromCategory, args.id.toString())
+        viewModel.initScreenData(args.slug, args.id.toString())
 
         loadProfileImage()
-        observeData()
         initAdapters()
         initListeners()
+        observeData()
+        binding.ivLoading.loadGif()
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean = false
@@ -78,7 +79,10 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
     private fun initAdapters() {
         dealAdapter = GridDealAdapter(
             onClickListener = {
-                navigate(CategoryAndShopFragmentDirections.toDealFragment(it))
+                val bundle = Bundle().apply {
+                    putParcelable("deal", it)
+                }
+                navigate(R.id.dealFragment, bundle)
             },
             onBookmarkClickListener = {
                 viewModel.updateBookmark(it.toString())
@@ -97,7 +101,10 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
 
         searchAdapter = GridDealAdapter(
             onClickListener = {
-                navigate(CategoryAndShopFragmentDirections.toDealFragment(it))
+                val bundle = Bundle().apply {
+                    putParcelable("deal", it)
+                }
+                navigate(R.id.dealFragment, bundle)
                 binding.searchView.setQuery("", false)
             },
             onBookmarkClickListener = {
@@ -115,10 +122,15 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
         )
         binding.rvSearchDeals.adapter = searchAdapter
 
-        val stringArray = resources.getStringArray(R.array.fr_deals_sorting_type)
-        val spinnerAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, stringArray)
-        spinnerAdapter.setDropDownViewResource(R.layout.spinner_item_dropdown)
-        binding.spinnerSortingType.adapter = spinnerAdapter
+        val sortingTypeArray = resources.getStringArray(R.array.fr_deals_sorting_type)
+        val sortingTypeAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, sortingTypeArray)
+        sortingTypeAdapter.setDropDownViewResource(R.layout.spinner_item_dropdown)
+        binding.spinnerSortingType.adapter = sortingTypeAdapter
+
+        val dealsTypeArray = resources.getStringArray(R.array.fr_deals_type)
+        val dealsTypeAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, dealsTypeArray)
+        dealsTypeAdapter.setDropDownViewResource(R.layout.spinner_item_dropdown)
+        binding.spinnerDealType.adapter = dealsTypeAdapter
     }
 
     private fun initListeners() {
@@ -137,34 +149,84 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
                 navigate(R.id.startFragment)
             }
         }
+        binding.spinnerDealType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (position == viewModel.currentDealTypeSpinnerPosition) {
+                    return
+                }
+
+                viewModel.filteringCategories.value?.let {
+                    when (position) {
+                        1 -> { // DealType.DISCOUNTS chosen
+                            val stringArray = resources.getStringArray(R.array.fr_deals_sorting_type)
+                            val spinnerAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, stringArray)
+                            spinnerAdapter.setDropDownViewResource(R.layout.spinner_item_dropdown)
+                            binding.spinnerSortingType.adapter = spinnerAdapter
+
+                            //setting only coupons categories for category spinner
+                            val filteredCategories = it.filter { item -> item.taxonomy != "categories-coupons" }
+                            val adapterCategories = ArrayAdapter(
+                                requireContext(),
+                                R.layout.spinner_item,
+                                getNamesWithFirstAllString(filteredCategories)
+                            )
+                            adapterCategories.setDropDownViewResource(R.layout.spinner_item_dropdown)
+                            binding.spinnerCategories.adapter = adapterCategories
+                        }
+                        2 -> { // DealType.COUPONS chosen
+                            //setting only 2 types for spinner Sort by
+                            val stringArray = resources.getStringArray(R.array.fr_coupons_sorting_type)
+                            val spinnerAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, stringArray)
+                            spinnerAdapter.setDropDownViewResource(R.layout.spinner_item_dropdown)
+                            binding.spinnerSortingType.adapter = spinnerAdapter
+
+                            //setting only discounts categories for category spinner
+                            val filteredCategories = it.filter { item -> item.taxonomy == "categories-coupons" }
+                            val adapterCategories = ArrayAdapter(
+                                requireContext(),
+                                R.layout.spinner_item,
+                                getNamesWithFirstAllString(filteredCategories)
+                            )
+                            adapterCategories.setDropDownViewResource(R.layout.spinner_item_dropdown)
+                            binding.spinnerCategories.adapter = adapterCategories
+                        }
+                        else -> {// DealType.ALL chosen
+                            val stringArray = resources.getStringArray(R.array.fr_deals_sorting_type)
+                            val spinnerAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, stringArray)
+                            spinnerAdapter.setDropDownViewResource(R.layout.spinner_item_dropdown)
+                            binding.spinnerSortingType.adapter = spinnerAdapter
+
+                            val adapterCategories = categoriesStyledAdapter(requireContext(), it)
+                            adapterCategories.setDropDownViewResource(R.layout.spinner_item_dropdown)
+                            binding.spinnerCategories.adapter = adapterCategories
+                        }
+                    }
+                }
+
+                viewModel.sortingByDealType(position, viewModel::getFilteringDeals)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) = Unit
+        }
         binding.spinnerSortingType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                if (position == viewModel.getSortBySpinnerPosition()) {
+                if (position == viewModel.currentSortBySpinnerPosition) {
                     return
                 }
-                viewModel.sortingByType(position)
+                viewModel.sortingByType(position, viewModel::getFilteringDeals)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) = Unit
         }
-        binding.spinnerSortingCatOrShop.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.spinnerCategories.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                if (position == viewModel.getCatOrShopSpinnerPosition()) {
+                if (position == viewModel.currentCategorySpinnerPosition) {
                     return
                 }
-                viewModel.sortingByCatOrShop(position)
+                viewModel.sortingByCategory(position, viewModel::getFilteringDeals)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) = Unit
-        }
-        binding.tvSortingPrice.setOnClickListener {
-            val bottomSheetFragment = BottomSheetPriceFragment(viewModel.getPriceFrom(), viewModel.getPriceTo())
-            bottomSheetFragment.setBottomSheetListener(object : BottomSheetPriceFragment.BottomSheetListener {
-                override fun onSubmitClicked(input1: Int, input2: Int) {
-                    viewModel.sortingByPrice(input1, input2)
-                }
-            })
-            bottomSheetFragment.show(requireActivity().supportFragmentManager, bottomSheetFragment.tag)
         }
         with(binding.nsvContent) {
             val scrollListener = ViewTreeObserver.OnScrollChangedListener {
@@ -181,14 +243,17 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
     }
 
     private fun observeData() {
-        viewModel.categoryOrShopNames.observe(viewLifecycleOwner) {
-            val list = mutableListOf("All")
-            it.forEach { item ->
-                list.add(item.name)
+        viewModel.loadingGifVisibility.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.ivLoading.visible()
+            } else {
+                binding.ivLoading.invisible()
             }
-            val spinnerAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, list)
-            spinnerAdapter.setDropDownViewResource(R.layout.spinner_item_dropdown)
-            binding.spinnerSortingCatOrShop.adapter = spinnerAdapter
+        }
+        viewModel.filteringCategories.observe(viewLifecycleOwner) {
+            val adapterCategories = categoriesStyledAdapter(requireContext(), it)
+            adapterCategories.setDropDownViewResource(R.layout.spinner_item_dropdown)
+            binding.spinnerCategories.adapter = adapterCategories
         }
         viewModel.deals.observe(viewLifecycleOwner) {
             dealAdapter.submitList(null)

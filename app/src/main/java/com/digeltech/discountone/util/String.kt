@@ -3,7 +3,6 @@ package com.digeltech.discountone.util
 import android.content.Context
 import com.digeltech.discountone.R
 import com.digeltech.discountone.util.numbers.getPercent
-import kotlin.math.roundToInt
 
 fun String?.isNotNullAndNotEmpty(): Boolean {
     return this != null && this.isNotEmpty()
@@ -18,15 +17,15 @@ fun String.safeToInt(): Int {
     }
 }
 
-fun getDiscountText(price: Double, discountPrice: Double, saleSize: Int): String {
+fun getDiscountText(price: Int, discountPrice: Int, saleSize: Int): String {
     val discountSize = if (saleSize == 0)
         (price - discountPrice).getPercent(price)
     else saleSize
 
     return if (discountSize > 0)
-        "₹${discountPrice.roundToInt()} ($discountSize%)"
+        "₹$discountPrice ($discountSize%)"
     else
-        "₹${discountPrice.roundToInt()}"
+        "₹$discountPrice"
 }
 
 

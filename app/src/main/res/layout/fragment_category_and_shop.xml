@@ -5,6 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/ivLoading"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="300dp"
+        android:foregroundGravity="top"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivBack"
         android:layout_width="wrap_content"
@@ -70,23 +80,23 @@
                 tools:text="@string/fr_deals_title" />
 
             <TextView
-                android:id="@+id/tvSortingType"
+                android:id="@+id/tvDealType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/common_offset_16dp"
                 android:layout_marginTop="@dimen/common_offset_8dp"
-                android:text="@string/sort_by"
+                android:text="@string/deal_type"
                 android:textColor="@color/defaultColor"
                 android:textStyle="bold"
                 app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
             <Spinner
-                android:id="@+id/spinnerSortingType"
+                android:id="@+id/spinnerDealType"
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
                 android:layout_marginHorizontal="@dimen/common_offset_16dp"
                 android:background="@drawable/bg_deal"
-                app:layout_constraintTop_toBottomOf="@id/tvSortingType" />
+                app:layout_constraintTop_toBottomOf="@id/tvDealType" />
 
             <TextView
                 android:id="@+id/tvSortingCatOrShop"
@@ -97,38 +107,40 @@
                 android:textColor="@color/defaultColor"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/spinnerSortingType"
+                app:layout_constraintTop_toBottomOf="@id/spinnerDealType"
                 tools:text="Store" />
 
             <Spinner
-                android:id="@+id/spinnerSortingCatOrShop"
+                android:id="@+id/spinnerCategories"
                 android:layout_width="0dp"
                 android:layout_height="38dp"
                 android:layout_marginStart="@dimen/common_offset_16dp"
                 android:layout_marginEnd="@dimen/common_offset_8dp"
                 android:background="@drawable/bg_deal"
-                app:layout_constraintEnd_toStartOf="@id/tvSortingPrice"
+                app:layout_constraintEnd_toStartOf="@id/spinnerSortingType"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvSortingCatOrShop" />
 
             <TextView
-                android:id="@+id/tvSortingPrice"
+                android:id="@+id/tvSortingType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/common_offset_8dp"
+                android:text="@string/sort_by"
+                android:textColor="@color/defaultColor"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/spinnerSortingType"
+                app:layout_constraintTop_toBottomOf="@id/spinnerDealType" />
+
+            <Spinner
+                android:id="@+id/spinnerSortingType"
                 android:layout_width="0dp"
                 android:layout_height="38dp"
-                android:layout_marginStart="@dimen/common_offset_8dp"
-                android:layout_marginEnd="@dimen/common_offset_16dp"
-                android:background="@drawable/bg_sorting"
-                android:drawableEnd="@drawable/ic_arrow_down"
-                android:drawablePadding="@dimen/common_offset_8dp"
-                android:gravity="center_vertical"
-                android:paddingStart="@dimen/common_offset_12dp"
-                android:paddingEnd="@dimen/common_offset_8dp"
-                android:text="@string/fr_deals_sorting_price"
-                android:textColor="@color/defaultColor"
-                android:textSize="@dimen/common_textSize_16sp"
+                android:layout_marginHorizontal="@dimen/common_offset_16dp"
+                android:background="@drawable/bg_deal"
+                app:layout_constraintStart_toEndOf="@id/spinnerCategories"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/spinnerSortingCatOrShop"
-                app:layout_constraintTop_toBottomOf="@id/tvSortingCatOrShop" />
+                app:layout_constraintTop_toBottomOf="@id/tvSortingType" />
 
             <TextView
                 android:id="@+id/tvFilteringResultEmpty"
@@ -140,7 +152,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/defaultColor"
                 android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/tvSortingPrice" />
+                app:layout_constraintTop_toBottomOf="@id/spinnerSortingType" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvDeals"
@@ -152,7 +164,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvSortingPrice"
+                app:layout_constraintTop_toBottomOf="@id/spinnerSortingType"
                 app:spanCount="2"
                 tools:itemCount="8"
                 tools:listitem="@layout/rv_deal_grid" />

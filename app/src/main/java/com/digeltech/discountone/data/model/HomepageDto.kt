@@ -5,10 +5,12 @@ import com.google.gson.annotations.SerializedName
 data class HomepageDto(
     @SerializedName("slider_1")
     val listOfBanners: List<DealDto>,
-//    @SerializedName("slider_3")
-//    val soloBanner: List<BannerDto>?,
-    @SerializedName("best-deals")
-    val bestDeals: List<CategoryWithItemsDto>,
+    @SerializedName("discounts")
+    val discounts: List<CategoryWithItemsDto>,
+    @SerializedName("coupons")
+    val coupons: List<CategoryWithItemsDto>,
+    @SerializedName("shops")
+    val shops: List<HomeShopDto>,
     @SerializedName("cat_with_posts")
-    val categories: List<CategoryWithSubcategoriesDto>,
+    val categories: List<CategoryWithItemsDto>,
 )

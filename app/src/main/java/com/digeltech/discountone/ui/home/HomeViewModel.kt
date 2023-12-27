@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.digeltech.discountone.common.base.BaseViewModel
 import com.digeltech.discountone.domain.model.CategoryWithDeals
 import com.digeltech.discountone.domain.model.Deal
+import com.digeltech.discountone.domain.model.HomeShop
 import com.digeltech.discountone.ui.common.KEY_SAVED_DEALS
 import com.digeltech.discountone.ui.common.SEARCH_DELAY
 import com.digeltech.discountone.ui.common.getUserId
@@ -30,14 +31,20 @@ class HomeViewModel @Inject constructor(
     private val _banners: MutableLiveData<List<Deal>> = MutableLiveData()
     val banners: LiveData<List<Deal>> = _banners
 
-//    private val _soloBanner: MutableLiveData<Banner> = MutableLiveData()
-//    val soloBanner: LiveData<Banner?> = _soloBanner
+    private val _discounts: MutableLiveData<List<DealParcelable>?> = MutableLiveData()
+    val discounts: LiveData<List<DealParcelable>?> = _discounts
 
-    private val _bestDeals: MutableLiveData<List<DealParcelable>> = MutableLiveData()
-    val bestDeals: LiveData<List<DealParcelable>> = _bestDeals
+    private val _coupons: MutableLiveData<List<DealParcelable>?> = MutableLiveData()
+    val coupons: LiveData<List<DealParcelable>?> = _coupons
+
+    private val _shops: MutableLiveData<List<HomeShop>?> = MutableLiveData()
+    val shops: LiveData<List<HomeShop>?> = _shops
 
     private val _categories: MutableLiveData<List<CategoryWithDeals>> = MutableLiveData()
     val categories: LiveData<List<CategoryWithDeals>> = _categories
+
+    private val _deal: MutableLiveData<DealParcelable> = MutableLiveData()
+    val deal: LiveData<DealParcelable> = _deal
 
     fun getHomepageData() {
         viewModelScope.launch {
@@ -51,18 +58,10 @@ class HomeViewModel @Inject constructor(
             interactor.getHomepage()
                 .onSuccess {
                     _banners.value = it.listOfBanners
-                    _bestDeals.value = it.bestDeals.items.toParcelableList()
-                    val list: MutableList<CategoryWithDeals> = mutableListOf()
-                    it.categories.forEach { category ->
-                        category.subcategories.forEachIndexed { index, subcategory ->
-                            if (index == 0) {
-                                list.add(subcategory.copy(showParentName = true))
-                            } else {
-                                list.add(subcategory)
-                            }
-                        }
-                    }
-                    _categories.value = list.take(70)
+                    _discounts.value = it.discounts.items.toParcelableList()
+                    _coupons.value = it.coupons.items.toParcelableList()
+                    _shops.value = it.shops.filter { shop -> shop.icon != null }
+                    _categories.value = it.categories
                 }.onFailure {
                     log(it.toString())
                     error.postValue(it.toString())

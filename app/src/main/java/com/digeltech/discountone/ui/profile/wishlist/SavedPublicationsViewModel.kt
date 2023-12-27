@@ -1,9 +1,8 @@
 package com.digeltech.discountone.ui.profile.wishlist
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.digeltech.discountone.common.base.BaseViewModel
+import com.digeltech.discountone.common.base.BaseFilteringViewModel
 import com.digeltech.discountone.domain.repository.DealsRepository
 import com.digeltech.discountone.ui.common.KEY_SAVED_DEALS
 import com.digeltech.discountone.ui.common.SEARCH_DELAY
@@ -20,10 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SavedPublicationsViewModel @Inject constructor(
     private val dealsRepository: DealsRepository
-) : BaseViewModel() {
-
-    private val _deals: MutableLiveData<List<DealParcelable>> = MutableLiveData()
-    val deals: LiveData<List<DealParcelable>> = _deals
+) : BaseFilteringViewModel() {
 
     val loadingError = MutableLiveData<Boolean>()
     val isGroupEmptyWishlistVisible = MutableLiveData<Boolean>()
@@ -35,7 +31,7 @@ class SavedPublicationsViewModel @Inject constructor(
                     .onSuccess { list ->
                         if (list.isNotEmpty()) {
                             Hawk.put(KEY_SAVED_DEALS, list.toParcelableList())
-                            _deals.postValue(list.toParcelableList())
+                            deals.postValue(list.toParcelableList())
                         } else {
                             isGroupEmptyWishlistVisible.postValue(true)
                         }

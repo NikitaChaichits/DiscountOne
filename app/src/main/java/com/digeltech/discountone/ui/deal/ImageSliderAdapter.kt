@@ -19,7 +19,6 @@ class ImageSliderAdapter(private val context: Context, private val imageUrls: Li
         Glide.with(context)
             .load(imageUrls[position])
             .transition(glideTransitionOption)
-
             .into(imageView)
 
         container.addView(itemView)

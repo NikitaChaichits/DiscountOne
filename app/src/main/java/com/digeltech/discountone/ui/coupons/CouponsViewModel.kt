@@ -1,14 +1,17 @@
 package com.digeltech.discountone.ui.coupons
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.digeltech.discountone.common.base.BaseViewModel
+import com.digeltech.discountone.common.base.BaseFilteringViewModel
+import com.digeltech.discountone.domain.model.Item
+import com.digeltech.discountone.domain.model.getTaxonomyBySlug
+import com.digeltech.discountone.domain.repository.CouponsRepository
 import com.digeltech.discountone.domain.repository.DealsRepository
 import com.digeltech.discountone.ui.common.SEARCH_DELAY
 import com.digeltech.discountone.ui.common.getUserId
 import com.digeltech.discountone.ui.common.model.DealParcelable
+import com.digeltech.discountone.ui.common.model.DealType
 import com.digeltech.discountone.ui.common.model.toParcelableList
+import com.digeltech.discountone.util.log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -16,14 +19,93 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CouponsViewModel @Inject constructor(
+    private val couponsRepository: CouponsRepository,
     private val dealsRepository: DealsRepository
-) : BaseViewModel() {
+) : BaseFilteringViewModel() {
 
-    private val _deals: MutableLiveData<List<DealParcelable>> = MutableLiveData()
-    val deals: LiveData<List<DealParcelable>> = _deals
+    private val allDeals = mutableListOf<DealParcelable>()
 
-    init {
-        initDeals()
+    fun initDeals(categorySlug: String?) {
+        if (allDeals.isEmpty()) {
+            viewModelScope.launch {
+                loadingGifVisibility.value = true
+                couponsRepository.getCoupons()
+                    .onSuccess {
+                        if (categorySlug.isNullOrEmpty()) {
+                            allDeals.addAll(it.coupons.toParcelableList())
+                            deals.postValue(it.coupons.toParcelableList().take(50))
+                        } else {
+                            this@CouponsViewModel.categorySlug = categorySlug
+                        }
+
+                        filteringShops.postValue(it.shops)
+
+                        val categories = mutableListOf<Item>()
+                        it.categories.forEach { category ->
+                            categories.add(Item(category.id, category.name, category.slug, category.taxonomy, true))
+                            category.child.forEach { childItem ->
+                                categories.add(Item(childItem.id, childItem.name, childItem.slug, childItem.taxonomy))
+                            }
+                        }
+                        filteringCategories.postValue(categories)
+                    }
+                    .onFailure { error.postValue(it.toString()) }
+                loadingGifVisibility.value = false
+            }
+        }
+    }
+
+    fun getFilteringDeals() {
+        if (filteringJob?.isActive == true) filteringJob?.cancel()
+
+        filteringJob = viewModelScope.launchWithLoading {
+            dealsRepository.getSortingDeals(
+                dealType = DealType.COUPONS,
+                categorySlug = categorySlug.takeIf { it.isNotEmpty() },
+                shopSlug = shopSlug.takeIf { it.isNotEmpty() },
+                taxonomy = filteringCategories.value?.getTaxonomyBySlug(categorySlug)
+            )
+                .onSuccess { _deals ->
+                    if (_deals.isNotEmpty()) {
+                        allDeals.clear()
+                        allDeals.addAll(_deals.toParcelableList())
+                        deals.postValue(allDeals as List<DealParcelable>)
+                    }
+                }
+                .onFailure {
+                    log(it.toString())
+                    filteringError.postValue(it.toString())
+                }
+        }
+    }
+
+    fun loadMoreDeals() {
+        if (isNeedMoreLoading) {
+            if (filteringJob?.isActive == true) filteringJob?.cancel()
+
+            filteringJob = viewModelScope.launchWithLoading {
+                dealsRepository.getSortingDeals(
+                    page = currentPage.toString(),
+                    dealType = DealType.COUPONS,
+                    categorySlug = categorySlug.takeIf { it.isNotEmpty() },
+                    shopSlug = shopSlug.takeIf { it.isNotEmpty() },
+                    taxonomy = filteringCategories.value?.getTaxonomyBySlug(categorySlug)
+                )
+                    .onSuccess { _deals ->
+                        if (_deals.isNotEmpty()) {
+                            allDeals.addAll(_deals.toParcelableList())
+                            deals.postValue(allDeals as List<DealParcelable>)
+                            currentPage++
+                        } else {
+                            isNeedMoreLoading = false
+                        }
+                    }
+                    .onFailure {
+                        log(it.toString())
+                        isNeedMoreLoading = false
+                    }
+            }
+        }
     }
 
     fun searchDeals(searchText: String) {
@@ -37,20 +119,6 @@ class CouponsViewModel @Inject constructor(
         }
     }
 
-    fun updateDealViewsClick(id: String) {
-        viewModelScope.launch {
-            dealsRepository.updateDealViewsClick(id)
-        }
-    }
-
-    private fun initDeals() {
-        viewModelScope.launchWithLoading {
-            dealsRepository.getAllCoupons()
-                .onSuccess { _deals.postValue(it.toParcelableList()) }
-                .onFailure { error.postValue(it.toString()) }
-        }
-    }
-
     fun updateBookmark(dealId: String) {
         getUserId()?.let { userId ->
             viewModelScope.launch {
@@ -58,5 +126,4 @@ class CouponsViewModel @Inject constructor(
             }
         }
     }
-
 }

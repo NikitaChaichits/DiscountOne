@@ -10,10 +10,11 @@
     <string name="default_notification_channel_name" translatable="true">Discount One special notifications</string>
 
     <string name="nav_home">Home</string>
-    <string name="nav_categories">Categories</string>
+    <string name="nav_discounts">Discounts</string>
     <string name="nav_deals">All Deals</string>
     <string name="nav_shops">Stores</string>
     <string name="nav_coupons">Coupons</string>
+    <string name="nav_categories">Categories</string>
 
     <string name="error_restore">Cann\'t restore your purchase</string>
     <string name="restore_successfully">Restore successfully</string>
@@ -31,6 +32,7 @@
     <string name="search_by_categories">Search by categories</string>
     <string name="search_by_shops">Search by stores</string>
     <string name="empty_search_result"><b>Nothing found</b>\nTry different phrasing</string>
+    <string name="deal_type">Deal Type</string>
     <string name="sort_by">Sort by</string>
     <string name="empty_sorting_result"><b>Nothing found</b></string>
     <string name="toast_bookmark">You must be logged in to add bookmark</string>
@@ -120,7 +122,12 @@
     <string name="profile_photo_loading">Wait for the profile photo loading</string>
 
     <!-- Fragment Home-->
-    <string name="fr_home_title">All Deals</string>
+    <string name="fr_home_discounts">Discounts</string>
+    <string name="fr_home_coupons">Coupons</string>
+    <string name="fr_home_stores">Stores</string>
+
+    <!-- Fragment Discounts-->
+    <string name="fr_discount_title">Discounts</string>
 
     <!-- Fragment Categories-->
     <string name="fr_cat_title">Categories</string>
@@ -139,11 +146,19 @@
         <item>Price (low-high)</item>
         <item>Price (high-low)</item>
     </string-array>
+    <string-array name="fr_coupons_sorting_type">
+        <item>New deals</item>
+        <item>Most popular</item>
+    </string-array>
+    <string-array name="fr_deals_type">
+        <item>All</item>
+        <item>Discounts</item>
+        <item>Coupons</item>
+    </string-array>
 
     <!-- Bottom Sheet Fragment Discount-->
     <string name="from_percent">From, %</string>
     <string name="to_percent">To, %</string>
-    <string name="fr_discount_title">Discount</string>
 
     <!-- Bottom Sheet Fragment Price-->
     <string name="from_price">From, ₹</string>
@@ -166,6 +181,7 @@
     <string name="fr_deal_daily_top">Daily Top</string>
     <string name="fr_deal_similar_more_deals">More deals</string>
     <string name="shop_now">SEE MORE</string>
+    <string name="get_coupon">GET COUPON</string>
     <string name="get_deal">Get Deal</string>
 
     <!-- Fragment Wishlist-->

@@ -30,9 +30,9 @@ data class DealDto(
     @SerializedName("shop_link")
     val shopLink: String?,
     @SerializedName("old_price")
-    val oldPrice: String?,
+    val oldPrice: Int?,
     @SerializedName("price")
-    val price: String?,
+    val price: Int?,
     @SerializedName("sale")
     val sale: String?,
     @SerializedName("sale_size")
@@ -40,7 +40,7 @@ data class DealDto(
     @SerializedName("promocode")
     val promocode: String?,
     @SerializedName("rating")
-    val rating: String?,
+    val rating: Int?,
     @SerializedName("expiration_date")
     val expirationDate: String?,
     @SerializedName("post_modified")
@@ -49,4 +49,13 @@ data class DealDto(
     val viewsClick: Int?,
     @SerializedName("guid")
     val webLink: String?,
-)
+    @SerializedName("post_type")
+    val dealType: String?,
+    @SerializedName("coupons_type_slug")
+    val couponsTypeSlug: String?,
+    @SerializedName("coupons_type_name")
+    val couponsTypeName: String?,
+    @SerializedName("categories")
+    val couponsCategory: String?,
+
+    )

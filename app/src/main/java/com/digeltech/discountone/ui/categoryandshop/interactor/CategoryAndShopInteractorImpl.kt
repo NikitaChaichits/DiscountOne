@@ -1,14 +1,13 @@
 package com.digeltech.discountone.ui.categoryandshop.interactor
 
-import com.digeltech.discountone.domain.model.CategoryShopFilterItem
 import com.digeltech.discountone.domain.model.Deal
+import com.digeltech.discountone.domain.model.Item
 import com.digeltech.discountone.domain.repository.CategoriesRepository
 import com.digeltech.discountone.domain.repository.DealsRepository
 import com.digeltech.discountone.domain.repository.ShopsRepository
 import com.digeltech.discountone.ui.common.model.CategoryType
+import com.digeltech.discountone.ui.common.model.DealType
 import com.digeltech.discountone.ui.common.model.SortBy
-import com.digeltech.discountone.ui.common.model.Sorting
-import com.digeltech.discountone.util.isNotNullAndNotEmpty
 import javax.inject.Inject
 
 internal class CategoryAndShopInteractorImpl @Inject constructor(
@@ -18,33 +17,29 @@ internal class CategoryAndShopInteractorImpl @Inject constructor(
 ) : CategoryAndShopInteractor {
 
 
-    override suspend fun getCategoryShops(pageslug: String): Result<List<CategoryShopFilterItem>> =
+    override suspend fun getCategoryShops(pageslug: String): Result<List<Item>> =
         categoriesRepository.getCategoryShops(pageslug)
 
-    override suspend fun getShopCategories(pageslug: String): Result<List<CategoryShopFilterItem>> =
+    override suspend fun getShopCategories(pageslug: String): Result<List<Item>> =
         shopsRepository.getShopCategories(pageslug)
 
     override suspend fun searchDeals(searchText: String): List<Deal> = dealsRepository.searchDeals(searchText)
 
     override suspend fun getSortingDeals(
         page: String,
-        categoryType: CategoryType,
-        taxSlug: String,
-        sorting: Sorting,
-        sortBy: SortBy,
-        catOrShopSlug: String?,
-        priceFrom: Int?,
-        priceTo: Int?
+        dealType: DealType?,
+        sortBy: SortBy?,
+        categorySlug: String?,
+        shopSlug: String?,
+        taxonomy: String?,
     ): Result<List<Deal>> =
         dealsRepository.getSortingDeals(
             page = page,
-            categoryType = categoryType,
-            taxSlug = taxSlug,
-            sorting = sorting,
+            dealType = dealType,
             sortBy = sortBy,
-            catOrShopSlug = catOrShopSlug.takeIf { it.isNotNullAndNotEmpty() },
-            priceFrom = priceFrom,
-            priceTo = priceTo
+            categorySlug = categorySlug,
+            shopSlug = shopSlug,
+            taxonomy = taxonomy
         )
 
     override suspend fun getInitialDeals(categoryType: CategoryType, id: String): Result<List<Deal>> =

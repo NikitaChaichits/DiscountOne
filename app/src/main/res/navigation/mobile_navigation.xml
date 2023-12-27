@@ -49,8 +49,47 @@
                 app:argType="boolean" />
         </action>
         <action
+            android:id="@+id/toDiscountsFragment"
+            app:destination="@id/discountsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left">
+            <argument
+                android:name="title"
+                app:argType="string" />
+            <argument
+                android:name="slug"
+                app:argType="string" />
+        </action>
+        <action
+            android:id="@+id/toCouponsFragment"
+            app:destination="@id/couponsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left">
+            <argument
+                android:name="title"
+                app:argType="string" />
+            <argument
+                android:name="slug"
+                app:argType="string" />
+        </action>
+        <action
             android:id="@+id/toStartFragment"
             app:destination="@id/startFragment" />
+        <action
+            android:id="@+id/toShopFragment"
+            app:destination="@id/categoryAndShopFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left">
+            <argument
+                android:name="id"
+                app:argType="integer" />
+            <argument
+                android:name="title"
+                app:argType="string" />
+            <argument
+                android:name="slug"
+                app:argType="string" />
+        </action>
     </fragment>
 
     <fragment
@@ -97,6 +136,31 @@
             android:name="isFromCategory"
             android:defaultValue="true"
             app:argType="boolean" />
+
+        <action
+            android:id="@+id/toDealFragment"
+            app:destination="@id/dealFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left">
+            <argument
+                android:name="deal"
+                app:argType="com.digeltech.discountone.ui.common.model.DealParcelable" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/discountsFragment"
+        android:name="com.digeltech.discountone.ui.discounts.DiscountsFragment"
+        android:label="@string/fr_discount_title"
+        tools:layout="@layout/fragment_discounts">
+        <argument
+            android:name="slug"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="title"
+            app:argType="string"
+            android:defaultValue="" />
 
         <action
             android:id="@+id/toDealFragment"
@@ -220,6 +284,14 @@
         android:name="com.digeltech.discountone.ui.coupons.CouponsFragment"
         android:label="@string/nav_coupons"
         tools:layout="@layout/fragment_coupons">
+        <argument
+            android:name="slug"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="title"
+            app:argType="string"
+            android:defaultValue="" />
         <action
             android:id="@+id/toProfileFragment"
             app:destination="@id/profileFragment" />

@@ -2,7 +2,8 @@ package com.digeltech.discountone.domain.model
 
 data class Homepage(
     val listOfBanners: List<Deal>,
-//    val soloBanner: Banner,
-    val bestDeals: CategoryWithDeals,
-    val categories: List<CategoryWithSubcategories>
+    val discounts: CategoryWithDeals,
+    val coupons: CategoryWithDeals,
+    val shops: List<HomeShop>,
+    val categories: List<CategoryWithDeals>
 )

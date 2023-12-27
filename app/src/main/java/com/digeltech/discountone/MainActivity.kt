@@ -58,6 +58,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appUpdateManager: AppUpdateManager
     private lateinit var referrerClient: InstallReferrerClient
 
+    private var selectedMenuItemId: Int = 0
+
     @Inject
     lateinit var logger: AppEventsLogger
 
@@ -75,10 +77,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        prefs = SharedPreferencesDataSource(applicationContext)
+        prefs = SharedPreferencesDataSource(this)
         Hawk.delete(KEY_HOMEPAGE_DATA)
 
-        appUpdateManager = AppUpdateManagerFactory.create(applicationContext)
+        appUpdateManager = AppUpdateManagerFactory.create(this)
         logger = AppEventsLogger.newLogger(this)
 
         showBannerIfNotLogin()
@@ -104,11 +106,14 @@ class MainActivity : AppCompatActivity() {
         if (!prefs.isLogin()) {
             val handler = Handler(Looper.getMainLooper())
             handler.postDelayed({
-                val dialogFragment = SignUpDialogFragment()
-                dialogFragment.show(supportFragmentManager, dialogFragment.tag)
+                if (!supportFragmentManager.isStateSaved) {
+                    val dialogFragment = SignUpDialogFragment()
+                    dialogFragment.show(supportFragmentManager, dialogFragment.tag)
+                }
             }, 3 * 60 * 1000) // 3 minutes
         }
     }
+
 
     private fun registerReceiverForReferrerLink() {
         referrerClient = InstallReferrerClient.newBuilder(this).build()
@@ -217,7 +222,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.categoryAndShopFragment,
                 R.id.dealsFragment,
                 R.id.shopsFragment,
-                R.id.couponsFragment -> {
+                R.id.couponsFragment,
+                R.id.discountsFragment -> {
                     binding.bottomNavMenu.visibility = View.VISIBLE
                 }
                 else -> {
@@ -232,28 +238,41 @@ class MainActivity : AppCompatActivity() {
 
             binding.bottomNavMenu.setupWithNavController(navController)
             binding.bottomNavMenu.setOnItemSelectedListener { menuItem ->
+                if (selectedMenuItemId == menuItem.itemId) {
+                    return@setOnItemSelectedListener true // user can't press same icon 2 times
+                }
                 val navOptions = NavOptions.Builder()
                     .setPopUpTo(menuItem.itemId, false)
                     .build()
                 when (menuItem.itemId) {
                     R.id.homeFragment -> {
                         navController.navigate(R.id.homeFragment, null, navOptions)
+                        selectedMenuItemId = menuItem.itemId
                         true
                     }
                     R.id.categoriesFragment -> {
                         navController.navigate(R.id.categoriesFragment, null, navOptions)
+                        selectedMenuItemId = menuItem.itemId
                         true
                     }
                     R.id.dealsFragment -> {
                         navController.navigate(R.id.dealsFragment, null, navOptions)
+                        selectedMenuItemId = menuItem.itemId
                         true
                     }
                     R.id.shopsFragment -> {
                         navController.navigate(R.id.shopsFragment, null, navOptions)
+                        selectedMenuItemId = menuItem.itemId
                         true
                     }
                     R.id.couponsFragment -> {
                         navController.navigate(R.id.couponsFragment, null, navOptions)
+                        selectedMenuItemId = menuItem.itemId
+                        true
+                    }
+                    R.id.discountsFragment -> {
+                        navController.navigate(R.id.discountsFragment, null, navOptions)
+                        selectedMenuItemId = menuItem.itemId
                         true
                     }
                     else -> false

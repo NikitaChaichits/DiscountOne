@@ -16,6 +16,10 @@ data class ItemWithChildDto(
     val id: Int,
     @SerializedName("name")
     val name: String,
+    @SerializedName("slug")
+    val slug: String,
+    @SerializedName("taxonomy")
+    val taxonomy: String?,
     @SerializedName("child")
     val child: List<ItemDto>,
 )
@@ -25,4 +29,8 @@ data class ItemDto(
     val id: Int,
     @SerializedName("name")
     val name: String,
+    @SerializedName("slug")
+    val slug: String,
+    @SerializedName("taxonomy")
+    val taxonomy: String?,
 )

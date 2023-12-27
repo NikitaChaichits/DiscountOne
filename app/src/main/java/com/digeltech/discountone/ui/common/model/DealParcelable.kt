@@ -2,7 +2,6 @@ package com.digeltech.discountone.ui.common.model
 
 import android.os.Parcelable
 import com.digeltech.discountone.domain.model.Deal
-import com.digeltech.discountone.util.safeToInt
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -15,21 +14,25 @@ data class DealParcelable(
     var imagesUrl: List<String>?,
     val shopName: String,
     val shopSlug: String,
-    val shopImageUrl: String,
-    val shopLink: String,
-    val oldPrice: String?,
-    val price: String?,
+    val shopImageUrl: String?,
+    val shopLink: String?,
+    val oldPrice: Int,
+    val price: Int,
     val priceCurrency: String = "₹",
     val promocode: String?,
     val rating: Int,
     val webLink: String?,
     var isAddedToBookmark: Boolean = false,
-    val publishedDate: String,
-    val lastUpdateDate: String,
+    val publishedDate: String?,
+    val lastUpdateDate: String?,
     val expirationDate: String?,
     val sale: String?,
     val saleSize: Int,
     val viewsClick: Int,
+    val dealType: DealType,
+    var couponsTypeName: String? = null,
+    var couponsTypeSlug: String? = null,
+    var couponsCategory: String? = null
 ) : Parcelable
 
 fun List<Deal>.toParcelableList(): List<DealParcelable> {
@@ -52,7 +55,7 @@ fun Deal.toParcelable(): DealParcelable {
         priceCurrency = priceCurrency,
         promocode = promocode,
         shopLink = shopLink,
-        rating = rating.safeToInt(),
+        rating = rating,
         isAddedToBookmark = isAddedToBookmark,
         publishedDate = publishedDate,
         expirationDate = expirationDate,
@@ -61,7 +64,9 @@ fun Deal.toParcelable(): DealParcelable {
         saleSize = saleSize,
         viewsClick = viewsClick,
         webLink = webLink,
+        dealType = dealType,
+        couponsTypeSlug = couponsTypeSlug,
+        couponsTypeName = couponsTypeName,
+        couponsCategory = couponsCategory
     )
 }
-
-

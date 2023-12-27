@@ -25,9 +25,3 @@ data class CategoryWithDeals(
     val parentName: String = "",
     val showParentName: Boolean = false
 )
-
-data class CategoryWithSubcategories(
-    val id: Int,
-    val name: String,
-    val subcategories: List<CategoryWithDeals>,
-)

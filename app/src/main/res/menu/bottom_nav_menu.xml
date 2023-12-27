@@ -7,9 +7,14 @@
         android:title="@string/nav_home" />
 
     <item
-        android:id="@id/categoriesFragment"
+        android:id="@id/couponsFragment"
+        android:icon="@drawable/ic_coupons"
+        android:title="@string/nav_coupons" />
+
+    <item
+        android:id="@id/discountsFragment"
         android:icon="@drawable/ic_categories"
-        android:title="@string/nav_categories" />
+        android:title="@string/nav_discounts" />
 
     <item
         android:id="@id/shopsFragment"

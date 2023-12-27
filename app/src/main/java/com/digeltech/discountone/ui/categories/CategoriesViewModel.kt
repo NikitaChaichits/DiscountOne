@@ -3,7 +3,7 @@ package com.digeltech.discountone.ui.categories
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.digeltech.discountone.common.base.BaseViewModel
+import com.digeltech.discountone.common.base.BaseFilteringViewModel
 import com.digeltech.discountone.domain.model.Category
 import com.digeltech.discountone.ui.categories.interactor.CategoriesInteractor
 import com.digeltech.discountone.ui.common.SEARCH_DELAY
@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CategoriesViewModel @Inject constructor(
     private val interactor: CategoriesInteractor,
-) : BaseViewModel() {
+) : BaseFilteringViewModel() {
 
     private val _categories: MutableLiveData<List<Pair<Category, Category?>>> = MutableLiveData()
     val categories: LiveData<List<Pair<Category, Category?>>> = _categories

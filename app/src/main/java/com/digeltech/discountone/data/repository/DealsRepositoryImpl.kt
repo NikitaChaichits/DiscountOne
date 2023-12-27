@@ -2,14 +2,15 @@ package com.digeltech.discountone.data.repository
 
 import com.digeltech.discountone.data.mapper.DealsMapper
 import com.digeltech.discountone.data.mapper.HomepageMapper
+import com.digeltech.discountone.data.source.remote.api.DiscountApi
 import com.digeltech.discountone.data.source.remote.api.ServerApi
 import com.digeltech.discountone.domain.model.AllDeals
 import com.digeltech.discountone.domain.model.Deal
 import com.digeltech.discountone.domain.model.Homepage
 import com.digeltech.discountone.domain.repository.DealsRepository
 import com.digeltech.discountone.ui.common.model.CategoryType
+import com.digeltech.discountone.ui.common.model.DealType
 import com.digeltech.discountone.ui.common.model.SortBy
-import com.digeltech.discountone.ui.common.model.Sorting
 import com.digeltech.discountone.ui.home.KEY_HOMEPAGE_DATA
 import com.digeltech.discountone.util.log
 import com.orhanobut.hawk.Hawk
@@ -19,7 +20,14 @@ import javax.inject.Inject
 
 class DealsRepositoryImpl @Inject constructor(
     private val api: ServerApi,
+    private val discountApi: DiscountApi,
 ) : DealsRepository {
+
+    override suspend fun getDiscounts(): Result<AllDeals> = withContext(Dispatchers.IO) {
+        runCatching {
+            DealsMapper().mapAllDeals(discountApi.getDiscounts())
+        }
+    }
 
     override suspend fun getBestDeals(): Result<AllDeals> = withContext(Dispatchers.IO) {
         runCatching {
@@ -84,25 +92,21 @@ class DealsRepositoryImpl @Inject constructor(
 
     override suspend fun getSortingDeals(
         page: String,
-        categoryType: CategoryType,
-        taxSlug: String,
-        sorting: Sorting,
-        sortBy: SortBy,
-        catOrShopSlug: String?,
-        priceFrom: Int?,
-        priceTo: Int?
+        dealType: DealType?,
+        sortBy: SortBy?,
+        categorySlug: String?,
+        shopSlug: String?,
+        taxonomy: String?,
     ): Result<List<Deal>> = withContext(Dispatchers.IO) {
         runCatching {
             DealsMapper().mapDeals(
                 api.getSortingDeals(
                     page = page,
-                    categoryType = categoryType.type,
-                    taxSlug = taxSlug,
-                    sorting = sorting.name,
-                    sortBy = sortBy.type,
-                    catOrShopSlug = catOrShopSlug,
-                    priceFrom = priceFrom,
-                    priceTo = priceTo,
+                    sortBy = sortBy?.type,
+                    categorySlug = categorySlug,
+                    shopSlug = shopSlug,
+                    dealType = dealType?.type,
+                    taxonomy = taxonomy
                 )
             )
         }

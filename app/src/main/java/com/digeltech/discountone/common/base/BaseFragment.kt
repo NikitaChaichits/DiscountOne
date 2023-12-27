@@ -62,8 +62,8 @@ abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
     fun showDialogError(text: String) {
         return MaterialDialog(requireContext())
             .lifecycleOwner(viewLifecycleOwner)
-//            .message(text = text)
-            .message(text = "Something went wrong. Please try later.")
+            .message(text = text)
+//            .message(text = "Something went wrong. Please try later.")
             .cornerRadius(res = R.dimen.radius_12)
             .cancelOnTouchOutside(cancelable = true)
             .onDismiss { navigateBack() }
@@ -88,6 +88,10 @@ abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
     /* Navigation */
     fun navigate(@IdRes resId: Int) {
         findNavController().navigate(resId)
+    }
+
+    fun navigate(@IdRes resId: Int, bundle: Bundle) {
+        findNavController().navigate(resId, bundle)
     }
 
     fun navigate(direction: NavDirections) {

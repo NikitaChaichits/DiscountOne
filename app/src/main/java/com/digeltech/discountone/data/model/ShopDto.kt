@@ -16,3 +16,14 @@ data class ShopDto(
     @SerializedName("meta_value")
     val popular: String,
 )
+
+data class HomeShopDto(
+    @SerializedName("id")
+    val id: Int?,
+    @SerializedName("name")
+    val name: String?,
+    @SerializedName("image_url")
+    var icon: String?,
+    @SerializedName("slug")
+    val slug: String?,
+)

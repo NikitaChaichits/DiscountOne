@@ -8,3 +8,10 @@ data class Shop(
     var icon: String?,
     val popular: Boolean,
 )
+
+data class HomeShop(
+    val id: String,
+    val name: String,
+    var icon: String?,
+    val slug: String,
+)

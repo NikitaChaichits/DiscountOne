@@ -9,10 +9,19 @@ data class AllDeals(
 data class ItemWithChild(
     val id: Int,
     val name: String,
+    val slug: String,
+    val taxonomy: String?,
     val child: List<Item>
 )
 
 data class Item(
     val id: Int,
     val name: String,
+    val slug: String,
+    val taxonomy: String?,
+    var isParent: Boolean = false
 )
+
+fun List<Item>.getTaxonomyBySlug(slug: String): String? {
+    return find { it.slug == slug }?.taxonomy
+}

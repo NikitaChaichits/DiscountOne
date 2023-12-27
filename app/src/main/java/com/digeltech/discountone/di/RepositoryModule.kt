@@ -1,15 +1,11 @@
 package com.digeltech.discountone.di
 
-import com.digeltech.discountone.data.repository.AuthRepositoryImpl
-import com.digeltech.discountone.data.repository.CategoriesRepositoryImpl
-import com.digeltech.discountone.data.repository.DealsRepositoryImpl
-import com.digeltech.discountone.data.repository.ShopsRepositoryImpl
+import com.digeltech.discountone.data.repository.*
 import com.digeltech.discountone.data.source.remote.api.AuthApi
+import com.digeltech.discountone.data.source.remote.api.CouponsApi
+import com.digeltech.discountone.data.source.remote.api.DiscountApi
 import com.digeltech.discountone.data.source.remote.api.ServerApi
-import com.digeltech.discountone.domain.repository.AuthRepository
-import com.digeltech.discountone.domain.repository.CategoriesRepository
-import com.digeltech.discountone.domain.repository.DealsRepository
-import com.digeltech.discountone.domain.repository.ShopsRepository
+import com.digeltech.discountone.domain.repository.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,8 +16,8 @@ import dagger.hilt.components.SingletonComponent
 object RepositoryModule {
 
     @Provides
-    fun provideCouponRepository(serverApi: ServerApi): DealsRepository =
-        DealsRepositoryImpl(serverApi)
+    fun provideDealRepository(serverApi: ServerApi, discountApi: DiscountApi): DealsRepository =
+        DealsRepositoryImpl(serverApi, discountApi)
 
     @Provides
     fun provideCategoriesRepository(serverApi: ServerApi): CategoriesRepository =
@@ -34,4 +30,8 @@ object RepositoryModule {
     @Provides
     fun provideAuthRepository(authApi: AuthApi): AuthRepository =
         AuthRepositoryImpl(authApi)
+
+    @Provides
+    fun provideCouponRepository(couponsApi: CouponsApi): CouponsRepository =
+        CouponsRepositoryImpl(couponsApi)
 }

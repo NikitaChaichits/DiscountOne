@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.discountone.R
@@ -13,10 +12,11 @@ import com.digeltech.discountone.databinding.FragmentHomeBinding
 import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.common.KEY_USER
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
-import com.digeltech.discountone.ui.common.getShopIdByName
+import com.digeltech.discountone.ui.common.adapter.LinearDealAdapter
+import com.digeltech.discountone.ui.common.model.DealType
 import com.digeltech.discountone.ui.home.adapter.BannerAdapter
-import com.digeltech.discountone.ui.home.adapter.HomeLinearDealAdapter
-import com.digeltech.discountone.ui.home.adapter.SubcategoriesAdapter
+import com.digeltech.discountone.ui.home.adapter.CategoriesAdapter
+import com.digeltech.discountone.ui.home.adapter.HomeShopsAdapter
 import com.digeltech.discountone.util.logSearch
 import com.digeltech.discountone.util.view.*
 import com.digeltech.discountone.util.view.recycler.AutoScrollHelper
@@ -37,13 +37,16 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
     lateinit var logger: AppEventsLogger
 
     private lateinit var bannerAdapter: BannerAdapter
-    private lateinit var bestDealsAdapter: HomeLinearDealAdapter
-    private lateinit var categoriesAdapter: SubcategoriesAdapter
-    private lateinit var searchDealAdapter: GridDealAdapter
-    private lateinit var autoScrollHelper: AutoScrollHelper
-    private lateinit var cyclicScrollHelper: CyclicScrollHelper
+    private lateinit var couponsLinearAdapter: LinearDealAdapter
+    private lateinit var discountsLinearAdapter: LinearDealAdapter
+    private lateinit var categoriesAdapter: CategoriesAdapter
+    private lateinit var shopsAdapter: HomeShopsAdapter
 
-//    private lateinit var categoryPaginator: CategoryPaginator
+    private lateinit var searchDealAdapter: GridDealAdapter
+    private lateinit var bannerAutoScrollHelper: AutoScrollHelper
+    private lateinit var bannerCyclicScrollHelper: CyclicScrollHelper
+//    private lateinit var shopsAutoScrollHelper: AutoScrollHelper
+//    private lateinit var shopsCyclicScrollHelper: CyclicScrollHelper
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -62,7 +65,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
 
     override fun onQueryTextChange(newText: String?): Boolean {
         if (newText.isNullOrEmpty()) {
-            binding.homeGroup.visible()
+            binding.mainContentGroup.visible()
             binding.tvSearchResultEmpty.invisible()
             binding.rvSearchDeals.invisible()
         } else {
@@ -74,7 +77,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
 
     override fun onPause() {
         super.onPause()
-        autoScrollHelper.stopAutoScroll()
+        bannerAutoScrollHelper.stopAutoScroll()
     }
 
     private fun initListeners() {
@@ -90,34 +93,49 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
             setOnQueryTextListener(this@HomeFragment)
             queryHint = getString(R.string.search_by_deals)
         }
-        binding.tvMoreBestDeals.setOnClickListener {
-            navigate(R.id.dealsFragment)
+        binding.tvMoreDiscounts.setOnClickListener {
+            navigate(R.id.discountsFragment)
+        }
+        binding.tvMoreCoupons.setOnClickListener {
+            navigate(R.id.couponsFragment)
+        }
+        binding.ivArrowBackward.setOnClickListener {
+            val layoutManager = binding.rvShops.layoutManager as? LinearLayoutManager
+            val currentPosition = layoutManager?.findFirstVisibleItemPosition() ?: 0
+            if (currentPosition != 0)
+                binding.rvShops.smoothScrollToPosition(currentPosition - 1)
+        }
+        binding.ivArrowForward.setOnClickListener {
+            val layoutManager = binding.rvShops.layoutManager as? LinearLayoutManager
+            val currentPosition = layoutManager?.findLastVisibleItemPosition() ?: 0
+            binding.rvShops.smoothScrollToPosition(currentPosition + 1)
         }
     }
 
     private fun initAdapters() {
         // scrolling horizontal RV for banners
         bannerAdapter = BannerAdapter {
-            val args = Bundle().apply {
-                putInt("id", getShopIdByName(it.shopName))
-                putString("title", it.shopName)
-                putString("slug", it.shopSlug)
-                putBoolean("isFromCategory", false)
-            }
-            findNavController().navigate(R.id.categoryAndShopFragment, args)
+            navigate(HomeFragmentDirections.toDealFragment(it))
         }
         binding.rvBanners.adapter = bannerAdapter
 
-        autoScrollHelper = AutoScrollHelper(binding.rvBanners)
-        cyclicScrollHelper = CyclicScrollHelper()
-        cyclicScrollHelper.enableCyclicScroll(binding.rvBanners)
-        autoScrollHelper.startAutoScroll()
+        bannerCyclicScrollHelper = CyclicScrollHelper()
+        bannerCyclicScrollHelper.enableCyclicScroll(binding.rvBanners)
+        bannerAutoScrollHelper = AutoScrollHelper(binding.rvBanners)
+        bannerAutoScrollHelper.startAutoScroll()
 
-        // Linear horizontal RV for best deals
-        bestDealsAdapter = HomeLinearDealAdapter(
+//        shopsCyclicScrollHelper = CyclicScrollHelper()
+//        shopsCyclicScrollHelper.enableCyclicScroll(binding.rvShops)
+//        shopsAutoScrollHelper = AutoScrollHelper(binding.rvShops)
+//        shopsAutoScrollHelper.startShopsAutoScroll()
+
+        // Linear horizontal RV for discounts
+        discountsLinearAdapter = LinearDealAdapter(
             onClickListener = {
-//                viewModel.updateDealViewsClick(it.id.toString())
-                navigate(HomeFragmentDirections.toDealFragment(it))
+                val bundle = Bundle().apply {
+                    putParcelable("deal", it)
+                }
+                navigate(R.id.dealFragment, bundle)
             },
             onBookmarkClickListener = {
                 viewModel.updateBookmark(it.toString())
@@ -125,22 +143,45 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
             fragmentManager = requireActivity().supportFragmentManager,
             logger = logger,
         )
-        binding.rvBestDeals.adapter = bestDealsAdapter
+        binding.rvDiscounts.adapter = discountsLinearAdapter
+
+        // Linear horizontal RV for coupons
+        couponsLinearAdapter = LinearDealAdapter(
+            onClickListener = {
+                val bundle = Bundle().apply {
+                    putParcelable("deal", it)
+                }
+                navigate(R.id.dealFragment, bundle)
+            },
+            onBookmarkClickListener = {
+                viewModel.updateBookmark(it.toString())
+            },
+            fragmentManager = requireActivity().supportFragmentManager,
+            logger = logger,
+        )
+        binding.rvCoupons.adapter = couponsLinearAdapter
+
+        // Linear horizontal RV for shops
+        shopsAdapter = HomeShopsAdapter(
+            onClickListener = {
+                navigate(HomeFragmentDirections.toShopFragment(it.id.toInt(), it.name, it.slug))
+            }
+        )
+        binding.rvShops.adapter = shopsAdapter
 
         // Linear vertical RV for Categories with subcategories with Linear horizontal RV for deals
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        categoriesAdapter = SubcategoriesAdapter(
+        categoriesAdapter = CategoriesAdapter(
             onMoreDealsClick = {
-                navigate(
-                    HomeFragmentDirections.toCategoryFragment(
-                        id = it.id,
-                        title = it.name,
-                        slug = it.slug,
-                    )
-                )
+                if (it.items.first().dealType == DealType.COUPONS)
+                    navigate(HomeFragmentDirections.toCouponsFragment(title = it.name, slug = it.slug))
+                else navigate(HomeFragmentDirections.toDiscountsFragment(title = it.name, slug = it.slug))
             },
             onDealClick = {
-                navigate(HomeFragmentDirections.toDealFragment(it))
+                val bundle = Bundle().apply {
+                    putParcelable("deal", it)
+                }
+                navigate(R.id.dealFragment, bundle)
             },
             onBookmarkClickListener = {
                 viewModel.updateBookmark(it.toString())
@@ -151,25 +192,6 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         binding.rvCategories.apply {
             adapter = categoriesAdapter
             this.layoutManager = layoutManager
-//            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-//                    super.onScrollStateChanged(recyclerView, newState)
-//                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-//                        val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
-//                        val totalItemCount = layoutManager.itemCount
-//
-//                        if (lastVisibleItemPosition == totalItemCount - 1) {
-//                            if (categoryPaginator.hasNextPage()) {
-//                                val nextPage = categoryPaginator.getNextPage()
-//                                categoriesAdapter.submitList(categoriesAdapter.currentList + nextPage)
-//                            } else if (categoryPaginator.hasLastPage()) {
-//                                val lastPage = categoryPaginator.getLastPage()
-//                                categoriesAdapter.submitList(categoriesAdapter.currentList + lastPage)
-//                            }
-//                        }
-//                    }
-//                }
-//            })
         }
 
         //Grid RV for searching results
@@ -202,37 +224,32 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
     }
 
     private fun observeData() {
-        viewModel.banners.observe(viewLifecycleOwner, bannerAdapter::submitList)
         viewModel.loadingGifVisibility.observe(viewLifecycleOwner) {
             if (it)
                 binding.ivLoading.visible()
             else
                 binding.ivLoading.invisible()
         }
-        viewModel.bestDeals.observe(viewLifecycleOwner) {
-            binding.bestDealsGroup.visible()
-            bestDealsAdapter.submitList(it)
-        }
+        viewModel.banners.observe(viewLifecycleOwner, bannerAdapter::submitList)
+        viewModel.discounts.observe(viewLifecycleOwner, discountsLinearAdapter::submitList)
+        viewModel.coupons.observe(viewLifecycleOwner, couponsLinearAdapter::submitList)
+        viewModel.shops.observe(viewLifecycleOwner, shopsAdapter::submitList)
         viewModel.categories.observe(viewLifecycleOwner) {
-//            categoryPaginator = CategoryPaginator(it)
-//            categoriesAdapter.submitList(categoryPaginator.getNextPage())
             categoriesAdapter.submitList(it)
+            binding.mainContentGroup.visible()
         }
         viewModel.searchResult.observe(viewLifecycleOwner) {
             if (binding.searchView.query.isNullOrEmpty()) {
-                binding.homeGroup.visible()
-                binding.bestDealsGroup.visible()
+                binding.mainContentGroup.visible()
                 binding.tvSearchResultEmpty.invisible()
                 binding.rvSearchDeals.invisible()
             } else if (it.isEmpty() && !binding.searchView.query.isNullOrEmpty()) {
                 binding.tvSearchResultEmpty.visible()
-                binding.homeGroup.invisible()
-                binding.bestDealsGroup.invisible()
+                binding.mainContentGroup.invisible()
                 binding.rvSearchDeals.invisible()
             } else {
                 binding.tvSearchResultEmpty.invisible()
-                binding.homeGroup.gone()
-                binding.bestDealsGroup.gone()
+                binding.mainContentGroup.gone()
                 binding.rvSearchDeals.visible()
             }
             searchDealAdapter.submitList(it)

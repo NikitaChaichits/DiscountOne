@@ -1,14 +1,14 @@
 package com.digeltech.discountone.ui.bestdeals
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.digeltech.discountone.common.base.BaseViewModel
+import com.digeltech.discountone.common.base.BaseFilteringViewModel
 import com.digeltech.discountone.domain.model.Item
+import com.digeltech.discountone.domain.model.getTaxonomyBySlug
 import com.digeltech.discountone.domain.repository.DealsRepository
 import com.digeltech.discountone.ui.common.SEARCH_DELAY
 import com.digeltech.discountone.ui.common.getUserId
 import com.digeltech.discountone.ui.common.model.DealParcelable
+import com.digeltech.discountone.ui.common.model.DealType
 import com.digeltech.discountone.ui.common.model.toParcelableList
 import com.digeltech.discountone.util.log
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,27 +21,10 @@ const val ITEMS_ON_PAGE = "50"
 @HiltViewModel
 class DealsViewModel @Inject constructor(
     private val dealsRepository: DealsRepository
-) : BaseViewModel() {
-
-    private val _deals: MutableLiveData<List<DealParcelable>> = MutableLiveData()
-    val deals: LiveData<List<DealParcelable>> = _deals
-
-    private val _categories: MutableLiveData<List<Item>> = MutableLiveData()
-    val categories: LiveData<List<Item>> = _categories
-
-    private val _shops: MutableLiveData<List<Item>> = MutableLiveData()
-    val shops: LiveData<List<Item>> = _shops
+) : BaseFilteringViewModel() {
 
     private val allDeals = mutableListOf<DealParcelable>()
     private val allDealsWithSorting = mutableListOf<DealParcelable>()
-
-    private var categorySpinnerPosition = 0
-    private var shopSpinnerPosition = 0
-    private var selectedShopId = 0
-    private var selectedCategoryId = 0
-    private var currentPage = 3 // startup count of deal = 100, next loading loading per page = 50, so currentPage is 2
-    private var currentSortingPage =
-        3 // startup count of deal = 100, next loading loading per page = 50, so currentPage is 2
 
     init {
         initDeals()
@@ -53,32 +36,62 @@ class DealsViewModel @Inject constructor(
             dealsRepository.getBestDeals()
                 .onSuccess {
                     allDeals.addAll(it.posts.toParcelableList())
-                    _deals.postValue(it.posts.toParcelableList())
-                    _shops.postValue(it.shops)
+                    deals.postValue(it.posts.toParcelableList())
+                    filteringShops.postValue(it.shops)
 
                     val categories = mutableListOf<Item>()
                     it.categories.forEach { category ->
-                        categories.add(Item(category.id, category.name))
+                        categories.add(Item(category.id, category.name, category.slug, category.taxonomy, true))
                         category.child.forEach { childItem ->
-                            // yes, hardcode, but for child items customer need padding
-                            categories.add(Item(childItem.id, "• ${childItem.name}"))
+                            categories.add(Item(childItem.id, childItem.name, childItem.slug, childItem.taxonomy))
                         }
                     }
-                    _categories.postValue(categories)
+                    val updatedCategoriesList = categories.map { item ->
+                        if (item.taxonomy == "categories-coupons") {
+                            item.copy(name = "${item.name} (coupon)")
+                        } else {
+                            item
+                        }
+                    }
+                    filteringCategories.postValue(updatedCategoriesList)
                 }
                 .onFailure { error.postValue(it.toString()) }
             loadingGifVisibility.value = false
         }
     }
 
+    fun getFilteringDeals() {
+        if (filteringJob?.isActive == true) filteringJob?.cancel()
+
+        filteringJob = viewModelScope.launchWithLoading {
+            dealsRepository.getSortingDeals(
+                dealType = dealType.takeIf { it != DealType.ALL },
+                categorySlug = categorySlug.takeIf { it.isNotEmpty() },
+                shopSlug = shopSlug.takeIf { it.isNotEmpty() },
+                taxonomy = filteringCategories.value?.getTaxonomyBySlug(categorySlug)
+            )
+                .onSuccess { _deals ->
+                    if (_deals.isNotEmpty()) {
+                        allDealsWithSorting.clear()
+                        allDealsWithSorting.addAll(_deals.toParcelableList())
+                        deals.postValue(allDealsWithSorting as List<DealParcelable>)
+                    }
+                }
+                .onFailure {
+                    log(it.toString())
+                    filteringError.postValue(it.toString())
+                }
+        }
+    }
+
     fun loadMoreDeals() {
-        if (shopSpinnerPosition == 0 && categorySpinnerPosition == 0) {
+        if (currentShopSpinnerPosition == 0 && currentCategorySpinnerPosition == 0) {
             viewModelScope.launchWithLoading {
                 dealsRepository.getAllDeals(currentPage.toString(), ITEMS_ON_PAGE)
-                    .onSuccess { deals ->
-                        if (deals.isNotEmpty()) {
-                            allDeals.addAll(deals.toParcelableList())
-                            _deals.postValue(allDeals as List<DealParcelable>)
+                    .onSuccess { _deals ->
+                        if (_deals.isNotEmpty()) {
+                            allDeals.addAll(_deals.toParcelableList())
+                            deals.postValue(allDeals as List<DealParcelable>)
                             currentPage++
                         }
                     }
@@ -87,21 +100,28 @@ class DealsViewModel @Inject constructor(
                     }
             }
         } else {
-            viewModelScope.launchWithLoading {
-                dealsRepository.getDealsByCategoryAndShopId(
-                    page = currentSortingPage.toString(),
-                    categoryId = selectedCategoryId.takeIf { categoryId -> categoryId != 0 },
-                    shopId = selectedShopId.takeIf { shopId -> shopId != 0 })
-                    .onSuccess { deals ->
-                        if (deals.isNotEmpty()) {
-                            allDealsWithSorting.addAll(deals.toParcelableList())
-                            _deals.postValue(allDealsWithSorting as List<DealParcelable>)
-                            currentSortingPage++
+            if (filteringJob?.isActive == true) filteringJob?.cancel()
+
+            filteringJob = viewModelScope.launchWithLoading {
+                dealsRepository.getSortingDeals(
+                    page = currentPage.toString(),
+                    dealType = dealType.takeIf { it != DealType.ALL },
+                    categorySlug = categorySlug.takeIf { it.isNotEmpty() },
+                    shopSlug = shopSlug.takeIf { it.isNotEmpty() },
+                    taxonomy = filteringCategories.value?.getTaxonomyBySlug(categorySlug)
+                )
+                    .onSuccess { _deals ->
+                        if (_deals.isNotEmpty()) {
+                            allDealsWithSorting.addAll(_deals.toParcelableList())
+                            deals.postValue(allDealsWithSorting as List<DealParcelable>)
+                            currentPage++
+                        } else {
+                            isNeedMoreLoading = false
                         }
                     }
-                    .onFailure { e ->
-                        log(e.toString())
-                        error.postValue(e.toString())
+                    .onFailure {
+                        log(it.toString())
+                        isNeedMoreLoading = false
                     }
             }
         }
@@ -120,88 +140,6 @@ class DealsViewModel @Inject constructor(
         }
     }
 
-    fun updateDealViewsClick(id: String) {
-        viewModelScope.launch {
-            dealsRepository.updateDealViewsClick(id)
-        }
-    }
-
-    fun loadCategoryDeals(spinnerPosition: Int) {
-        categorySpinnerPosition = spinnerPosition
-        selectedCategoryId = if (spinnerPosition > 0)
-            _categories.value?.get(spinnerPosition - 1)?.id ?: 0
-        else 0
-
-        viewModelScope.launch {
-            if (spinnerPosition == 0) {
-                if (shopSpinnerPosition == 0) {
-                    _deals.postValue(allDeals)
-                } else {
-                    loadShopDeals(shopSpinnerPosition)
-                }
-            } else {
-                viewModelScope.launchWithLoading {
-                    _categories.value?.get(spinnerPosition - 1)?.id?.let { categoryId ->
-                        dealsRepository.getDealsByCategoryAndShopId(
-                            categoryId = categoryId,
-                            shopId = selectedShopId.takeIf { shopId -> shopId != 0 })
-                            .onSuccess { deals ->
-                                allDealsWithSorting.clear()
-                                allDealsWithSorting.addAll(deals.toParcelableList())
-                                _deals.postValue(allDealsWithSorting as List<DealParcelable>)
-                                currentSortingPage = 3
-                            }
-                            .onFailure { e ->
-                                log(e.toString())
-                                error.postValue(e.toString())
-                            }
-                    }
-                }
-            }
-        }
-    }
-
-    fun loadShopDeals(spinnerPosition: Int) {
-        shopSpinnerPosition = spinnerPosition
-
-        selectedShopId = if (spinnerPosition > 0)
-            _shops.value?.get(spinnerPosition - 1)?.id ?: 0
-        else 0
-
-        viewModelScope.launch {
-            if (spinnerPosition == 0) {
-                if (categorySpinnerPosition == 0) {
-                    _deals.postValue(allDeals)
-                } else {
-                    loadCategoryDeals(categorySpinnerPosition)
-                }
-            } else {
-                viewModelScope.launchWithLoading {
-                    _shops.value?.get(spinnerPosition - 1)?.id?.let { shopId ->
-                        dealsRepository.getDealsByCategoryAndShopId(
-                            categoryId = selectedCategoryId.takeIf { categoryId -> categoryId != 0 },
-                            shopId = shopId
-                        )
-                            .onSuccess { deals ->
-                                allDealsWithSorting.clear()
-                                allDealsWithSorting.addAll(deals.toParcelableList())
-                                _deals.postValue(allDealsWithSorting as List<DealParcelable>)
-                                currentSortingPage = 3
-                            }
-                            .onFailure { e ->
-                                log(e.toString())
-                                error.postValue(e.toString())
-                            }
-                    }
-                }
-            }
-        }
-    }
-
-    fun getCategoriesFilterPosition(): Int = categorySpinnerPosition
-
-    fun getShopFilterPosition(): Int = shopSpinnerPosition
-
     fun updateBookmark(dealId: String) {
         getUserId()?.let { userId ->
             viewModelScope.launch {
@@ -209,4 +147,76 @@ class DealsViewModel @Inject constructor(
             }
         }
     }
+//
+//    fun loadCategoryDeals(spinnerPosition: Int) {
+//        currentCategorySpinnerPosition = spinnerPosition
+//        selectedCategoryId = if (spinnerPosition > 0)
+//            filteringCategories.value?.get(spinnerPosition - 1)?.id ?: 0
+//        else 0
+//
+//        viewModelScope.launch {
+//            if (spinnerPosition == 0) {
+//                if (currentShopSpinnerPosition == 0) {
+//                    deals.postValue(allDeals)
+//                } else {
+//                    loadShopDeals(currentShopSpinnerPosition)
+//                }
+//            } else {
+//                viewModelScope.launchWithLoading {
+//                    filteringCategories.value?.get(spinnerPosition - 1)?.id?.let { categoryId ->
+//                        dealsRepository.getDealsByCategoryAndShopId(
+//                            categoryId = categoryId,
+//                            shopId = selectedShopId.takeIf { shopId -> shopId != 0 })
+//                            .onSuccess { _deals ->
+//                                allDealsWithSorting.clear()
+//                                allDealsWithSorting.addAll(_deals.toParcelableList())
+//                                deals.postValue(allDealsWithSorting as List<DealParcelable>)
+//                                currentPage = 3
+//                            }
+//                            .onFailure { e ->
+//                                log(e.toString())
+//                                error.postValue(e.toString())
+//                            }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//    fun loadShopDeals(spinnerPosition: Int) {
+//        currentShopSpinnerPosition = spinnerPosition
+//
+//        selectedShopId = if (spinnerPosition > 0)
+//            filteringShops.value?.get(spinnerPosition - 1)?.id ?: 0
+//        else 0
+//
+//        viewModelScope.launch {
+//            if (spinnerPosition == 0) {
+//                if (currentCategorySpinnerPosition == 0) {
+//                    deals.postValue(allDeals)
+//                } else {
+//                    loadCategoryDeals(currentCategorySpinnerPosition)
+//                }
+//            } else {
+//                viewModelScope.launchWithLoading {
+//                    filteringShops.value?.get(spinnerPosition - 1)?.id?.let { shopId ->
+//                        dealsRepository.getDealsByCategoryAndShopId(
+//                            categoryId = selectedCategoryId.takeIf { categoryId -> categoryId != 0 },
+//                            shopId = shopId
+//                        )
+//                            .onSuccess { _deals ->
+//                                allDealsWithSorting.clear()
+//                                allDealsWithSorting.addAll(_deals.toParcelableList())
+//                                deals.postValue(allDealsWithSorting as List<DealParcelable>)
+//                                currentPage = 3
+//                            }
+//                            .onFailure { e ->
+//                                log(e.toString())
+//                                error.postValue(e.toString())
+//                            }
+//                    }
+//                }
+//            }
+//        }
+//    }
 }

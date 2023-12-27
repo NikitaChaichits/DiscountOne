@@ -21,6 +21,8 @@
         android:id="@+id/ivBookmark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_offset_4dp"
+        android:layout_marginStart="@dimen/common_offset_4dp"
         android:background="@drawable/bg_ic_bookmark"
         android:padding="@dimen/common_offset_8dp"
         android:src="@drawable/ic_wishlist_colored"
@@ -101,7 +103,7 @@
         tools:text="Nike Air Max 90 SENike Air Max 90 SENike Air Max 90 SENike Air Max 90 SENike Air Max 90 SE" />
 
     <ImageView
-        android:id="@+id/ivCouponCompanyLogo"
+        android:id="@+id/ivShopLogo"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginBottom="@dimen/common_offset_8dp"
@@ -109,7 +111,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/tvCouponCompany"
+        android:id="@+id/tvShopName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/common_offset_8dp"
@@ -118,10 +120,10 @@
         android:maxLines="1"
         android:textColor="@color/defaultColor"
         android:textSize="@dimen/common_textSize_14sp"
-        app:layout_constraintBottom_toBottomOf="@id/ivCouponCompanyLogo"
+        app:layout_constraintBottom_toBottomOf="@id/ivShopLogo"
         app:layout_constraintEnd_toStartOf="@id/ivRateArrow"
-        app:layout_constraintStart_toEndOf="@id/ivCouponCompanyLogo"
-        app:layout_constraintTop_toTopOf="@id/ivCouponCompanyLogo"
+        app:layout_constraintStart_toEndOf="@id/ivShopLogo"
+        app:layout_constraintTop_toTopOf="@id/ivShopLogo"
         tools:text="Nike" />
 
     <ImageView
@@ -130,9 +132,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/common_offset_8dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/ivCouponCompanyLogo"
+        app:layout_constraintBottom_toBottomOf="@id/ivShopLogo"
         app:layout_constraintEnd_toStartOf="@id/tvRate"
-        app:layout_constraintTop_toTopOf="@id/ivCouponCompanyLogo"
+        app:layout_constraintTop_toTopOf="@id/ivShopLogo"
         tools:src="@drawable/ic_arrow_up" />
 
     <TextView
@@ -143,9 +145,9 @@
         android:textColor="@color/defaultColor"
         android:textSize="@dimen/common_textSize_14sp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/ivCouponCompanyLogo"
+        app:layout_constraintBottom_toBottomOf="@id/ivShopLogo"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/ivCouponCompanyLogo"
+        app:layout_constraintTop_toTopOf="@id/ivShopLogo"
         tools:text="273" />
 
     <com.google.android.material.button.MaterialButton

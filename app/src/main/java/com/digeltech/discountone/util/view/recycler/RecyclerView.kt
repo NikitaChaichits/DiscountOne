@@ -21,7 +21,6 @@ class AutoScrollHelper(private val recyclerView: RecyclerView) {
     private var job: Job? = null
     private var currentPosition: Int = 0
 
-
     fun startAutoScroll() {
         stopAutoScroll() // Stop any existing autoscroll
 
@@ -32,7 +31,30 @@ class AutoScrollHelper(private val recyclerView: RecyclerView) {
 
                 val layoutManager = recyclerView.layoutManager as? LinearLayoutManager
                 layoutManager?.let {
-                    val itemCount = layoutManager.itemCount
+                    val itemCount = it.itemCount
+
+                    currentPosition++
+                    if (currentPosition >= itemCount) {
+                        currentPosition = 0
+                    }
+
+                    recyclerView.smoothScrollToPosition(currentPosition)
+                }
+            }
+        }
+    }
+
+    fun startShopsAutoScroll() {
+        stopAutoScroll() // Stop any existing autoscroll
+
+        currentPosition = 0
+        job = CoroutineScope(Dispatchers.Main).launch {
+            while (isActive) {
+                delay(3000L)
+
+                val layoutManager = recyclerView.layoutManager as? LinearLayoutManager
+                layoutManager?.let {
+                    val itemCount = it.itemCount
 
                     currentPosition++
                     if (currentPosition >= itemCount) {
