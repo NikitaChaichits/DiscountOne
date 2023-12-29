@@ -15,6 +15,7 @@ import com.digeltech.discountone.databinding.FragmentCategoryAndShopBinding
 import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.common.KEY_USER
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
+import com.digeltech.discountone.ui.common.model.Taxonomy
 import com.digeltech.discountone.util.logSearch
 import com.digeltech.discountone.util.view.*
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
@@ -47,6 +48,7 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
          */
         binding.tvSortingCatOrShop.text = if (args.isFromCategory) getString(R.string.fr_deals_filter_shops)
         else getString(R.string.fr_deals_filter_categories)
+
         viewModel.initScreenData(args.slug, args.id.toString())
 
         loadProfileImage()
@@ -122,7 +124,7 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
         )
         binding.rvSearchDeals.adapter = searchAdapter
 
-        val sortingTypeArray = resources.getStringArray(R.array.fr_deals_sorting_type)
+        val sortingTypeArray = resources.getStringArray(R.array.fr_coupons_sorting_type)
         val sortingTypeAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, sortingTypeArray)
         sortingTypeAdapter.setDropDownViewResource(R.layout.spinner_item_dropdown)
         binding.spinnerSortingType.adapter = sortingTypeAdapter
@@ -158,13 +160,8 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
                 viewModel.filteringCategories.value?.let {
                     when (position) {
                         1 -> { // DealType.DISCOUNTS chosen
-                            val stringArray = resources.getStringArray(R.array.fr_deals_sorting_type)
-                            val spinnerAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, stringArray)
-                            spinnerAdapter.setDropDownViewResource(R.layout.spinner_item_dropdown)
-                            binding.spinnerSortingType.adapter = spinnerAdapter
-
                             //setting only coupons categories for category spinner
-                            val filteredCategories = it.filter { item -> item.taxonomy != "categories-coupons" }
+                            val filteredCategories = it.filter { item -> item.taxonomy != Taxonomy.COUPONS.type }
                             val adapterCategories = ArrayAdapter(
                                 requireContext(),
                                 R.layout.spinner_item,
@@ -174,14 +171,8 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
                             binding.spinnerCategories.adapter = adapterCategories
                         }
                         2 -> { // DealType.COUPONS chosen
-                            //setting only 2 types for spinner Sort by
-                            val stringArray = resources.getStringArray(R.array.fr_coupons_sorting_type)
-                            val spinnerAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, stringArray)
-                            spinnerAdapter.setDropDownViewResource(R.layout.spinner_item_dropdown)
-                            binding.spinnerSortingType.adapter = spinnerAdapter
-
                             //setting only discounts categories for category spinner
-                            val filteredCategories = it.filter { item -> item.taxonomy == "categories-coupons" }
+                            val filteredCategories = it.filter { item -> item.taxonomy == Taxonomy.COUPONS.type }
                             val adapterCategories = ArrayAdapter(
                                 requireContext(),
                                 R.layout.spinner_item,
@@ -191,11 +182,6 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
                             binding.spinnerCategories.adapter = adapterCategories
                         }
                         else -> {// DealType.ALL chosen
-                            val stringArray = resources.getStringArray(R.array.fr_deals_sorting_type)
-                            val spinnerAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, stringArray)
-                            spinnerAdapter.setDropDownViewResource(R.layout.spinner_item_dropdown)
-                            binding.spinnerSortingType.adapter = spinnerAdapter
-
                             val adapterCategories = categoriesStyledAdapter(requireContext(), it)
                             adapterCategories.setDropDownViewResource(R.layout.spinner_item_dropdown)
                             binding.spinnerCategories.adapter = adapterCategories

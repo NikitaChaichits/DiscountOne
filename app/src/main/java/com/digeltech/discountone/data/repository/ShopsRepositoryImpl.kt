@@ -5,8 +5,6 @@ import com.digeltech.discountone.data.source.remote.api.ServerApi
 import com.digeltech.discountone.domain.model.Item
 import com.digeltech.discountone.domain.model.Shop
 import com.digeltech.discountone.domain.repository.ShopsRepository
-import com.digeltech.discountone.ui.common.KEY_SHOPS
-import com.orhanobut.hawk.Hawk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -18,9 +16,7 @@ class ShopsRepositoryImpl @Inject constructor(
 
     override suspend fun getAllShops(): Result<List<Shop>> = withContext(Dispatchers.IO) {
         runCatching {
-            ShopMapper().map(api.getAllShops()).also {
-                Hawk.put(KEY_SHOPS, it)
-            }
+            ShopMapper().map(api.getAllShops())
         }
     }
 

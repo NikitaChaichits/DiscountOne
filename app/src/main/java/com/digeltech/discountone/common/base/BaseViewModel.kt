@@ -20,6 +20,7 @@ open class BaseViewModel : ViewModel() {
     val searchResult = MutableLiveData<List<DealParcelable>>()
 
     var searchJob: Job? = null
+    var filteringJob: Job? = null
 
     val loadingGifVisibility = MutableLiveData(false)
 
@@ -35,8 +36,12 @@ open class BaseViewModel : ViewModel() {
         return launch(context, start) {
             loading.start()
             block()
-            loading.stop()
         }
+    }
+
+    fun stopJobs() {
+        if (filteringJob?.isActive == true) filteringJob?.cancel()
+        if (searchJob?.isActive == true) searchJob?.cancel()
     }
 
     @MainThread

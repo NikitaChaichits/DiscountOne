@@ -3,9 +3,9 @@ package com.digeltech.discountone.domain.repository
 import com.digeltech.discountone.domain.model.AllDeals
 import com.digeltech.discountone.domain.model.Deal
 import com.digeltech.discountone.domain.model.Homepage
-import com.digeltech.discountone.ui.common.model.CategoryType
 import com.digeltech.discountone.ui.common.model.DealType
 import com.digeltech.discountone.ui.common.model.SortBy
+import com.digeltech.discountone.ui.common.model.Taxonomy
 
 interface DealsRepository {
 
@@ -17,8 +17,6 @@ interface DealsRepository {
 
     suspend fun getAllCoupons(): Result<List<Deal>>
 
-    suspend fun getDealsByCategoryAndShopId(page: String = "1", categoryId: Int?, shopId: Int?): Result<List<Deal>>
-
     suspend fun getDealById(dealId: Int): Result<Deal>
 
     suspend fun getHomepage(): Result<Homepage>
@@ -27,9 +25,13 @@ interface DealsRepository {
 
     suspend fun updateDealViewsClick(id: String)
 
-    suspend fun getSimilarDealsByCategory(categoryName: String): List<Deal>
+    suspend fun getSimilarDealsByCategory(categoryName: String): Result<List<Deal>>
 
-    suspend fun getSimilarDealsByShop(shopName: String): List<Deal>
+    suspend fun getSimilarCouponsByCategory(): Result<List<Deal>>
+
+    suspend fun getSimilarDealsByShop(shopName: String): Result<List<Deal>>
+
+    suspend fun getSimilarCouponsByShop(shopName: String): Result<List<Deal>>
 
     suspend fun getSortingDeals(
         page: String = "1",
@@ -41,7 +43,7 @@ interface DealsRepository {
     ): Result<List<Deal>>
 
     suspend fun getInitialDeals(
-        categoryType: CategoryType,
+        categoryType: Taxonomy,
         id: String
     ): Result<List<Deal>>
 

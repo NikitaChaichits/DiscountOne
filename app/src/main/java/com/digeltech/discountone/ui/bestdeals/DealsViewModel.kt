@@ -9,6 +9,7 @@ import com.digeltech.discountone.ui.common.SEARCH_DELAY
 import com.digeltech.discountone.ui.common.getUserId
 import com.digeltech.discountone.ui.common.model.DealParcelable
 import com.digeltech.discountone.ui.common.model.DealType
+import com.digeltech.discountone.ui.common.model.Taxonomy
 import com.digeltech.discountone.ui.common.model.toParcelableList
 import com.digeltech.discountone.util.log
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -47,8 +48,8 @@ class DealsViewModel @Inject constructor(
                         }
                     }
                     val updatedCategoriesList = categories.map { item ->
-                        if (item.taxonomy == "categories-coupons") {
-                            item.copy(name = "${item.name} (coupon)")
+                        if (item.taxonomy == Taxonomy.COUPONS.type) {
+                            item.copy(name = "${item.name} (coupons)")
                         } else {
                             item
                         }
@@ -61,31 +62,35 @@ class DealsViewModel @Inject constructor(
     }
 
     fun getFilteringDeals() {
-        if (filteringJob?.isActive == true) filteringJob?.cancel()
+        if (currentShopSpinnerPosition == 0 && currentCategorySpinnerPosition == 0 && currentDealTypeSpinnerPosition == 0) {
+            deals.postValue(allDeals as List<DealParcelable>)
+        } else {
+            if (filteringJob?.isActive == true) filteringJob?.cancel()
 
-        filteringJob = viewModelScope.launchWithLoading {
-            dealsRepository.getSortingDeals(
-                dealType = dealType.takeIf { it != DealType.ALL },
-                categorySlug = categorySlug.takeIf { it.isNotEmpty() },
-                shopSlug = shopSlug.takeIf { it.isNotEmpty() },
-                taxonomy = filteringCategories.value?.getTaxonomyBySlug(categorySlug)
-            )
-                .onSuccess { _deals ->
-                    if (_deals.isNotEmpty()) {
-                        allDealsWithSorting.clear()
-                        allDealsWithSorting.addAll(_deals.toParcelableList())
-                        deals.postValue(allDealsWithSorting as List<DealParcelable>)
+            filteringJob = viewModelScope.launchWithLoading {
+                dealsRepository.getSortingDeals(
+                    dealType = dealType.takeIf { it != DealType.ALL },
+                    categorySlug = categorySlug.takeIf { it.isNotEmpty() },
+                    shopSlug = shopSlug.takeIf { it.isNotEmpty() },
+                    taxonomy = filteringCategories.value?.getTaxonomyBySlug(categorySlug)
+                )
+                    .onSuccess { _deals ->
+                        if (_deals.isNotEmpty()) {
+                            allDealsWithSorting.clear()
+                            allDealsWithSorting.addAll(_deals.toParcelableList())
+                            deals.postValue(allDealsWithSorting as List<DealParcelable>)
+                        }
                     }
-                }
-                .onFailure {
-                    log(it.toString())
-                    filteringError.postValue(it.toString())
-                }
+                    .onFailure {
+                        log(it.toString())
+                        filteringError.postValue(it.toString())
+                    }
+            }
         }
     }
 
     fun loadMoreDeals() {
-        if (currentShopSpinnerPosition == 0 && currentCategorySpinnerPosition == 0) {
+        if (currentShopSpinnerPosition == 0 && currentCategorySpinnerPosition == 0 && currentDealTypeSpinnerPosition == 0) {
             viewModelScope.launchWithLoading {
                 dealsRepository.getAllDeals(currentPage.toString(), ITEMS_ON_PAGE)
                     .onSuccess { _deals ->

@@ -14,6 +14,7 @@ import com.digeltech.discountone.databinding.FragmentBestDealsBinding
 import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.common.KEY_USER
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
+import com.digeltech.discountone.ui.common.model.Taxonomy
 import com.digeltech.discountone.util.logSearch
 import com.digeltech.discountone.util.view.*
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
@@ -169,7 +170,7 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
                     when (position) {
                         1 -> { // DealType.DISCOUNTS chosen
                             //setting only coupons categories for category spinner
-                            val filteredCategories = it.filter { item -> item.taxonomy != "categories-coupons" }
+                            val filteredCategories = it.filter { item -> item.taxonomy != Taxonomy.COUPONS.type }
                             val adapterCategories = ArrayAdapter(
                                 requireContext(),
                                 R.layout.spinner_item,
@@ -181,7 +182,7 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
                         2 -> { // DealType.COUPONS chosen
                             //setting only discounts categories for category spinner
 
-                            val filteredCategories = it.filter { item -> item.taxonomy == "categories-coupons" }
+                            val filteredCategories = it.filter { item -> item.taxonomy == Taxonomy.COUPONS.type }
                             val adapterCategories = ArrayAdapter(
                                 requireContext(),
                                 R.layout.spinner_item,

@@ -1,16 +1,5 @@
 package com.digeltech.discountone.ui.common.model
 
-enum class Sorting {
-    ASC, DESC
-}
-
-//enum class SortBy(val type: String) {
-//    PRICE("price"),
-//    SALE_SIZE("sale_size"),
-//    VIEWS_CLICK("views_click"),
-//    DATE("date"),
-//}
-
 enum class SortBy(val type: String) {
     NEW_DEALS("new_deals"),
     MOST_POPULAR("most_popular"),
@@ -19,7 +8,7 @@ enum class SortBy(val type: String) {
     PRICE_DESC("price_desc"),
 }
 
-enum class CategoryType(val type: String) {
+enum class Taxonomy(val type: String) {
     CATEGORY("categories"),
     SHOP("categories-shops"),
     COUPONS("categories-coupons")

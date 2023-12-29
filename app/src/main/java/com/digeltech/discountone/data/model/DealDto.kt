@@ -30,9 +30,9 @@ data class DealDto(
     @SerializedName("shop_link")
     val shopLink: String?,
     @SerializedName("old_price")
-    val oldPrice: Int?,
+    val oldPrice: Double?,
     @SerializedName("price")
-    val price: Int?,
+    val price: Double?,
     @SerializedName("sale")
     val sale: String?,
     @SerializedName("sale_size")

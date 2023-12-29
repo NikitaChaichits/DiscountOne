@@ -109,10 +109,11 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
             )
 
             initListeners(deal)
-            viewModel.getSimilarDealsByCategory(deal.categoryId, deal.id)
-            viewModel.getSimilarDealsByShop(deal.shopName, deal.id)
-
             scrollView.visible()
+
+            viewModel.getSimilarDealsByShop(deal.shopSlug, deal.id, deal.dealType)
+            viewModel.getSimilarDealsByCategory(deal.id)
+
 
             if (deal.dealType == DealType.COUPONS) {
                 deal.shopImageUrl?.let(ivCouponShopImage::setImageWithRadius)
@@ -122,6 +123,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
                 tvPriceWithDiscount.gone()
                 tvCouponPrice.visible()
                 btnGetDeal.backgroundTintList = ColorStateList.valueOf(btnGetDeal.getColorValue(R.color.green))
+                btnGetDeal.text = getString(R.string.get_coupon)
 
                 if (deal.price != 0) {
                     tvCouponPrice.background = tvCouponPrice.getImageDrawable(R.color.couponPriceColor)
@@ -231,7 +233,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
         ivShopLogo.setOnClickListener {
             navigate(
                 DealFragmentDirections.toShopFragment(
-                    id = getShopIdByName(deal.shopName),
+                    id = getShopIdBySlug(deal.shopSlug),
                     title = deal.shopName,
                     slug = deal.shopSlug,
                 )
@@ -240,7 +242,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
         tvShopName.setOnClickListener {
             navigate(
                 DealFragmentDirections.toShopFragment(
-                    id = getShopIdByName(deal.shopName),
+                    id = getShopIdBySlug(deal.shopSlug),
                     title = deal.shopName,
                     slug = deal.shopSlug,
                 )
@@ -322,7 +324,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
             binding.tvSimilarShopName.setOnClickListener {
                 navigate(
                     DealFragmentDirections.toShopFragment(
-                        id = getShopIdByName(firstDeal.shopName),
+                        id = getShopIdBySlug(firstDeal.shopSlug),
                         title = firstDeal.shopName,
                         slug = firstDeal.shopSlug,
                         isFromCategory = false

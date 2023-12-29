@@ -34,7 +34,7 @@
     <string name="empty_search_result"><b>Nothing found</b>\nTry different phrasing</string>
     <string name="deal_type">Deal Type</string>
     <string name="sort_by">Sort by</string>
-    <string name="empty_sorting_result"><b>Nothing found</b></string>
+    <string name="empty_sorting_result"><b>Deals not found. Try other filter settings.</b></string>
     <string name="toast_bookmark">You must be logged in to add bookmark</string>
     <string name="share_text">Look what I found in DiscouneOne %s</string>
     <string name="trow_off">Trow off</string>

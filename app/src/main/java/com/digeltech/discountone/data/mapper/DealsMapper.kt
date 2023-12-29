@@ -31,8 +31,8 @@ class DealsMapper {
             shopName = data.shopName.toString(),
             shopSlug = data.shopSlug.toString(),
             shopImageUrl = data.shopImageUrl.toString(),
-            oldPrice = data.oldPrice ?: 0,
-            price = data.price ?: 0,
+            oldPrice = data.oldPrice?.toInt() ?: 0,
+            price = data.price?.toInt() ?: 0,
             promocode = data.promocode,
             shopLink = data.shopLink.toString(),
             rating = data.rating ?: 0,
@@ -53,6 +53,8 @@ class DealsMapper {
 
     fun mapOtherDeals(data: OtherDealsDto): List<Deal> = data.posts.map(::mapToDeal)
 
+    fun mapTopCoupons(data: List<DealDto>): List<Deal> = data.map(::mapToDeal)
+
     fun mapBookmarks(data: List<DealDto>): List<Deal> = data.map {
         mapToBookmark(it)
     }
@@ -69,8 +71,8 @@ class DealsMapper {
             shopName = data.shopName.toString(),
             shopSlug = data.shopSlug.toString(),
             shopImageUrl = data.shopImageUrl.toString(),
-            oldPrice = data.oldPrice ?: 0,
-            price = data.price ?: 0,
+            oldPrice = data.oldPrice?.toInt() ?: 0,
+            price = data.price?.toInt() ?: 0,
             promocode = data.promocode,
             shopLink = data.shopLink.toString(),
             rating = data.rating ?: 0,

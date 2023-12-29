@@ -10,7 +10,7 @@ data class Shop(
 )
 
 data class HomeShop(
-    val id: String,
+    val id: Int,
     val name: String,
     var icon: String?,
     val slug: String,

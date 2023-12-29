@@ -3,6 +3,7 @@ package com.digeltech.discountone.ui.discounts
 import androidx.lifecycle.viewModelScope
 import com.digeltech.discountone.common.base.BaseFilteringViewModel
 import com.digeltech.discountone.domain.model.Item
+import com.digeltech.discountone.domain.model.getTaxonomyBySlug
 import com.digeltech.discountone.domain.repository.DealsRepository
 import com.digeltech.discountone.ui.common.SEARCH_DELAY
 import com.digeltech.discountone.ui.common.getUserId
@@ -59,16 +60,28 @@ class DiscountsViewModel @Inject constructor(
         }
     }
 
-    fun searchDeals(searchText: String) {
-        if (searchJob?.isActive == true) searchJob?.cancel()
+    fun getFilteringDeals() {
+        if (filteringJob?.isActive == true) filteringJob?.cancel()
 
-        searchJob = viewModelScope.launch {
-            delay(SEARCH_DELAY)
-
-            launchWithLoading {
-                val deals = dealsRepository.searchDeals(searchText)
-                searchResult.value = deals.toParcelableList()
-            }
+        filteringJob = viewModelScope.launchWithLoading {
+            dealsRepository.getSortingDeals(
+                dealType = DealType.DISCOUNTS,
+                sortBy = sortBy,
+                categorySlug = categorySlug.takeIf { it.isNotEmpty() },
+                shopSlug = shopSlug.takeIf { it.isNotEmpty() },
+                taxonomy = filteringCategories.value?.getTaxonomyBySlug(categorySlug)
+            )
+                .onSuccess { _deals ->
+                    if (_deals.isNotEmpty()) {
+                        allDeals.clear()
+                        allDeals.addAll(_deals.toParcelableList())
+                        deals.postValue(allDeals as List<DealParcelable>)
+                    }
+                }
+                .onFailure {
+                    log(it.toString())
+                    filteringError.postValue(it.toString())
+                }
         }
     }
 
@@ -82,7 +95,8 @@ class DiscountsViewModel @Inject constructor(
                     dealType = DealType.DISCOUNTS,
                     sortBy = sortBy,
                     categorySlug = categorySlug.takeIf { it.isNotEmpty() },
-                    shopSlug = shopSlug.takeIf { it.isNotEmpty() }
+                    shopSlug = shopSlug.takeIf { it.isNotEmpty() },
+                    taxonomy = filteringCategories.value?.getTaxonomyBySlug(categorySlug)
                 )
                     .onSuccess { _deals ->
                         if (_deals.isNotEmpty()) {
@@ -101,35 +115,24 @@ class DiscountsViewModel @Inject constructor(
         }
     }
 
+    fun searchDeals(searchText: String) {
+        if (searchJob?.isActive == true) searchJob?.cancel()
+
+        searchJob = viewModelScope.launch {
+            delay(SEARCH_DELAY)
+
+            launchWithLoading {
+                val deals = dealsRepository.searchDeals(searchText)
+                searchResult.value = deals.toParcelableList()
+            }
+        }
+    }
+
     fun updateBookmark(dealId: String) {
         getUserId()?.let { userId ->
             viewModelScope.launch {
                 dealsRepository.updateBookmark(userId, dealId)
             }
-        }
-    }
-
-    fun getFilteringDeals() {
-        if (filteringJob?.isActive == true) filteringJob?.cancel()
-
-        filteringJob = viewModelScope.launchWithLoading {
-            dealsRepository.getSortingDeals(
-                dealType = DealType.DISCOUNTS,
-                sortBy = sortBy,
-                categorySlug = categorySlug.takeIf { it.isNotEmpty() },
-                shopSlug = shopSlug.takeIf { it.isNotEmpty() }
-            )
-                .onSuccess { _deals ->
-                    if (_deals.isNotEmpty()) {
-                        allDeals.clear()
-                        allDeals.addAll(_deals.toParcelableList())
-                        deals.postValue(allDeals as List<DealParcelable>)
-                    }
-                }
-                .onFailure {
-                    log(it.toString())
-                    filteringError.postValue(it.toString())
-                }
         }
     }
 

@@ -5,9 +5,9 @@ import com.digeltech.discountone.domain.model.Item
 import com.digeltech.discountone.domain.repository.CategoriesRepository
 import com.digeltech.discountone.domain.repository.DealsRepository
 import com.digeltech.discountone.domain.repository.ShopsRepository
-import com.digeltech.discountone.ui.common.model.CategoryType
 import com.digeltech.discountone.ui.common.model.DealType
 import com.digeltech.discountone.ui.common.model.SortBy
+import com.digeltech.discountone.ui.common.model.Taxonomy
 import javax.inject.Inject
 
 internal class CategoryAndShopInteractorImpl @Inject constructor(
@@ -42,7 +42,7 @@ internal class CategoryAndShopInteractorImpl @Inject constructor(
             taxonomy = taxonomy
         )
 
-    override suspend fun getInitialDeals(categoryType: CategoryType, id: String): Result<List<Deal>> =
+    override suspend fun getInitialDeals(categoryType: Taxonomy, id: String): Result<List<Deal>> =
         dealsRepository.getInitialDeals(categoryType, id)
 
     override suspend fun updateBookmark(userId: String, dealId: String) = dealsRepository.updateBookmark(userId, dealId)

@@ -41,10 +41,16 @@ interface ServerApi {
     @GET("/wp-json/theme/v1/top_deals")
     suspend fun getTopDeals(@Query("cat") categorySlugName: String): OtherDealsDto
 
+    @GET("/wp-json/theme/v1/top_deals_coupons")
+    suspend fun getTopCoupons(): OtherDealsDto
+
     @GET("/wp-json/theme/v1/other_deals")
     suspend fun getOtherDeals(@Query("shop") shopSlugName: String): OtherDealsDto
 
-    @GET("/wp-json/theme/v1/list_categories_start_page")
+    @GET("/wp-json/theme/v1/other_deals_coupons")
+    suspend fun getOtherCoupons(@Query("shop") shopSlugName: String): OtherDealsDto
+
+    @GET("/wp-json/theme/v1/list_categories_start_page_new")
     suspend fun getInitialDeals(
         @Query("categories") categoryType: String,
         @Query("id") id: String
@@ -60,17 +66,10 @@ interface ServerApi {
         @Query("taxonomy") taxonomy: String?,
     ): List<DealDto>
 
-    @GET("/wp-json/theme/v1/list_categories?categories=categories&limit=100")
-    suspend fun getSortingBestDeals(
-        @Query("page") page: String,
-        @Query("id_category") idCategory: Int?,
-        @Query("id_shop") idShop: Int?
-    ): List<DealDto>
-
-    @GET("/wp-json/theme/v1/cat_and_chop_filter?category=categories")
+    @GET("/wp-json/theme/v1/cat_and_chop_filter_new?category=categories")
     suspend fun getCategoryStores(@Query("pageslug") pageslug: String): List<CategoryShopDto>
 
-    @GET("/wp-json/theme/v1/cat_and_chop_filter?category=categories-shops")
+    @GET("/wp-json/theme/v1/cat_and_chop_filter_new?category=categories-shops")
     suspend fun getShopCategories(@Query("pageslug") pageslug: String): List<CategoryShopDto>
 
     @GET("/wp-json/theme/v1/users/save_coupons")

@@ -2,9 +2,9 @@ package com.digeltech.discountone.ui.categoryandshop.interactor
 
 import com.digeltech.discountone.domain.model.Deal
 import com.digeltech.discountone.domain.model.Item
-import com.digeltech.discountone.ui.common.model.CategoryType
 import com.digeltech.discountone.ui.common.model.DealType
 import com.digeltech.discountone.ui.common.model.SortBy
+import com.digeltech.discountone.ui.common.model.Taxonomy
 
 interface CategoryAndShopInteractor {
 
@@ -24,7 +24,7 @@ interface CategoryAndShopInteractor {
     ): Result<List<Deal>>
 
     suspend fun getInitialDeals(
-        categoryType: CategoryType,
+        categoryType: Taxonomy,
         id: String
     ): Result<List<Deal>>
 

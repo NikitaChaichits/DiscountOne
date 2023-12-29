@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.digeltech.discountone.R
 import com.digeltech.discountone.domain.model.Item
+import com.digeltech.discountone.ui.common.model.Taxonomy
 
 fun categoriesStyledAdapter(context: Context, list: List<Item>) =
     object : ArrayAdapter<String>(context, R.layout.spinner_item, getNamesWithFirstAllString(list)) {
@@ -19,7 +20,10 @@ fun categoriesStyledAdapter(context: Context, list: List<Item>) =
             if (position > 0) {
                 val category = list[position - 1]
                 if (category.isParent) {
-                    view.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
+                    if (category.taxonomy == Taxonomy.COUPONS.type)
+                        view.setTextColor(ContextCompat.getColor(context, R.color.green))
+                    else
+                        view.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
                     view.setTypeface(null, Typeface.BOLD)
                     view.paintFlags = view.paintFlags or Paint.UNDERLINE_TEXT_FLAG
                 } else {

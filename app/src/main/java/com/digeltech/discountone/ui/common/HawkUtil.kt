@@ -43,13 +43,6 @@ fun removeFromBookmarkCache(id: Int) {
     Hawk.put(KEY_SAVED_DEALS, mutableList.toList())
 }
 
-fun getListOfBookmarks(): List<DealParcelable>? {
-    if (Hawk.contains(KEY_SAVED_DEALS)) {
-        return Hawk.get(KEY_SAVED_DEALS)
-    }
-    return emptyList()
-}
-
 fun isAddedToBookmark(id: Int): Boolean {
     if (Hawk.contains(KEY_SAVED_DEALS)) {
         val listOfBookMark: List<DealParcelable> = Hawk.get(KEY_SAVED_DEALS)
@@ -70,20 +63,11 @@ fun getCategoryNameById(id: Int): String {
     return "Unknown category name"
 }
 
-fun getShopNameById(id: Int): String {
-    if (Hawk.contains(KEY_SHOPS)) {
-        return Hawk.get<List<Category>>(KEY_SHOPS).find {
-            it.id == id
-        }?.name ?: "Unknown shop name"
-    }
-    return "Unknown shop name"
-}
-
-fun getShopIdByName(name: String): Int {
+fun getShopIdBySlug(slug: String): Int {
     if (Hawk.contains(KEY_SHOPS)) {
         val listOfShops: List<Shop> = Hawk.get(KEY_SHOPS)
         return listOfShops.find {
-            it.name.equals(name, true)
+            it.slug.equals(slug, true)
         }?.id ?: 0
     }
     return 0

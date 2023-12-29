@@ -2,11 +2,10 @@ package com.digeltech.discountone.common.base
 
 import androidx.lifecycle.MutableLiveData
 import com.digeltech.discountone.domain.model.Item
-import com.digeltech.discountone.ui.common.model.CategoryType
 import com.digeltech.discountone.ui.common.model.DealParcelable
 import com.digeltech.discountone.ui.common.model.DealType
 import com.digeltech.discountone.ui.common.model.SortBy
-import kotlinx.coroutines.Job
+import com.digeltech.discountone.ui.common.model.Taxonomy
 
 /**
  * Startup products loading 100 items, then additional loading by 50 items,
@@ -16,7 +15,7 @@ const val CURRENT_PAGE_ON_START = 3
 
 open class BaseFilteringViewModel : BaseViewModel() {
 
-    var filteringJob: Job? = null
+
     val filteringError = MutableLiveData<String>()
 
     val deals = MutableLiveData<List<DealParcelable>>()
@@ -91,7 +90,7 @@ open class BaseFilteringViewModel : BaseViewModel() {
                     ""
                 } else {
                     filteringCategories.value
-                        ?.filter { it.taxonomy == CategoryType.COUPONS.type }
+                        ?.filter { it.taxonomy == Taxonomy.COUPONS.type }
                         ?.get(spinnerPosition - 1)?.slug ?: ""
                 }
             }
@@ -100,7 +99,7 @@ open class BaseFilteringViewModel : BaseViewModel() {
                     ""
                 } else {
                     filteringCategories.value
-                        ?.filter { it.taxonomy != CategoryType.COUPONS.type }
+                        ?.filter { it.taxonomy != Taxonomy.COUPONS.type }
                         ?.get(spinnerPosition - 1)?.slug ?: ""
                 }
             }

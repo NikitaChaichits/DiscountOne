@@ -7,10 +7,12 @@ import com.digeltech.discountone.data.source.remote.api.ServerApi
 import com.digeltech.discountone.domain.model.AllDeals
 import com.digeltech.discountone.domain.model.Deal
 import com.digeltech.discountone.domain.model.Homepage
+import com.digeltech.discountone.domain.model.Shop
 import com.digeltech.discountone.domain.repository.DealsRepository
-import com.digeltech.discountone.ui.common.model.CategoryType
+import com.digeltech.discountone.ui.common.KEY_SHOPS
 import com.digeltech.discountone.ui.common.model.DealType
 import com.digeltech.discountone.ui.common.model.SortBy
+import com.digeltech.discountone.ui.common.model.Taxonomy
 import com.digeltech.discountone.ui.home.KEY_HOMEPAGE_DATA
 import com.digeltech.discountone.util.log
 import com.orhanobut.hawk.Hawk
@@ -47,13 +49,6 @@ class DealsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getDealsByCategoryAndShopId(page: String, categoryId: Int?, shopId: Int?): Result<List<Deal>> =
-        withContext(Dispatchers.IO) {
-            runCatching {
-                DealsMapper().mapDeals(api.getSortingBestDeals(page, categoryId, shopId))
-            }
-        }
-
     override suspend fun getDealById(dealId: Int): Result<Deal> = withContext(Dispatchers.IO) {
         runCatching {
             DealsMapper().mapToDeal(api.getDeal(dealId.toString()))
@@ -67,6 +62,17 @@ class DealsRepositoryImpl @Inject constructor(
             } else {
                 HomepageMapper().map(api.getHomepage()).also {
                     Hawk.put(KEY_HOMEPAGE_DATA, it)
+                    val cacheShops = it.shops.map { shop ->
+                        Shop(
+                            id = shop.id,
+                            name = shop.name,
+                            slug = shop.slug,
+                            countOfItems = 0,
+                            icon = shop.icon,
+                            popular = false
+                        )
+                    }
+                    Hawk.put(KEY_SHOPS, cacheShops)
                 }
             }
         }
@@ -82,12 +88,30 @@ class DealsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getSimilarDealsByCategory(categoryName: String): List<Deal> = withContext(Dispatchers.IO) {
-        DealsMapper().mapOtherDeals(api.getTopDeals(categoryName))
+    override suspend fun getSimilarDealsByCategory(categoryName: String): Result<List<Deal>> =
+        withContext(Dispatchers.IO) {
+            runCatching {
+                DealsMapper().mapOtherDeals(api.getTopDeals(categoryName))
+            }
+        }
+
+    override suspend fun getSimilarCouponsByCategory(): Result<List<Deal>> =
+        withContext(Dispatchers.IO) {
+            runCatching {
+                DealsMapper().mapOtherDeals(api.getTopCoupons())
+            }
+        }
+
+    override suspend fun getSimilarDealsByShop(shopName: String): Result<List<Deal>> = withContext(Dispatchers.IO) {
+        runCatching {
+            DealsMapper().mapOtherDeals(api.getOtherDeals(shopName))
+        }
     }
 
-    override suspend fun getSimilarDealsByShop(shopName: String): List<Deal> = withContext(Dispatchers.IO) {
-        DealsMapper().mapOtherDeals(api.getOtherDeals(shopName))
+    override suspend fun getSimilarCouponsByShop(shopName: String): Result<List<Deal>> = withContext(Dispatchers.IO) {
+        runCatching {
+            DealsMapper().mapOtherDeals(api.getOtherCoupons(shopName))
+        }
     }
 
     override suspend fun getSortingDeals(
@@ -112,7 +136,7 @@ class DealsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getInitialDeals(categoryType: CategoryType, id: String): Result<List<Deal>> =
+    override suspend fun getInitialDeals(categoryType: Taxonomy, id: String): Result<List<Deal>> =
         withContext(Dispatchers.IO) {
             runCatching {
                 DealsMapper().mapDeals(

@@ -41,7 +41,7 @@
         android:paddingHorizontal="@dimen/common_offset_4dp"
         android:textAllCaps="true"
         android:textColor="@color/white"
-        android:textSize="@dimen/common_textSize_14sp"
+        android:textSize="@dimen/common_textSize_12sp"
         android:textStyle="bold"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="@id/ivDealImage"
@@ -176,6 +176,7 @@
         app:layout_constraintBottom_toBottomOf="@id/ivShopLogo"
         app:layout_constraintStart_toEndOf="@id/ivShopLogo"
         app:layout_constraintTop_toTopOf="@id/ivShopLogo"
+        app:layout_constraintEnd_toEndOf="parent"
         tools:text="Nike" />
 
     <com.google.android.material.button.MaterialButton
@@ -190,28 +191,16 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnGetCoupon"
-        style="@style/ButtonColored.Coupon.Green"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:text="@string/get_coupon"
-        android:textAllCaps="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <androidx.constraintlayout.widget.Group
         android:id="@+id/grCouponUnique"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:constraint_referenced_ids="tvCouponCategoryName, ivCouponShopImage, tvCouponPrice, btnGetCoupon" />
+        app:constraint_referenced_ids="tvCouponCategoryName, ivCouponShopImage, tvCouponPrice" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/grDiscountUnique"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="tvPrice, tvPriceWithDiscount, ivShopLogo, tvShopName, btnGetDeal" />
+        app:constraint_referenced_ids="tvPrice, tvPriceWithDiscount, ivShopLogo, tvShopName" />
 </androidx.constraintlayout.widget.ConstraintLayout>

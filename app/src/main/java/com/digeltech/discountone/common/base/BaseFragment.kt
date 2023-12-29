@@ -45,6 +45,8 @@ abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
     override fun onPause() {
         super.onPause()
         hideKeyboard()
+        viewModel.stopJobs()
+        showLoading(false)
     }
 
     /* Messages */

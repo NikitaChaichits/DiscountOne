@@ -42,8 +42,8 @@ class HomepageMapper {
             shopName = shopName.toString(),
             shopSlug = shopSlug.toString(),
             shopImageUrl = shopImageUrl.toString(),
-            oldPrice = oldPrice ?: 0,
-            price = price ?: 0,
+            oldPrice = oldPrice?.toInt() ?: 0,
+            price = price?.toInt() ?: 0,
             promocode = promocode,
             shopLink = shopLink.toString(),
             rating = rating ?: 0,
@@ -64,7 +64,7 @@ class HomepageMapper {
 
     private fun HomeShopDto.mapToHomeShop(): HomeShop {
         return HomeShop(
-            id = id.toString(),
+            id = id ?: 0,
             name = name.toString(),
             icon = icon,
             slug = slug.toString()

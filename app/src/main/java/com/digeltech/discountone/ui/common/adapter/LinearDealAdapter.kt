@@ -1,6 +1,7 @@
 package com.digeltech.discountone.ui.common.adapter
 
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -51,7 +52,6 @@ class LinearDealAdapter(
             with(binding) {
                 root.setOnClickListener { onClickListener(item) }
                 btnGetDeal.setOnClickListener { onClickListener(item) }
-                btnGetCoupon.setOnClickListener { onClickListener(item) }
 
                 if (item.dealType == DealType.DISCOUNTS) discountDataSetting(item)
                 else couponDataSetting(item)
@@ -92,6 +92,8 @@ class LinearDealAdapter(
             grDiscountUnique.visible()
             grCouponUnique.gone()
 
+            btnGetDeal.backgroundTintList = ColorStateList.valueOf(btnGetDeal.getColorValue(R.color.colorPrimary))
+
             item.imageUrl.let(ivDealImage::setImageWithRadius)
             tvTitle.text = item.title
             tvPrice.setStrikethrough(item.priceCurrency + item.oldPrice)
@@ -110,6 +112,8 @@ class LinearDealAdapter(
         private fun RvDealLinearBinding.couponDataSetting(item: DealParcelable) {
             grDiscountUnique.gone()
             grCouponUnique.visible()
+
+            btnGetDeal.backgroundTintList = ColorStateList.valueOf(btnGetDeal.getColorValue(R.color.green))
 
             item.imageUrl.let(ivCouponImage::setImageWithRadius)
             tvCouponTitle.text = item.title

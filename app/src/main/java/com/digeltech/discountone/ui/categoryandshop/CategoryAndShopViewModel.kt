@@ -6,9 +6,9 @@ import com.digeltech.discountone.domain.model.getTaxonomyBySlug
 import com.digeltech.discountone.ui.categoryandshop.interactor.CategoryAndShopInteractor
 import com.digeltech.discountone.ui.common.SEARCH_DELAY
 import com.digeltech.discountone.ui.common.getUserId
-import com.digeltech.discountone.ui.common.model.CategoryType
 import com.digeltech.discountone.ui.common.model.DealParcelable
 import com.digeltech.discountone.ui.common.model.DealType
+import com.digeltech.discountone.ui.common.model.Taxonomy
 import com.digeltech.discountone.ui.common.model.toParcelableList
 import com.digeltech.discountone.util.log
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +22,7 @@ class CategoryAndShopViewModel @Inject constructor(
 ) : BaseFilteringViewModel() {
 
     private val allDeals = mutableListOf<DealParcelable>()
-    private var currentCategoryType: CategoryType = CategoryType.SHOP
+    private var currentCategoryType: Taxonomy = Taxonomy.SHOP
 
     fun initScreenData(slug: String, id: String) {
         if (allDeals.isEmpty()) {
@@ -33,7 +33,7 @@ class CategoryAndShopViewModel @Inject constructor(
                     .onSuccess {
                         val updatedItemList = it.map { item ->
                             if (item.taxonomy == "categories-coupons") {
-                                item.copy(name = "${item.name} (coupon)")
+                                item.copy(name = "${item.name} (coupons)")
                             } else {
                                 item
                             }
