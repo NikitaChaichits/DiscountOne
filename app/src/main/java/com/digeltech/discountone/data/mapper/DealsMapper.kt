@@ -43,7 +43,7 @@ class DealsMapper {
             saleSize = data.saleSize ?: 0,
             viewsClick = data.viewsClick ?: 0,
             webLink = data.webLink,
-            dealType = if (data.dealType == "coupons") DealType.COUPONS
+            dealType = if (data.dealType == DealType.COUPONS.type) DealType.COUPONS
             else DealType.DISCOUNTS,
             couponsTypeName = data.couponsTypeName,
             couponsTypeSlug = data.couponsTypeSlug,
@@ -84,7 +84,7 @@ class DealsMapper {
             viewsClick = data.viewsClick ?: 0,
             webLink = data.webLink,
             isAddedToBookmark = true,
-            dealType = if (data.dealType == "coupons") DealType.COUPONS
+            dealType = if (data.dealType == DealType.COUPONS.type) DealType.COUPONS
             else DealType.DISCOUNTS,
             couponsTypeName = data.couponsTypeName,
             couponsTypeSlug = data.couponsTypeSlug,

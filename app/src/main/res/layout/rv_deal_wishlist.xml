@@ -95,7 +95,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_offset_8dp"
         android:ellipsize="end"
-        android:maxLines="2"
+        android:maxLines="3"
         android:textColor="@color/defaultColor"
         android:textSize="@dimen/common_textSize_12sp"
         app:layout_constraintStart_toStartOf="parent"

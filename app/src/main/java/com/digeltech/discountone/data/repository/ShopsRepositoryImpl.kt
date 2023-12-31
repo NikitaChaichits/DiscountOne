@@ -24,7 +24,7 @@ class ShopsRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             runCatching {
                 api.getShopCategories(pageslug).map {
-                    Item(0, it.name, it.slug, it.taxonomy)
+                    Item(0, it.name, it.slug, it.taxonomy, isParent = it.parentId == 0)
                 }
             }
         }

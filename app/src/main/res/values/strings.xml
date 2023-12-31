@@ -31,7 +31,7 @@
     <string name="search_by_coupons">Search by coupons</string>
     <string name="search_by_categories">Search by categories</string>
     <string name="search_by_shops">Search by stores</string>
-    <string name="empty_search_result"><b>Nothing found</b>\nTry different phrasing</string>
+    <string name="empty_search_result">Nothing found for your search</string>
     <string name="deal_type">Deal Type</string>
     <string name="sort_by">Sort by</string>
     <string name="empty_sorting_result"><b>Deals not found. Try other filter settings.</b></string>
@@ -182,6 +182,7 @@
     <string name="fr_deal_similar_more_deals">More deals</string>
     <string name="shop_now">SEE MORE</string>
     <string name="get_coupon">GET COUPON</string>
+    <string name="activate_coupon">Activate Coupon</string>
     <string name="get_deal">Get Deal</string>
 
     <!-- Fragment Wishlist-->

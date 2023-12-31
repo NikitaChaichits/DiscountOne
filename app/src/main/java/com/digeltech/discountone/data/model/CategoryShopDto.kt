@@ -8,5 +8,7 @@ data class CategoryShopDto(
     @SerializedName("slug")
     val slug: String,
     @SerializedName("taxonomy")
-    val taxonomy: String
+    val taxonomy: String,
+    @SerializedName("parent")
+    val parentId: Int?,
 )

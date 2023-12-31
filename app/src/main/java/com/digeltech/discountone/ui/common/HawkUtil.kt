@@ -63,6 +63,15 @@ fun getCategoryNameById(id: Int): String {
     return "Unknown category name"
 }
 
+fun getCategorySlugById(id: Int): String {
+    if (Hawk.contains(KEY_CATEGORIES)) {
+        return Hawk.get<List<Category>>(KEY_CATEGORIES).find {
+            it.id == id
+        }?.slug ?: ""
+    }
+    return ""
+}
+
 fun getShopIdBySlug(slug: String): Int {
     if (Hawk.contains(KEY_SHOPS)) {
         val listOfShops: List<Shop> = Hawk.get(KEY_SHOPS)

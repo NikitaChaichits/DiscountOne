@@ -2,14 +2,18 @@ package com.digeltech.discountone.ui.home.interactor
 
 import com.digeltech.discountone.domain.model.Deal
 import com.digeltech.discountone.domain.model.Homepage
+import com.digeltech.discountone.domain.repository.CategoriesRepository
 import com.digeltech.discountone.domain.repository.DealsRepository
 import javax.inject.Inject
 
 internal class HomeInteractorImpl @Inject constructor(
     private val dealsRepository: DealsRepository,
+    private val categoriesRepository: CategoriesRepository,
 ) : HomeInteractor {
 
-    override suspend fun getHomepage(): Result<Homepage> = dealsRepository.getHomepage()
+    override suspend fun getHomepage(): Result<Homepage> = dealsRepository.getHomepage().also {
+        categoriesRepository.getAllCategories()
+    }
 
     override suspend fun getDeal(dealId: Int): Result<Deal> = dealsRepository.getDealById(dealId = dealId)
 

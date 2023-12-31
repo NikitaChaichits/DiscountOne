@@ -4,11 +4,8 @@ import androidx.annotation.MainThread
 import androidx.collection.ArraySet
 import androidx.lifecycle.*
 import com.digeltech.discountone.ui.common.model.DealParcelable
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
@@ -36,6 +33,8 @@ open class BaseViewModel : ViewModel() {
         return launch(context, start) {
             loading.start()
             block()
+            delay(2000)
+            loading.stop()
         }
     }
 

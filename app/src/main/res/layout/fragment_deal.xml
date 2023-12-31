@@ -185,7 +185,7 @@
                 app:layout_constraintTop_toBottomOf="@id/tvPrice" />
 
             <TextView
-                android:id="@+id/tvPublishedDate"
+                android:id="@+id/tvUpdatedDate"
                 style="@style/TextRegular.Description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -205,7 +205,7 @@
                 android:layout_marginHorizontal="0dp"
                 android:layout_marginTop="@dimen/common_offset_8dp"
                 android:paddingHorizontal="@dimen/common_offset_16dp"
-                app:layout_constraintTop_toBottomOf="@id/tvPublishedDate"
+                app:layout_constraintTop_toBottomOf="@id/tvUpdatedDate"
                 tools:text="WH-1000XM5 Wireless Industry Leading Noise Canceling Headphones" />
 
             <ImageView

@@ -32,7 +32,7 @@ class CategoryAndShopViewModel @Inject constructor(
                 interactor.getShopCategories(slug)
                     .onSuccess {
                         val updatedItemList = it.map { item ->
-                            if (item.taxonomy == "categories-coupons") {
+                            if (item.taxonomy == Taxonomy.COUPONS.type) {
                                 item.copy(name = "${item.name} (coupons)")
                             } else {
                                 item

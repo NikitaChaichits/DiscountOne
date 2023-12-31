@@ -23,7 +23,7 @@ class ShopsViewModel @Inject constructor(
     val shops: LiveData<List<Shop>> = _shops
 
     fun getShopsList() {
-        viewModelScope.launchWithLoading {
+        viewModelScope.launch {
             interactor.getShopsList()
                 .onSuccess { shops ->
                     _shops.postValue(

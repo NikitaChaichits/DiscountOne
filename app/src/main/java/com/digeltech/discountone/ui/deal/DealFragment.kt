@@ -20,7 +20,6 @@ import com.digeltech.discountone.ui.common.adapter.LinearDealAdapter
 import com.digeltech.discountone.ui.common.model.DealParcelable
 import com.digeltech.discountone.ui.common.model.DealType
 import com.digeltech.discountone.util.*
-import com.digeltech.discountone.util.time.formatDate
 import com.digeltech.discountone.util.view.*
 import com.facebook.appevents.AppEventsLogger
 import dagger.hilt.android.AndroidEntryPoint
@@ -112,18 +111,20 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
             scrollView.visible()
 
             viewModel.getSimilarDealsByShop(deal.shopSlug, deal.id, deal.dealType)
-            viewModel.getSimilarDealsByCategory(deal.id)
-
 
             if (deal.dealType == DealType.COUPONS) {
+                viewModel.getSimilarCouponsByCategory(deal.id)
+
                 deal.shopImageUrl?.let(ivCouponShopImage::setImageWithRadius)
                 tvCouponCategoryName.text = deal.couponsCategory
 
                 tvPrice.gone()
                 tvPriceWithDiscount.gone()
                 tvCouponPrice.visible()
+                tvExpirationDate.visible()
+                tvExpirationDate.text = deal.expirationDate
                 btnGetDeal.backgroundTintList = ColorStateList.valueOf(btnGetDeal.getColorValue(R.color.green))
-                btnGetDeal.text = getString(R.string.get_coupon)
+                btnGetDeal.text = getString(R.string.activate_coupon)
 
                 if (deal.price != 0) {
                     tvCouponPrice.background = tvCouponPrice.getImageDrawable(R.color.couponPriceColor)
@@ -143,6 +144,11 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
                     }
                     tvCouponPrice.text = deal.couponsTypeName
                 }
+            } else {
+                viewModel.getSimilarDealsByCategory(deal.id, getCategorySlugById(deal.categoryId))
+
+                tvUpdatedDate.text = "Updated: ${deal.lastUpdateDate}"
+                tvUpdatedDate.visible()
             }
 
             if (!deal.imagesUrl.isNullOrEmpty()) {
@@ -181,14 +187,6 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
                     discountPrice = deal.price,
                     saleSize = deal.saleSize,
                 )
-            }
-
-            if (deal.expirationDate.isNotNullAndNotEmpty()) {
-                tvExpirationDate.text = deal.expirationDate
-                tvExpirationDate.visible()
-            } else {
-                tvPublishedDate.text = getString(R.string.fr_deal_published, formatDate(deal.lastUpdateDate.toString()))
-                tvPublishedDate.visible()
             }
 
             tvDealName.text = deal.title

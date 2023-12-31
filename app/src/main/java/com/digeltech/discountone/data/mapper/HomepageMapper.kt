@@ -54,7 +54,7 @@ class HomepageMapper {
             saleSize = saleSize ?: 0,
             viewsClick = viewsClick ?: 0,
             webLink = webLink,
-            dealType = if (dealType == "coupons") DealType.COUPONS
+            dealType = if (dealType == DealType.COUPONS.type) DealType.COUPONS
             else DealType.DISCOUNTS,
             couponsTypeName = couponsTypeName,
             couponsTypeSlug = couponsTypeSlug,

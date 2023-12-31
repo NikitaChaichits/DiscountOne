@@ -61,6 +61,7 @@ class CouponsViewModel @Inject constructor(
         filteringJob = viewModelScope.launchWithLoading {
             dealsRepository.getSortingDeals(
                 dealType = DealType.COUPONS,
+                sortBy = sortBy,
                 categorySlug = categorySlug.takeIf { it.isNotEmpty() },
                 shopSlug = shopSlug.takeIf { it.isNotEmpty() },
                 taxonomy = filteringCategories.value?.getTaxonomyBySlug(categorySlug)

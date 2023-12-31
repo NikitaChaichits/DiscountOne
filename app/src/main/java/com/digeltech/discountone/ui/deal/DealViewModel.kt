@@ -31,7 +31,20 @@ class DealViewModel @Inject constructor(
 
     val loadingDealError = MutableLiveData<String>()
 
-    fun getSimilarDealsByCategory(dealId: Int) {
+    fun getSimilarDealsByCategory(dealId: Int, categorySlug: String) {
+        viewModelScope.launch {
+            dealsRepository.getSimilarDealsByCategory(categorySlug)
+                .onSuccess { list ->
+                    list.toMutableList().removeIf { it.id == dealId }
+                    _similarCategoryDeals.postValue(list.toParcelableList())
+                }
+                .onFailure {
+                    log(it)
+                }
+        }
+    }
+
+    fun getSimilarCouponsByCategory(dealId: Int) {
         viewModelScope.launch {
             dealsRepository.getSimilarCouponsByCategory()
                 .onSuccess { list ->

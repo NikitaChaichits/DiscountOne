@@ -139,12 +139,7 @@ class DealsRepositoryImpl @Inject constructor(
     override suspend fun getInitialDeals(categoryType: Taxonomy, id: String): Result<List<Deal>> =
         withContext(Dispatchers.IO) {
             runCatching {
-                DealsMapper().mapDeals(
-                    api.getInitialDeals(
-                        categoryType = categoryType.type,
-                        id = id
-                    )
-                )
+                DealsMapper().mapDeals(api.getInitialDeals(categoryType = categoryType.type, id = id))
             }
         }
 

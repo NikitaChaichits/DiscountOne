@@ -45,14 +45,7 @@ class DiscountsViewModel @Inject constructor(
                                 categories.add(Item(childItem.id, childItem.name, childItem.slug, childItem.taxonomy))
                             }
                         }
-                        val updatedCategoriesList = categories.map { item ->
-                            if (item.taxonomy == "categories-coupons") {
-                                item.copy(name = "${item.name} (coupon)")
-                            } else {
-                                item
-                            }
-                        }
-                        filteringCategories.postValue(updatedCategoriesList)
+                        filteringCategories.postValue(categories)
                     }
                     .onFailure { error.postValue(it.toString()) }
                 loadingGifVisibility.value = false
