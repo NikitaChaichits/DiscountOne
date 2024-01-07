@@ -27,8 +27,8 @@ class CouponsViewModel @Inject constructor(
 
     fun initDeals(categorySlug: String?) {
         if (allDeals.isEmpty()) {
-            viewModelScope.launch {
-                loadingGifVisibility.value = true
+            viewModelScope.launchWithLoading {
+//                loadingGifVisibility.value = true
                 couponsRepository.getCoupons()
                     .onSuccess {
                         if (categorySlug.isNullOrEmpty()) {
@@ -50,7 +50,7 @@ class CouponsViewModel @Inject constructor(
                         filteringCategories.postValue(categories)
                     }
                     .onFailure { error.postValue(it.toString()) }
-                loadingGifVisibility.value = false
+//                loadingGifVisibility.value = false
             }
         }
     }

@@ -26,7 +26,7 @@ class CategoryAndShopViewModel @Inject constructor(
 
     fun initScreenData(slug: String, id: String) {
         if (allDeals.isEmpty()) {
-            loadingGifVisibility.value = true
+//            loadingGifVisibility.value = true
             shopSlug = slug
             viewModelScope.launch {
                 interactor.getShopCategories(slug)
@@ -53,7 +53,7 @@ class CategoryAndShopViewModel @Inject constructor(
                             }
                     }
             }
-            loadingGifVisibility.value = false
+//            loadingGifVisibility.value = false
         }
     }
 

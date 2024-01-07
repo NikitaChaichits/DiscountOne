@@ -173,7 +173,7 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
                 val totalHeight = this.getChildAt(0).height
                 val currentHeight = this.height
 
-                if (scrollY + currentHeight >= totalHeight) {
+                if (scrollY + currentHeight >= totalHeight && scrollY != 0) {
                     viewModel.loadMoreDeals()
                 }
             }

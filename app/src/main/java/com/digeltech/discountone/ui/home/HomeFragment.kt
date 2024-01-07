@@ -45,8 +45,8 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
     private lateinit var searchDealAdapter: GridDealAdapter
     private lateinit var bannerAutoScrollHelper: AutoScrollHelper
     private lateinit var bannerCyclicScrollHelper: CyclicScrollHelper
-//    private lateinit var shopsAutoScrollHelper: AutoScrollHelper
-//    private lateinit var shopsCyclicScrollHelper: CyclicScrollHelper
+    private lateinit var shopsAutoScrollHelper: AutoScrollHelper
+    private lateinit var shopsCyclicScrollHelper: CyclicScrollHelper
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -120,14 +120,14 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         binding.rvBanners.adapter = bannerAdapter
 
         bannerCyclicScrollHelper = CyclicScrollHelper()
-        bannerCyclicScrollHelper.enableCyclicScroll(binding.rvBanners)
+        bannerCyclicScrollHelper.enableBannerCyclicScroll(binding.rvBanners)
         bannerAutoScrollHelper = AutoScrollHelper(binding.rvBanners)
         bannerAutoScrollHelper.startAutoScroll()
 
-//        shopsCyclicScrollHelper = CyclicScrollHelper()
-//        shopsCyclicScrollHelper.enableCyclicScroll(binding.rvShops)
-//        shopsAutoScrollHelper = AutoScrollHelper(binding.rvShops)
-//        shopsAutoScrollHelper.startShopsAutoScroll()
+        shopsCyclicScrollHelper = CyclicScrollHelper()
+        shopsCyclicScrollHelper.enableShopCyclicScroll(binding.rvShops)
+        shopsAutoScrollHelper = AutoScrollHelper(binding.rvShops)
+        shopsAutoScrollHelper.startShopsAutoScroll()
 
         // Linear horizontal RV for discounts
         discountsLinearAdapter = LinearDealAdapter(
@@ -164,7 +164,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         // Linear horizontal RV for shops
         shopsAdapter = HomeShopsAdapter(
             onClickListener = {
-                navigate(HomeFragmentDirections.toShopFragment(it.id.toInt(), it.name, it.slug))
+                navigate(HomeFragmentDirections.toShopFragment(it.id, it.name, it.slug))
             }
         )
         binding.rvShops.adapter = shopsAdapter
@@ -233,7 +233,9 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         viewModel.banners.observe(viewLifecycleOwner, bannerAdapter::submitList)
         viewModel.discounts.observe(viewLifecycleOwner, discountsLinearAdapter::submitList)
         viewModel.coupons.observe(viewLifecycleOwner, couponsLinearAdapter::submitList)
-        viewModel.shops.observe(viewLifecycleOwner, shopsAdapter::submitList)
+        viewModel.shops.observe(viewLifecycleOwner) {
+            shopsAdapter.submitList(it)
+        }
         viewModel.categories.observe(viewLifecycleOwner) {
             categoriesAdapter.submitList(it)
             binding.mainContentGroup.visible()

@@ -10,8 +10,10 @@ import com.digeltech.discountone.ui.common.getUserId
 import com.digeltech.discountone.ui.common.model.DealParcelable
 import com.digeltech.discountone.ui.common.model.DealType
 import com.digeltech.discountone.ui.common.model.toParcelableList
+import com.digeltech.discountone.util.isNotNullAndNotEmpty
 import com.digeltech.discountone.util.log
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,12 +23,13 @@ class DiscountsViewModel @Inject constructor(
     private val dealsRepository: DealsRepository
 ) : BaseFilteringViewModel() {
 
+    private var initJob: Job? = null
+
     private val allDeals = mutableListOf<DealParcelable>()
 
     fun initDeals(categorySlug: String?) {
         if (allDeals.isEmpty()) {
-            viewModelScope.launch {
-                loadingGifVisibility.value = true
+            viewModelScope.launchWithLoading {
                 dealsRepository.getDiscounts()
                     .onSuccess {
                         if (categorySlug.isNullOrEmpty()) {
@@ -46,9 +49,9 @@ class DiscountsViewModel @Inject constructor(
                             }
                         }
                         filteringCategories.postValue(categories)
+                        if (categorySlug.isNotNullAndNotEmpty()) loading.stop() // eliminates the overlap of loading progressbar
                     }
                     .onFailure { error.postValue(it.toString()) }
-                loadingGifVisibility.value = false
             }
         }
     }

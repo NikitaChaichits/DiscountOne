@@ -7,10 +7,7 @@ import com.digeltech.discountone.domain.model.getTaxonomyBySlug
 import com.digeltech.discountone.domain.repository.DealsRepository
 import com.digeltech.discountone.ui.common.SEARCH_DELAY
 import com.digeltech.discountone.ui.common.getUserId
-import com.digeltech.discountone.ui.common.model.DealParcelable
-import com.digeltech.discountone.ui.common.model.DealType
-import com.digeltech.discountone.ui.common.model.Taxonomy
-import com.digeltech.discountone.ui.common.model.toParcelableList
+import com.digeltech.discountone.ui.common.model.*
 import com.digeltech.discountone.util.log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -32,8 +29,8 @@ class DealsViewModel @Inject constructor(
     }
 
     private fun initDeals() {
-        viewModelScope.launch {
-            loadingGifVisibility.value = true
+        viewModelScope.launchWithLoading {
+//            loadingGifVisibility.value = true
             dealsRepository.getBestDeals()
                 .onSuccess {
                     allDeals.addAll(it.posts.toParcelableList())
@@ -57,7 +54,7 @@ class DealsViewModel @Inject constructor(
                     filteringCategories.postValue(updatedCategoriesList)
                 }
                 .onFailure { error.postValue(it.toString()) }
-            loadingGifVisibility.value = false
+//            loadingGifVisibility.value = false
         }
     }
 
@@ -70,6 +67,7 @@ class DealsViewModel @Inject constructor(
             filteringJob = viewModelScope.launchWithLoading {
                 dealsRepository.getSortingDeals(
                     dealType = dealType.takeIf { it != DealType.ALL },
+                    sortBy = SortBy.MOST_POPULAR,
                     categorySlug = categorySlug.takeIf { it.isNotEmpty() },
                     shopSlug = shopSlug.takeIf { it.isNotEmpty() },
                     taxonomy = filteringCategories.value?.getTaxonomyBySlug(categorySlug)
@@ -111,6 +109,7 @@ class DealsViewModel @Inject constructor(
                 dealsRepository.getSortingDeals(
                     page = currentPage.toString(),
                     dealType = dealType.takeIf { it != DealType.ALL },
+                    sortBy = SortBy.MOST_POPULAR,
                     categorySlug = categorySlug.takeIf { it.isNotEmpty() },
                     shopSlug = shopSlug.takeIf { it.isNotEmpty() },
                     taxonomy = filteringCategories.value?.getTaxonomyBySlug(categorySlug)
@@ -152,76 +151,4 @@ class DealsViewModel @Inject constructor(
             }
         }
     }
-//
-//    fun loadCategoryDeals(spinnerPosition: Int) {
-//        currentCategorySpinnerPosition = spinnerPosition
-//        selectedCategoryId = if (spinnerPosition > 0)
-//            filteringCategories.value?.get(spinnerPosition - 1)?.id ?: 0
-//        else 0
-//
-//        viewModelScope.launch {
-//            if (spinnerPosition == 0) {
-//                if (currentShopSpinnerPosition == 0) {
-//                    deals.postValue(allDeals)
-//                } else {
-//                    loadShopDeals(currentShopSpinnerPosition)
-//                }
-//            } else {
-//                viewModelScope.launchWithLoading {
-//                    filteringCategories.value?.get(spinnerPosition - 1)?.id?.let { categoryId ->
-//                        dealsRepository.getDealsByCategoryAndShopId(
-//                            categoryId = categoryId,
-//                            shopId = selectedShopId.takeIf { shopId -> shopId != 0 })
-//                            .onSuccess { _deals ->
-//                                allDealsWithSorting.clear()
-//                                allDealsWithSorting.addAll(_deals.toParcelableList())
-//                                deals.postValue(allDealsWithSorting as List<DealParcelable>)
-//                                currentPage = 3
-//                            }
-//                            .onFailure { e ->
-//                                log(e.toString())
-//                                error.postValue(e.toString())
-//                            }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//    fun loadShopDeals(spinnerPosition: Int) {
-//        currentShopSpinnerPosition = spinnerPosition
-//
-//        selectedShopId = if (spinnerPosition > 0)
-//            filteringShops.value?.get(spinnerPosition - 1)?.id ?: 0
-//        else 0
-//
-//        viewModelScope.launch {
-//            if (spinnerPosition == 0) {
-//                if (currentCategorySpinnerPosition == 0) {
-//                    deals.postValue(allDeals)
-//                } else {
-//                    loadCategoryDeals(currentCategorySpinnerPosition)
-//                }
-//            } else {
-//                viewModelScope.launchWithLoading {
-//                    filteringShops.value?.get(spinnerPosition - 1)?.id?.let { shopId ->
-//                        dealsRepository.getDealsByCategoryAndShopId(
-//                            categoryId = selectedCategoryId.takeIf { categoryId -> categoryId != 0 },
-//                            shopId = shopId
-//                        )
-//                            .onSuccess { _deals ->
-//                                allDealsWithSorting.clear()
-//                                allDealsWithSorting.addAll(_deals.toParcelableList())
-//                                deals.postValue(allDealsWithSorting as List<DealParcelable>)
-//                                currentPage = 3
-//                            }
-//                            .onFailure { e ->
-//                                log(e.toString())
-//                                error.postValue(e.toString())
-//                            }
-//                    }
-//                }
-//            }
-//        }
-//    }
 }
