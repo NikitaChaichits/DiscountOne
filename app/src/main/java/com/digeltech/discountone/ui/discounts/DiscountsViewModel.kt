@@ -5,15 +5,15 @@ import com.digeltech.discountone.common.base.BaseFilteringViewModel
 import com.digeltech.discountone.domain.model.Item
 import com.digeltech.discountone.domain.model.getTaxonomyBySlug
 import com.digeltech.discountone.domain.repository.DealsRepository
+import com.digeltech.discountone.ui.common.INIT_COUNT_OF_DEALS
+import com.digeltech.discountone.ui.common.INIT_DELAY
 import com.digeltech.discountone.ui.common.SEARCH_DELAY
 import com.digeltech.discountone.ui.common.getUserId
 import com.digeltech.discountone.ui.common.model.DealParcelable
 import com.digeltech.discountone.ui.common.model.DealType
 import com.digeltech.discountone.ui.common.model.toParcelableList
-import com.digeltech.discountone.util.isNotNullAndNotEmpty
 import com.digeltech.discountone.util.log
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,8 +23,6 @@ class DiscountsViewModel @Inject constructor(
     private val dealsRepository: DealsRepository
 ) : BaseFilteringViewModel() {
 
-    private var initJob: Job? = null
-
     private val allDeals = mutableListOf<DealParcelable>()
 
     fun initDeals(categorySlug: String?) {
@@ -33,13 +31,13 @@ class DiscountsViewModel @Inject constructor(
                 dealsRepository.getDiscounts()
                     .onSuccess {
                         if (categorySlug.isNullOrEmpty()) {
-                            allDeals.addAll(it.posts.toParcelableList())
-                            deals.postValue(it.posts.toParcelableList())
+                            val parcelableList = it.posts.toParcelableList()
+                            allDeals.addAll(parcelableList)
+                            deals.postValue(parcelableList.take(INIT_COUNT_OF_DEALS))
                         } else {
                             this@DiscountsViewModel.categorySlug = categorySlug
+                            loading.stop() // eliminates the overlap of loading progressbar
                         }
-
-                        filteringShops.postValue(it.shops)
 
                         val categories = mutableListOf<Item>()
                         it.categories.forEach { category ->
@@ -49,7 +47,8 @@ class DiscountsViewModel @Inject constructor(
                             }
                         }
                         filteringCategories.postValue(categories)
-                        if (categorySlug.isNotNullAndNotEmpty()) loading.stop() // eliminates the overlap of loading progressbar
+                        filteringShops.postValue(it.shops)
+
                     }
                     .onFailure { error.postValue(it.toString()) }
             }
@@ -83,6 +82,13 @@ class DiscountsViewModel @Inject constructor(
 
     fun loadMoreDeals() {
         if (isNeedMoreLoading) {
+            if ((deals.value?.size ?: 0) <= INIT_COUNT_OF_DEALS) {
+                viewModelScope.launchWithLoading {
+                    delay(INIT_DELAY)
+                    deals.postValue(allDeals as List<DealParcelable>)
+                }
+                return
+            }
             if (filteringJob?.isActive == true) filteringJob?.cancel()
 
             filteringJob = viewModelScope.launchWithLoading {

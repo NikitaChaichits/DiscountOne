@@ -6,6 +6,8 @@ import com.digeltech.discountone.domain.model.Item
 import com.digeltech.discountone.domain.model.getTaxonomyBySlug
 import com.digeltech.discountone.domain.repository.CouponsRepository
 import com.digeltech.discountone.domain.repository.DealsRepository
+import com.digeltech.discountone.ui.common.INIT_COUNT_OF_DEALS
+import com.digeltech.discountone.ui.common.INIT_DELAY
 import com.digeltech.discountone.ui.common.SEARCH_DELAY
 import com.digeltech.discountone.ui.common.getUserId
 import com.digeltech.discountone.ui.common.model.DealParcelable
@@ -28,17 +30,15 @@ class CouponsViewModel @Inject constructor(
     fun initDeals(categorySlug: String?) {
         if (allDeals.isEmpty()) {
             viewModelScope.launchWithLoading {
-//                loadingGifVisibility.value = true
                 couponsRepository.getCoupons()
                     .onSuccess {
                         if (categorySlug.isNullOrEmpty()) {
-                            allDeals.addAll(it.coupons.toParcelableList())
-                            deals.postValue(it.coupons.toParcelableList().take(50))
+                            val parcelableList = it.coupons.toParcelableList()
+                            allDeals.addAll(parcelableList)
+                            deals.postValue(parcelableList.take(INIT_COUNT_OF_DEALS))
                         } else {
                             this@CouponsViewModel.categorySlug = categorySlug
                         }
-
-                        filteringShops.postValue(it.shops)
 
                         val categories = mutableListOf<Item>()
                         it.categories.forEach { category ->
@@ -48,9 +48,9 @@ class CouponsViewModel @Inject constructor(
                             }
                         }
                         filteringCategories.postValue(categories)
+                        filteringShops.postValue(it.shops)
                     }
                     .onFailure { error.postValue(it.toString()) }
-//                loadingGifVisibility.value = false
             }
         }
     }
@@ -82,6 +82,14 @@ class CouponsViewModel @Inject constructor(
 
     fun loadMoreDeals() {
         if (isNeedMoreLoading) {
+            if ((deals.value?.size ?: 0) <= INIT_COUNT_OF_DEALS) {
+                viewModelScope.launchWithLoading {
+                    delay(INIT_DELAY)
+                    deals.postValue(allDeals as List<DealParcelable>)
+                }
+                return
+            }
+
             if (filteringJob?.isActive == true) filteringJob?.cancel()
 
             filteringJob = viewModelScope.launchWithLoading {

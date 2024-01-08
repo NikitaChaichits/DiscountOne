@@ -5,7 +5,6 @@ import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -126,24 +125,24 @@ class GridDealAdapter(
             btnGetDeal.backgroundTintList = ColorStateList.valueOf(btnGetDeal.getColorValue(R.color.green))
 
             if (item.price != 0) {
-                tvCouponPrice.backgroundTintList =
-                    ContextCompat.getColorStateList(tvPrice.context, R.color.couponPriceColor)
                 tvCouponPrice.text = "Rs ${item.price} OFF"
+//                tvCouponPrice.backgroundTintList =
+//                    ContextCompat.getColorStateList(tvPrice.context, R.color.couponPriceColor)
             }
             if (item.saleSize != 0) {
                 tvCouponPrice.text = "${item.saleSize}% OFF"
-                tvCouponPrice.backgroundTintList =
-                    ContextCompat.getColorStateList(tvPrice.context, R.color.couponDiscountColor)
+//                tvCouponPrice.backgroundTintList =
+//                    ContextCompat.getColorStateList(tvPrice.context, R.color.couponDiscountColor)
             }
 
             if (item.price == 0 && item.saleSize == 0) {
-                if (item.couponsTypeSlug == "free_trial") {
-                    tvCouponPrice.backgroundTintList =
-                        ContextCompat.getColorStateList(tvPrice.context, R.color.couponFreeTrialColor)
-                } else {
-                    tvCouponPrice.backgroundTintList =
-                        ContextCompat.getColorStateList(tvPrice.context, R.color.couponFreeGiftColor)
-                }
+//                if (item.couponsTypeSlug == "free_trial") {
+//                    tvCouponPrice.backgroundTintList =
+//                        ContextCompat.getColorStateList(tvPrice.context, R.color.couponFreeTrialColor)
+//                } else {
+//                    tvCouponPrice.backgroundTintList =
+//                        ContextCompat.getColorStateList(tvPrice.context, R.color.couponFreeGiftColor)
+//                }
                 tvCouponPrice.text = item.couponsTypeName
             }
             item.shopImageUrl?.let(ivCouponShopImage::setImageWithRadius)

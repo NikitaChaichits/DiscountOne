@@ -4,6 +4,8 @@ import androidx.lifecycle.viewModelScope
 import com.digeltech.discountone.common.base.BaseFilteringViewModel
 import com.digeltech.discountone.domain.model.getTaxonomyBySlug
 import com.digeltech.discountone.ui.categoryandshop.interactor.CategoryAndShopInteractor
+import com.digeltech.discountone.ui.common.INIT_COUNT_OF_DEALS
+import com.digeltech.discountone.ui.common.INIT_DELAY
 import com.digeltech.discountone.ui.common.SEARCH_DELAY
 import com.digeltech.discountone.ui.common.getUserId
 import com.digeltech.discountone.ui.common.model.DealParcelable
@@ -26,7 +28,6 @@ class CategoryAndShopViewModel @Inject constructor(
 
     fun initScreenData(slug: String, id: String) {
         if (allDeals.isEmpty()) {
-//            loadingGifVisibility.value = true
             shopSlug = slug
             viewModelScope.launch {
                 interactor.getShopCategories(slug)
@@ -45,15 +46,15 @@ class CategoryAndShopViewModel @Inject constructor(
                     launchWithLoading {
                         interactor.getInitialDeals(currentCategoryType, id)
                             .onSuccess {
-                                deals.postValue(it.toParcelableList())
-                                allDeals.addAll(it.toParcelableList())
+                                val parcelableList = it.toParcelableList()
+                                allDeals.addAll(parcelableList)
+                                deals.postValue(parcelableList.take(INIT_COUNT_OF_DEALS))
                             }
                             .onFailure {
                                 error.postValue(it.toString())
                             }
                     }
             }
-//            loadingGifVisibility.value = false
         }
     }
 
@@ -84,6 +85,14 @@ class CategoryAndShopViewModel @Inject constructor(
 
     fun loadMoreDeals() {
         if (isNeedMoreLoading) {
+            if ((deals.value?.size ?: 0) <= INIT_COUNT_OF_DEALS) {
+                viewModelScope.launchWithLoading {
+                    delay(INIT_DELAY)
+                    deals.postValue(allDeals as List<DealParcelable>)
+                }
+                return
+            }
+
             if (filteringJob?.isActive == true) filteringJob?.cancel()
 
             filteringJob = viewModelScope.launchWithLoading {

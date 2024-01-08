@@ -5,16 +5,13 @@ import com.digeltech.discountone.common.base.BaseFilteringViewModel
 import com.digeltech.discountone.domain.model.Item
 import com.digeltech.discountone.domain.model.getTaxonomyBySlug
 import com.digeltech.discountone.domain.repository.DealsRepository
-import com.digeltech.discountone.ui.common.SEARCH_DELAY
-import com.digeltech.discountone.ui.common.getUserId
+import com.digeltech.discountone.ui.common.*
 import com.digeltech.discountone.ui.common.model.*
 import com.digeltech.discountone.util.log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-const val ITEMS_ON_PAGE = "50"
 
 @HiltViewModel
 class DealsViewModel @Inject constructor(
@@ -30,13 +27,8 @@ class DealsViewModel @Inject constructor(
 
     private fun initDeals() {
         viewModelScope.launchWithLoading {
-//            loadingGifVisibility.value = true
             dealsRepository.getBestDeals()
                 .onSuccess {
-                    allDeals.addAll(it.posts.toParcelableList())
-                    deals.postValue(it.posts.toParcelableList())
-                    filteringShops.postValue(it.shops)
-
                     val categories = mutableListOf<Item>()
                     it.categories.forEach { category ->
                         categories.add(Item(category.id, category.name, category.slug, category.taxonomy, true))
@@ -52,9 +44,13 @@ class DealsViewModel @Inject constructor(
                         }
                     }
                     filteringCategories.postValue(updatedCategoriesList)
+                    filteringShops.postValue(it.shops)
+
+                    val parcelableList = it.posts.toParcelableList()
+                    allDeals.addAll(parcelableList)
+                    deals.postValue(parcelableList.take(INIT_COUNT_OF_DEALS))
                 }
                 .onFailure { error.postValue(it.toString()) }
-//            loadingGifVisibility.value = false
         }
     }
 
@@ -88,6 +84,14 @@ class DealsViewModel @Inject constructor(
     }
 
     fun loadMoreDeals() {
+        if ((deals.value?.size ?: 0) <= INIT_COUNT_OF_DEALS) {
+            viewModelScope.launchWithLoading {
+                delay(INIT_DELAY)
+                deals.postValue(allDeals as List<DealParcelable>)
+            }
+            return
+        }
+
         if (currentShopSpinnerPosition == 0 && currentCategorySpinnerPosition == 0 && currentDealTypeSpinnerPosition == 0) {
             viewModelScope.launchWithLoading {
                 dealsRepository.getAllDeals(currentPage.toString(), ITEMS_ON_PAGE)
