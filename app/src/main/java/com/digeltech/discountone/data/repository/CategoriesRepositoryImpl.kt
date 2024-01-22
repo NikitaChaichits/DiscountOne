@@ -2,7 +2,7 @@ package com.digeltech.discountone.data.repository
 
 import com.digeltech.discountone.data.mapper.CategoryMapper
 import com.digeltech.discountone.data.mapper.SubscriptionMapper
-import com.digeltech.discountone.data.source.remote.api.ServerApi
+import com.digeltech.discountone.data.source.remote.api.DealsApi
 import com.digeltech.discountone.domain.model.Category
 import com.digeltech.discountone.domain.model.Item
 import com.digeltech.discountone.domain.model.SubscriptionCategories
@@ -14,7 +14,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class CategoriesRepositoryImpl @Inject constructor(
-    private val api: ServerApi,
+    private val api: DealsApi,
 ) : CategoriesRepository {
 
     override suspend fun getAllCategories(): Result<List<Category>> = withContext(Dispatchers.IO) {

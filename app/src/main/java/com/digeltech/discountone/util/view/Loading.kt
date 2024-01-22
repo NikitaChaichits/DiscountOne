@@ -1,5 +1,3 @@
-@file:Suppress("IMPLICIT_CAST_TO_ANY")
-
 package com.digeltech.discountone.util.view
 
 import android.app.Dialog

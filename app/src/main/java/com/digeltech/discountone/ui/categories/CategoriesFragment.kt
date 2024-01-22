@@ -12,11 +12,14 @@ import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.categories.adapter.CategoryAdapter
 import com.digeltech.discountone.ui.common.KEY_USER
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
-import com.digeltech.discountone.ui.home.HomeFragmentDirections
 import com.digeltech.discountone.util.logOpenCategoryDeals
 import com.digeltech.discountone.util.logSearch
-import com.digeltech.discountone.util.view.*
+import com.digeltech.discountone.util.view.getString
+import com.digeltech.discountone.util.view.invisible
+import com.digeltech.discountone.util.view.px
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
+import com.digeltech.discountone.util.view.setProfileImage
+import com.digeltech.discountone.util.view.visible
 import com.facebook.appevents.AppEventsLogger
 import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
@@ -86,7 +89,10 @@ class CategoriesFragment : BaseFragment(R.layout.fragment_categories), SearchVie
 
         searchDealAdapter = GridDealAdapter(
             onClickListener = {
-                navigate(HomeFragmentDirections.toDealFragment(it))
+                val bundle = Bundle().apply {
+                    putParcelable("deal", it)
+                }
+                navigate(R.id.dealFragment, bundle)
             },
             onBookmarkClickListener = {
                 viewModel.updateBookmark(it.toString())

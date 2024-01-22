@@ -45,7 +45,8 @@
 
     <!-- Wildcard strings -->
     <string name="price_wildcard">₹%d</string>
-    <string name="price_wildcard_with_discount_vallue">₹%s (%d%%)</string>
+    <string name="price_wildcard_with_discount_value">₹%s (%d%%)</string>
+    <string name="published_date">Updated: %1$s</string>
 
     <!-- Permission -->
 

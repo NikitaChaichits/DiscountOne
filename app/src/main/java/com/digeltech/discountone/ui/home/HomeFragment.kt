@@ -18,10 +18,16 @@ import com.digeltech.discountone.ui.home.adapter.BannerAdapter
 import com.digeltech.discountone.ui.home.adapter.CategoriesAdapter
 import com.digeltech.discountone.ui.home.adapter.HomeShopsAdapter
 import com.digeltech.discountone.util.logSearch
-import com.digeltech.discountone.util.view.*
+import com.digeltech.discountone.util.view.getString
+import com.digeltech.discountone.util.view.gone
+import com.digeltech.discountone.util.view.invisible
+import com.digeltech.discountone.util.view.loadGif
+import com.digeltech.discountone.util.view.px
 import com.digeltech.discountone.util.view.recycler.AutoScrollHelper
 import com.digeltech.discountone.util.view.recycler.CyclicScrollHelper
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
+import com.digeltech.discountone.util.view.setProfileImage
+import com.digeltech.discountone.util.view.visible
 import com.facebook.appevents.AppEventsLogger
 import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
@@ -115,7 +121,8 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
     private fun initAdapters() {
         // scrolling horizontal RV for banners
         bannerAdapter = BannerAdapter {
-            navigate(HomeFragmentDirections.toDealFragment(it))
+            viewModel.updateDealViewsClick(it.id.toString())
+            navigateToDealFragment(it)
         }
         binding.rvBanners.adapter = bannerAdapter
 
@@ -132,10 +139,8 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         // Linear horizontal RV for discounts
         discountsLinearAdapter = LinearDealAdapter(
             onClickListener = {
-                val bundle = Bundle().apply {
-                    putParcelable("deal", it)
-                }
-                navigate(R.id.dealFragment, bundle)
+                viewModel.updateDealViewsClick(it.id.toString())
+                navigateToDealFragment(it)
             },
             onBookmarkClickListener = {
                 viewModel.updateBookmark(it.toString())
@@ -148,10 +153,8 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         // Linear horizontal RV for coupons
         couponsLinearAdapter = LinearDealAdapter(
             onClickListener = {
-                val bundle = Bundle().apply {
-                    putParcelable("deal", it)
-                }
-                navigate(R.id.dealFragment, bundle)
+                viewModel.updateDealViewsClick(it.id.toString())
+                navigateToDealFragment(it)
             },
             onBookmarkClickListener = {
                 viewModel.updateBookmark(it.toString())
@@ -178,10 +181,8 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
                 else navigate(HomeFragmentDirections.toDiscountsFragment(title = it.name, slug = it.slug))
             },
             onDealClick = {
-                val bundle = Bundle().apply {
-                    putParcelable("deal", it)
-                }
-                navigate(R.id.dealFragment, bundle)
+                viewModel.updateDealViewsClick(it.id.toString())
+                navigateToDealFragment(it)
             },
             onBookmarkClickListener = {
                 viewModel.updateBookmark(it.toString())
@@ -197,7 +198,8 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         //Grid RV for searching results
         searchDealAdapter = GridDealAdapter(
             onClickListener = {
-                navigate(HomeFragmentDirections.toDealFragment(it))
+                viewModel.updateDealViewsClick(it.id.toString())
+                navigateToDealFragment(it)
             },
             onBookmarkClickListener = {
                 viewModel.updateBookmark(it.toString())

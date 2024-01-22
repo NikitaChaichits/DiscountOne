@@ -15,9 +15,16 @@ import com.digeltech.discountone.databinding.FragmentCouponsBinding
 import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.common.KEY_USER
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
+import com.digeltech.discountone.util.isNotNullAndNotEmpty
 import com.digeltech.discountone.util.logSearch
-import com.digeltech.discountone.util.view.*
+import com.digeltech.discountone.util.view.getNamesWithFirstAllString
+import com.digeltech.discountone.util.view.getString
+import com.digeltech.discountone.util.view.invisible
+import com.digeltech.discountone.util.view.loadGif
+import com.digeltech.discountone.util.view.px
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
+import com.digeltech.discountone.util.view.setProfileImage
+import com.digeltech.discountone.util.view.visible
 import com.facebook.appevents.AppEventsLogger
 import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
@@ -71,6 +78,25 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
         return true
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.currentCategorySpinnerPosition.let {
+            if (it > 0) {
+                binding.spinnerCategories.setSelection(it)
+            }
+        }
+        viewModel.currentSortBySpinnerPosition.let {
+            if (it > 0) {
+                binding.spinnerSortingType.setSelection(it)
+            }
+        }
+        viewModel.currentShopSpinnerPosition.let {
+            if (it > 0) {
+                binding.spinnerShops.setSelection(it)
+            }
+        }
+    }
+
     private fun initAdapters() {
         val stringArray = resources.getStringArray(R.array.fr_coupons_sorting_type)
         val spinnerAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, stringArray)
@@ -79,11 +105,8 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
 
         couponAdapter = GridDealAdapter(
             onClickListener = {
-                val bundle = Bundle().apply {
-                    putParcelable("deal", it)
-                }
-                navigate(R.id.dealFragment, bundle)
-                binding.searchView.setQuery("", false)
+                viewModel.updateDealViewsClick(it.id.toString())
+                navigateToDealFragment(it)
             },
             onBookmarkClickListener = {
                 viewModel.updateBookmark(it.toString())
@@ -102,10 +125,8 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
 
         searchAdapter = GridDealAdapter(
             onClickListener = {
-                val bundle = Bundle().apply {
-                    putParcelable("deal", it)
-                }
-                navigate(R.id.dealFragment, bundle)
+                viewModel.updateDealViewsClick(it.id.toString())
+                navigateToDealFragment(it)
                 binding.searchView.setQuery("", false)
             },
             onBookmarkClickListener = {
@@ -206,8 +227,9 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
             if (it.isNotEmpty()) {
                 couponAdapter.submitList(it)
                 couponAdapter.notifyDataSetChanged()
-                binding.tvFilteringResultEmpty.invisible()
                 binding.rvDeals.visible()
+                viewModel.filteringError.value = null
+                binding.tvFilteringResultEmpty.invisible()
             } else {
                 binding.tvFilteringResultEmpty.visible()
                 binding.rvDeals.invisible()
@@ -232,8 +254,10 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
                 }
         }
         viewModel.filteringError.observe(viewLifecycleOwner) {
-            binding.tvFilteringResultEmpty.visible()
-            binding.rvDeals.invisible()
+            if (it.isNotNullAndNotEmpty()) {
+                binding.tvFilteringResultEmpty.visible()
+                binding.rvDeals.invisible()
+            }
         }
     }
 

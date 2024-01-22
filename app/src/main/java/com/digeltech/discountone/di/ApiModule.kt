@@ -3,8 +3,8 @@ package com.digeltech.discountone.di
 import com.digeltech.discountone.data.constants.RemoteConstants.BASE_URL
 import com.digeltech.discountone.data.source.remote.api.AuthApi
 import com.digeltech.discountone.data.source.remote.api.CouponsApi
-import com.digeltech.discountone.data.source.remote.api.DiscountApi
-import com.digeltech.discountone.data.source.remote.api.ServerApi
+import com.digeltech.discountone.data.source.remote.api.DealsApi
+import com.digeltech.discountone.data.source.remote.api.DiscountsApi
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -26,7 +26,7 @@ object ApiModule {
     fun provideRetrofit(): Retrofit {
         val httpClient = OkHttpClient.Builder()
             .connectTimeout(5, TimeUnit.SECONDS) // connection timeout to 5 seconds
-            .readTimeout(20, TimeUnit.SECONDS) // read timeout to 20 seconds
+            .readTimeout(25, TimeUnit.SECONDS) // read timeout to 20 seconds
             .build()
         val gson = GsonBuilder()
             .setLenient()
@@ -41,8 +41,8 @@ object ApiModule {
 
     @Provides
     @Singleton
-    fun provideServerApi(retrofit: Retrofit): ServerApi =
-        retrofit.create(ServerApi::class.java)
+    fun provideServerApi(retrofit: Retrofit): DealsApi =
+        retrofit.create(DealsApi::class.java)
 
     @Provides
     @Singleton
@@ -51,8 +51,8 @@ object ApiModule {
 
     @Provides
     @Singleton
-    fun provideDiscountApi(retrofit: Retrofit): DiscountApi =
-        retrofit.create(DiscountApi::class.java)
+    fun provideDiscountApi(retrofit: Retrofit): DiscountsApi =
+        retrofit.create(DiscountsApi::class.java)
 
     @Provides
     @Singleton

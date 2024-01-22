@@ -12,10 +12,10 @@ ext {
      */
 
     globalConfig = [
-            compileSdkVersion: 33,
+            compileSdkVersion: 34,
             minSdkVersion    : 26,
-            targetSdkVersion : 33,
-            buildToolsVersion: "30.0.3"
+            targetSdkVersion : 34,
+            buildToolsVersion: "34.0.0"
     ]
 
     /**
@@ -23,8 +23,8 @@ ext {
      */
 
     def appVersionMajor = 1
-    def appVersionPatch = 4
-    def appVersionBuild = 3
+    def appVersionPatch = 5
+    def appVersionBuild = 1
 
     appConfig = [
             applicationId: 'com.digeltech.discountone',

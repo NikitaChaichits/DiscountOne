@@ -46,4 +46,6 @@ internal class CategoryAndShopInteractorImpl @Inject constructor(
         dealsRepository.getInitialDeals(categoryType, id)
 
     override suspend fun updateBookmark(userId: String, dealId: String) = dealsRepository.updateBookmark(userId, dealId)
+
+    override suspend fun updateDealViewsClick(id: String) = dealsRepository.updateDealViewsClick(id)
 }

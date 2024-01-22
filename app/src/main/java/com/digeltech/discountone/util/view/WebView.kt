@@ -1,8 +1,6 @@
 package com.digeltech.discountone.util.view
 
-import android.content.Context
 import android.graphics.Bitmap
-import android.provider.Settings.Secure
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -24,8 +22,4 @@ class MyWebViewClient(private val loader: View, private val webView: WebView) : 
         loader.gone()
         webView.visible()
     }
-}
-
-fun getAndroidID(context: Context): String? {
-    return Secure.getString(context.contentResolver, Secure.ANDROID_ID)
 }

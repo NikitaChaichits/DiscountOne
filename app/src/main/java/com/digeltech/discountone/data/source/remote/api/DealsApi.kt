@@ -6,7 +6,7 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface ServerApi {
+interface DealsApi {
 
     @GET("/wp-json/theme/v1/shop")
     suspend fun getAllShops(): List<ShopDto>
@@ -31,12 +31,6 @@ interface ServerApi {
 
     @GET("/wp-json/theme/v1/products/id/{id}")
     suspend fun getDeal(@Path("id") id: String): DealDto
-
-    @GET("/wp-json/theme/v1/products/search/{searchText}")
-    suspend fun searchDeals(@Path("searchText") id: String): List<DealDto>
-
-    @GET("/wp-json/theme/v1/views")
-    suspend fun updateViewsClick(@Query("id") id: String)
 
     @GET("/wp-json/theme/v1/top_deals")
     suspend fun getTopDeals(@Query("cat") categorySlugName: String): OtherDealsDto
@@ -64,6 +58,7 @@ interface ServerApi {
         @Query("shop_slug") shopSlug: String?,
         @Query("deal_type") dealType: String?,
         @Query("taxonomy") taxonomy: String?,
+        @Query("page_url") pageUrl: String?,
     ): List<DealDto>
 
     @GET("/wp-json/theme/v1/cat_and_chop_filter_new?category=categories")
@@ -92,4 +87,13 @@ interface ServerApi {
         @Query("notification") notification: Boolean?,
         @Query("notification_cat") notificationCategoriesUnsubscribe: String?,
     )
+
+    @GET("/wp-json/theme/v1/products/search/{searchText}")
+    suspend fun searchDeals(@Path("searchText") id: String): List<DealDto>
+
+    @GET("/wp-json/theme/v1/views")
+    suspend fun updateViewsClick(@Query("id") id: String)
+
+    @GET("/wp-json/theme/v1/total_get_deal")
+    suspend fun activateDealClick(@Query("id") id: String)
 }

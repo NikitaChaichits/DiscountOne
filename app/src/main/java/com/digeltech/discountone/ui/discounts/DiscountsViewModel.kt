@@ -64,7 +64,8 @@ class DiscountsViewModel @Inject constructor(
                 sortBy = sortBy,
                 categorySlug = categorySlug.takeIf { it.isNotEmpty() },
                 shopSlug = shopSlug.takeIf { it.isNotEmpty() },
-                taxonomy = filteringCategories.value?.getTaxonomyBySlug(categorySlug)
+                taxonomy = filteringCategories.value?.getTaxonomyBySlug(categorySlug),
+                pageUrl = "discounts"
             )
                 .onSuccess { _deals ->
                     if (_deals.isNotEmpty()) {
@@ -98,7 +99,8 @@ class DiscountsViewModel @Inject constructor(
                     sortBy = sortBy,
                     categorySlug = categorySlug.takeIf { it.isNotEmpty() },
                     shopSlug = shopSlug.takeIf { it.isNotEmpty() },
-                    taxonomy = filteringCategories.value?.getTaxonomyBySlug(categorySlug)
+                    taxonomy = filteringCategories.value?.getTaxonomyBySlug(categorySlug),
+                    pageUrl = "discounts"
                 )
                     .onSuccess { _deals ->
                         if (_deals.isNotEmpty()) {
@@ -138,4 +140,9 @@ class DiscountsViewModel @Inject constructor(
         }
     }
 
+    fun updateDealViewsClick(id: String) {
+        viewModelScope.launch {
+            dealsRepository.updateDealViewsClick(id)
+        }
+    }
 }

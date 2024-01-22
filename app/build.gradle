@@ -45,6 +45,7 @@ android {
             minifyEnabled false
             shrinkResources false
             signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
             debuggable true
@@ -58,13 +59,14 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
+
 }
 
 dependencies {
@@ -119,7 +121,6 @@ dependencies {
     implementation platform(firebaseDependencies.bom)
     implementation firebaseDependencies.analyticsKtx
     implementation firebaseDependencies.crashlyticsKtx
-    implementation firebaseDependencies.authKtx
     implementation firebaseDependencies.firestoreKtx
     implementation firebaseDependencies.messaging
 
@@ -138,10 +139,6 @@ dependencies {
     implementation 'com.orhanobut:hawk:2.0.1'
 
     implementation 'com.facebook.android:facebook-android-sdk:15.2.0'
-    // don't update to 16.0.0 version
-    implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
-
-    implementation 'com.android.installreferrer:installreferrer:2.2'
 }
 
 android.applicationVariants.all { variant ->

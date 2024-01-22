@@ -15,12 +15,34 @@ import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.digeltech.discountone.R
 import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentDealBinding
-import com.digeltech.discountone.ui.common.*
+import com.digeltech.discountone.ui.common.WishlistDialogFragment
 import com.digeltech.discountone.ui.common.adapter.LinearDealAdapter
+import com.digeltech.discountone.ui.common.addToBookmarkCache
+import com.digeltech.discountone.ui.common.getCategoryNameById
+import com.digeltech.discountone.ui.common.getCategorySlugById
+import com.digeltech.discountone.ui.common.getShopIdBySlug
+import com.digeltech.discountone.ui.common.isAddedToBookmark
 import com.digeltech.discountone.ui.common.model.DealParcelable
 import com.digeltech.discountone.ui.common.model.DealType
-import com.digeltech.discountone.util.*
-import com.digeltech.discountone.util.view.*
+import com.digeltech.discountone.ui.common.removeFromBookmarkCache
+import com.digeltech.discountone.util.capitalizeFirstLetter
+import com.digeltech.discountone.util.copyTextToClipboard
+import com.digeltech.discountone.util.getDiscountText
+import com.digeltech.discountone.util.isNotNullAndNotEmpty
+import com.digeltech.discountone.util.logOpenDeal
+import com.digeltech.discountone.util.logShopNow
+import com.digeltech.discountone.util.view.getColorValue
+import com.digeltech.discountone.util.view.getImageDrawable
+import com.digeltech.discountone.util.view.getString
+import com.digeltech.discountone.util.view.gone
+import com.digeltech.discountone.util.view.invisible
+import com.digeltech.discountone.util.view.loadImage
+import com.digeltech.discountone.util.view.openLink
+import com.digeltech.discountone.util.view.setImageWithRadius
+import com.digeltech.discountone.util.view.setStrikethrough
+import com.digeltech.discountone.util.view.shareText
+import com.digeltech.discountone.util.view.toast
+import com.digeltech.discountone.util.view.visible
 import com.facebook.appevents.AppEventsLogger
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -257,7 +279,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
             tvRate.text = deal.rating.dec().toString()
         }
         btnGetDeal.setOnClickListener {
-            viewModel.updateDealViewsClick(deal.id.toString())
+            viewModel.activateDealClick(deal.id.toString())
             logShopNow(
                 name = deal.title,
                 url = deal.shopLink.toString(),

@@ -1,21 +1,15 @@
 package com.digeltech.discountone.util.view
 
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.widget.ImageView
 import androidx.annotation.DimenRes
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.Target
 import com.digeltech.discountone.R
-import com.digeltech.discountone.util.log
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory as DCFF
 
 val glideFactory: DCFF = DCFF.Builder().setCrossFadeEnabled(true).build()
@@ -25,12 +19,10 @@ val glideCircleTransformOption = RequestOptions().apply(RequestOptions.circleCro
 
 fun ImageView.setCircleImage(
     uri: Uri?,
-    requestListener: RequestListener<Drawable>? = null
 ) {
     Glide.with(this)
         .load(uri)
         .apply(glideCircleTransformOption)
-        .apply { if (requestListener != null) addListener(requestListener) }
         .transition(glideTransitionOption)
         .into(this)
 }
@@ -57,27 +49,6 @@ fun ImageView.setImageWithRadius(
         .diskCacheStrategy(DiskCacheStrategy.ALL)
         .transform(FitCenter(), RoundedCorners(radius))
         .transition(glideTransitionOption)
-        .listener(object : RequestListener<Drawable> {
-            override fun onLoadFailed(
-                e: GlideException?,
-                model: Any?,
-                target: Target<Drawable>?,
-                isFirstResource: Boolean
-            ): Boolean {
-                log(e)
-                return false
-            }
-
-            override fun onResourceReady(
-                resource: Drawable?,
-                model: Any?,
-                target: Target<Drawable>?,
-                dataSource: DataSource?,
-                isFirstResource: Boolean
-            ): Boolean {
-                return false
-            }
-        })
         .into(this)
 }
 
@@ -96,31 +67,4 @@ fun ImageView.loadGif() {
         .with(context)
         .load(R.raw.loading)
         .into(this)
-}
-
-open class RequestListenerAdapter(
-    private val onSuccess: (resource: Drawable) -> Unit = {},
-    private val onFail: () -> Unit = {}
-) : RequestListener<Drawable> {
-
-    override fun onLoadFailed(
-        e: GlideException?,
-        model: Any?,
-        target: Target<Drawable>?,
-        isFirstResource: Boolean
-    ): Boolean {
-        onFail()
-        return false
-    }
-
-    override fun onResourceReady(
-        resource: Drawable,
-        model: Any?,
-        target: Target<Drawable>,
-        dataSource: DataSource?,
-        isFirstResource: Boolean
-    ): Boolean {
-        onSuccess(resource)
-        return false
-    }
 }

@@ -25,7 +25,6 @@ class CategoryAndShopViewModel @Inject constructor(
 
     private val allDeals = mutableListOf<DealParcelable>()
     private var currentCategoryType: Taxonomy = Taxonomy.SHOP
-
     fun initScreenData(slug: String, id: String) {
         if (allDeals.isEmpty()) {
             shopSlug = slug
@@ -139,6 +138,12 @@ class CategoryAndShopViewModel @Inject constructor(
             viewModelScope.launch {
                 interactor.updateBookmark(userId, dealId)
             }
+        }
+    }
+
+    fun updateDealViewsClick(id: String) {
+        viewModelScope.launch {
+            interactor.updateDealViewsClick(id)
         }
     }
 

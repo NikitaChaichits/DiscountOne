@@ -1,14 +1,15 @@
 package com.digeltech.discountone.ui.splash
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.view.WindowManager
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.digeltech.discountone.R
 import com.digeltech.discountone.common.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SplashFragment : BaseFragment(R.layout.fragment_splash) {
@@ -19,11 +20,11 @@ class SplashFragment : BaseFragment(R.layout.fragment_splash) {
         super.onViewCreated(view, savedInstanceState)
         activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
-        val handler = Handler(Looper.getMainLooper())
-        handler.postDelayed({
+        lifecycleScope.launch {
+            delay(2000)
             navigate(R.id.homeFragment)
             activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-        }, 2000)
+        }
     }
 
 }

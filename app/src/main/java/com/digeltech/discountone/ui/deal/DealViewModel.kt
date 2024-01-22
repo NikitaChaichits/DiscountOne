@@ -88,9 +88,9 @@ class DealViewModel @Inject constructor(
         }
     }
 
-    fun updateDealViewsClick(id: String) {
+    fun activateDealClick(id: String) {
         viewModelScope.launch {
-            dealsRepository.updateDealViewsClick(id)
+            dealsRepository.activateDealClick(id)
         }
     }
 

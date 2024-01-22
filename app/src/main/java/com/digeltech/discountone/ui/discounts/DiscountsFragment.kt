@@ -15,9 +15,18 @@ import com.digeltech.discountone.databinding.FragmentDiscountsBinding
 import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.common.KEY_USER
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
+import com.digeltech.discountone.util.isNotNullAndNotEmpty
 import com.digeltech.discountone.util.logSearch
-import com.digeltech.discountone.util.view.*
+import com.digeltech.discountone.util.view.categoriesStyledAdapter
+import com.digeltech.discountone.util.view.getNamesWithFirstAllString
+import com.digeltech.discountone.util.view.getString
+import com.digeltech.discountone.util.view.gone
+import com.digeltech.discountone.util.view.invisible
+import com.digeltech.discountone.util.view.loadGif
+import com.digeltech.discountone.util.view.px
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
+import com.digeltech.discountone.util.view.setProfileImage
+import com.digeltech.discountone.util.view.visible
 import com.facebook.appevents.AppEventsLogger
 import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
@@ -77,13 +86,30 @@ class DiscountsFragment : BaseFragment(R.layout.fragment_discounts), SearchView.
         return true
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.currentCategorySpinnerPosition.let {
+            if (it > 0) {
+                binding.spinnerCategories.setSelection(it)
+            }
+        }
+        viewModel.currentSortBySpinnerPosition.let {
+            if (it > 0) {
+                binding.spinnerSortingType.setSelection(it)
+            }
+        }
+        viewModel.currentShopSpinnerPosition.let {
+            if (it > 0) {
+                binding.spinnerShops.setSelection(it)
+            }
+        }
+    }
+
     private fun initAdapters() {
         dealAdapter = GridDealAdapter(
             onClickListener = {
-                val bundle = Bundle().apply {
-                    putParcelable("deal", it)
-                }
-                navigate(R.id.dealFragment, bundle)
+                viewModel.updateDealViewsClick(it.id.toString())
+                navigateToDealFragment(it)
             },
             onBookmarkClickListener = {
                 viewModel.updateBookmark(it.toString())
@@ -102,10 +128,8 @@ class DiscountsFragment : BaseFragment(R.layout.fragment_discounts), SearchView.
 
         searchAdapter = GridDealAdapter(
             onClickListener = {
-                val bundle = Bundle().apply {
-                    putParcelable("deal", it)
-                }
-                navigate(R.id.dealFragment, bundle)
+                viewModel.updateDealViewsClick(it.id.toString())
+                navigateToDealFragment(it)
                 binding.searchView.setQuery("", false)
             },
             onBookmarkClickListener = {
@@ -213,8 +237,9 @@ class DiscountsFragment : BaseFragment(R.layout.fragment_discounts), SearchView.
             if (it.isNotEmpty()) {
                 dealAdapter.submitList(it)
                 dealAdapter.notifyDataSetChanged()
-                binding.tvFilteringResultEmpty.invisible()
                 binding.rvDeals.visible()
+                viewModel.filteringError.value = null
+                binding.tvFilteringResultEmpty.invisible()
             } else {
                 binding.tvFilteringResultEmpty.visible()
                 binding.rvDeals.invisible()
@@ -238,8 +263,10 @@ class DiscountsFragment : BaseFragment(R.layout.fragment_discounts), SearchView.
                 }
         }
         viewModel.filteringError.observe(viewLifecycleOwner) {
-            binding.tvFilteringResultEmpty.visible()
-            binding.rvDeals.invisible()
+            if (it.isNotNullAndNotEmpty()) {
+                binding.tvFilteringResultEmpty.visible()
+                binding.rvDeals.invisible()
+            }
         }
     }
 

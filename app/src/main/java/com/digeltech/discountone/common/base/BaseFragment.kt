@@ -17,6 +17,7 @@ import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.digeltech.discountone.R
 import com.digeltech.discountone.data.source.local.SharedPreferencesDataSource
+import com.digeltech.discountone.ui.common.model.DealParcelable
 import com.digeltech.discountone.util.flow.collectWhileStarted
 import com.digeltech.discountone.util.permission.checkPermission
 import com.digeltech.discountone.util.view.buildLoadingDialog
@@ -106,6 +107,13 @@ abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
 
     fun navigateBack() {
         findNavController().popBackStack()
+    }
+
+    fun navigateToDealFragment(deal: DealParcelable) {
+        val bundle = Bundle().apply {
+            putParcelable("deal", deal)
+        }
+        findNavController().navigate(R.id.dealFragment, bundle)
     }
 
     /* Permission */

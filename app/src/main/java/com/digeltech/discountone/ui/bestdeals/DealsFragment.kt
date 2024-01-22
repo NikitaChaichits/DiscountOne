@@ -15,9 +15,17 @@ import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.common.KEY_USER
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
 import com.digeltech.discountone.ui.common.model.Taxonomy
+import com.digeltech.discountone.util.isNotNullAndNotEmpty
 import com.digeltech.discountone.util.logSearch
-import com.digeltech.discountone.util.view.*
+import com.digeltech.discountone.util.view.categoriesStyledAdapter
+import com.digeltech.discountone.util.view.getNamesWithFirstAllString
+import com.digeltech.discountone.util.view.getString
+import com.digeltech.discountone.util.view.invisible
+import com.digeltech.discountone.util.view.loadGif
+import com.digeltech.discountone.util.view.px
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
+import com.digeltech.discountone.util.view.setProfileImage
+import com.digeltech.discountone.util.view.visible
 import com.facebook.appevents.AppEventsLogger
 import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
@@ -86,10 +94,8 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
     private fun initAdapters() {
         dealAdapter = GridDealAdapter(
             onClickListener = {
-                val bundle = Bundle().apply {
-                    putParcelable("deal", it)
-                }
-                navigate(R.id.dealFragment, bundle)
+                viewModel.updateDealViewsClick(it.id.toString())
+                navigateToDealFragment(it)
             },
             onBookmarkClickListener = {
                 viewModel.updateBookmark(it.toString())
@@ -121,10 +127,8 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
 
         searchAdapter = GridDealAdapter(
             onClickListener = {
-                val bundle = Bundle().apply {
-                    putParcelable("deal", it)
-                }
-                navigate(R.id.dealFragment, bundle)
+                viewModel.updateDealViewsClick(it.id.toString())
+                navigateToDealFragment(it)
                 binding.searchView.setQuery("", false)
             },
             onBookmarkClickListener = {
@@ -178,6 +182,8 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
                             )
                             adapterCategories.setDropDownViewResource(R.layout.spinner_item_dropdown)
                             binding.spinnerCategories.adapter = adapterCategories
+                            viewModel.categorySlug = ""
+                            viewModel.currentCategorySpinnerPosition = 0
                         }
                         2 -> { // DealType.COUPONS chosen
                             //setting only discounts categories for category spinner
@@ -190,6 +196,8 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
                             )
                             adapterCategories.setDropDownViewResource(R.layout.spinner_item_dropdown)
                             binding.spinnerCategories.adapter = adapterCategories
+                            viewModel.categorySlug = ""
+                            viewModel.currentCategorySpinnerPosition = 0
                         }
                         else -> {// DealType.ALL chosen
                             val adapterCategories = categoriesStyledAdapter(requireContext(), it)
@@ -243,9 +251,10 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
             } else {
                 dealAdapter.submitList(it)
                 dealAdapter.notifyDataSetChanged()
-                binding.tvFilteringResultEmpty.invisible()
                 binding.grContent.visible()
                 binding.rvDeals.visible()
+                viewModel.filteringError.value = null
+                binding.tvFilteringResultEmpty.invisible()
             }
         }
         viewModel.filteringShops.observe(viewLifecycleOwner) {
@@ -272,8 +281,10 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
             binding.grContent.invisible()
         }
         viewModel.filteringError.observe(viewLifecycleOwner) {
-            binding.tvFilteringResultEmpty.visible()
-            binding.rvDeals.invisible()
+            if (it.isNotNullAndNotEmpty()) {
+                binding.tvFilteringResultEmpty.visible()
+                binding.rvDeals.invisible()
+            }
         }
     }
 }

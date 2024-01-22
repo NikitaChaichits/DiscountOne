@@ -2,10 +2,19 @@ package com.digeltech.discountone.common.base
 
 import androidx.annotation.MainThread
 import androidx.collection.ArraySet
-import androidx.lifecycle.*
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import com.digeltech.discountone.ui.common.model.DealParcelable
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
@@ -50,7 +59,7 @@ open class BaseViewModel : ViewModel() {
     @MainThread
     fun <T> Event<T>.callNow(newValue: T) = internalCall(newValue)
     fun <T> Event<T>.call(newValue: T) = internalPostCall(newValue)
-    fun Event<Unit>.call() = internalPostCall(kotlin.Unit)
+    fun Event<Unit>.call() = internalPostCall(Unit)
 
     class State<T>(initValue: T? = null) {
 

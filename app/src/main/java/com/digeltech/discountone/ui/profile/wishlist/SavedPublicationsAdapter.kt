@@ -61,7 +61,7 @@ class SavedPublicationsAdapter(
 
                 item.shopImageUrl?.let { ivShopLogo.setImageWithRadius(it, R.dimen.radius_10) }
                 if (item.shopName.isNotNullAndNotEmpty()) {
-                    tvShopName.text = item.shopName?.capitalizeFirstLetter()
+                    tvShopName.text = item.shopName.capitalizeFirstLetter()
                 }
 
                 if (item.isAddedToBookmark) {

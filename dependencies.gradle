@@ -5,39 +5,39 @@ ext {
 
     def libraryVersions = [
 
-            androidGradlePluginVersion : '7.3.1',
+            androidGradlePluginVersion : '8.2.1',
             kotlinGradlePluginVersion  : '1.8.0',
             googleServices             : '4.3.14',
             googlePlayCore             : '1.8.1',
             googlePlayAppUpdate        : '2.1.0',
 
-            coreKtxVersion             : '1.9.0',
+            coreKtxVersion             : '1.12.0',
             constraintLayoutVersion    : '2.2.0-alpha07',
-            recyclerViewVersion        : '1.2.1',
+            recyclerViewVersion        : '1.3.2',
             lifecycleVersion           : '2.6.0-rc01',
-            materialVersion            : '1.8.0',
+            materialVersion            : '1.11.0',
             cardViewVersion            : '1.0.0',
             materialDialogs            : '3.3.0',
 
-            navigation                 : '2.5.3',
-            hilt                       : '2.45',
+            navigation                 : '2.7.6',
+            hilt                       : '2.50',
             lifecycleHilt              : '1.0.0-alpha01',
-            ktxActivityVersion         : '1.6.1',
-            ktxFragmentVersion         : '1.5.5',
+            ktxActivityVersion         : '1.8.2',
+            ktxFragmentVersion         : '1.6.2',
             viewBindingPropertyDelegate: '1.5.8',
 
             retrofitVersion            : '2.9.0',
             okHttpVersion              : '5.0.0-alpha.7',
             gsonVersion                : '2.10.1',
 
-            coroutineVersion           : '1.6.4',
-            coroutineWorkManager       : '2.8.0',
+            coroutineVersion           : '1.7.3',
+            coroutineWorkManager       : '2.9.0',
 
-            glide                      : '4.15.0',
-            lottieVersion              : '6.0.0',
+            glide                      : '4.16.0',
+            lottieVersion              : '6.3.0',
 
             // Firebase
-            bom                        : '31.2.2',
+            bom                        : '32.7.0',
             analytics                  : '21.0.0',
             crashlytics                : '18.2.10',
             buildtools                 : '2.9.2',
@@ -47,10 +47,10 @@ ext {
             junitExt                   : '1.1.5',
             espresso                   : '3.5.1',
             jupiter                    : '5.8.1',
-            mockVersion                : '3.12.4',
+            mockVersion                : '5.8.0',
 
             room                       : '2.4.0',
-            paging                     : '3.1.0'
+            paging                     : '3.2.1'
     ]
     /**
      * Common dependencies for all project
@@ -118,7 +118,6 @@ ext {
             bom                  : "com.google.firebase:firebase-bom:${libraryVersions.bom}",
             analyticsKtx         : "com.google.firebase:firebase-analytics-ktx",
             crashlyticsKtx       : "com.google.firebase:firebase-crashlytics-ktx",
-            authKtx              : "com.google.firebase:firebase-auth-ktx",
             firestoreKtx         : "com.google.firebase:firebase-firestore-ktx",
             crashlyticsBuildTools: "com.google.firebase:firebase-crashlytics-buildtools:${libraryVersions.buildtools}",
             messaging            : "com.google.firebase:firebase-messaging-ktx",

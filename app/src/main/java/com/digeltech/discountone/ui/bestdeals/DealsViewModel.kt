@@ -5,8 +5,16 @@ import com.digeltech.discountone.common.base.BaseFilteringViewModel
 import com.digeltech.discountone.domain.model.Item
 import com.digeltech.discountone.domain.model.getTaxonomyBySlug
 import com.digeltech.discountone.domain.repository.DealsRepository
-import com.digeltech.discountone.ui.common.*
-import com.digeltech.discountone.ui.common.model.*
+import com.digeltech.discountone.ui.common.INIT_COUNT_OF_DEALS
+import com.digeltech.discountone.ui.common.INIT_DELAY
+import com.digeltech.discountone.ui.common.ITEMS_ON_PAGE
+import com.digeltech.discountone.ui.common.SEARCH_DELAY
+import com.digeltech.discountone.ui.common.getUserId
+import com.digeltech.discountone.ui.common.model.DealParcelable
+import com.digeltech.discountone.ui.common.model.DealType
+import com.digeltech.discountone.ui.common.model.SortBy
+import com.digeltech.discountone.ui.common.model.Taxonomy
+import com.digeltech.discountone.ui.common.model.toParcelableList
 import com.digeltech.discountone.util.log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -153,6 +161,12 @@ class DealsViewModel @Inject constructor(
             viewModelScope.launch {
                 dealsRepository.updateBookmark(userId, dealId)
             }
+        }
+    }
+
+    fun updateDealViewsClick(id: String) {
+        viewModelScope.launch {
+            dealsRepository.updateDealViewsClick(id)
         }
     }
 }

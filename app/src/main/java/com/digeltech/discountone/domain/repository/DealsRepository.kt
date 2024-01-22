@@ -24,6 +24,7 @@ interface DealsRepository {
     suspend fun searchDeals(searchText: String): List<Deal>
 
     suspend fun updateDealViewsClick(id: String)
+    suspend fun activateDealClick(id: String)
 
     suspend fun getSimilarDealsByCategory(categoryName: String): Result<List<Deal>>
 
@@ -40,6 +41,7 @@ interface DealsRepository {
         categorySlug: String? = null,
         shopSlug: String? = null,
         taxonomy: String? = null,
+        pageUrl: String? = null,
     ): Result<List<Deal>>
 
     suspend fun getInitialDeals(

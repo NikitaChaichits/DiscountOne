@@ -2,8 +2,8 @@ package com.digeltech.discountone.data.repository
 
 import com.digeltech.discountone.data.mapper.DealsMapper
 import com.digeltech.discountone.data.mapper.HomepageMapper
-import com.digeltech.discountone.data.source.remote.api.DiscountApi
-import com.digeltech.discountone.data.source.remote.api.ServerApi
+import com.digeltech.discountone.data.source.remote.api.DealsApi
+import com.digeltech.discountone.data.source.remote.api.DiscountsApi
 import com.digeltech.discountone.domain.model.AllDeals
 import com.digeltech.discountone.domain.model.Deal
 import com.digeltech.discountone.domain.model.Homepage
@@ -14,15 +14,14 @@ import com.digeltech.discountone.ui.common.model.DealType
 import com.digeltech.discountone.ui.common.model.SortBy
 import com.digeltech.discountone.ui.common.model.Taxonomy
 import com.digeltech.discountone.ui.home.KEY_HOMEPAGE_DATA
-import com.digeltech.discountone.util.log
 import com.orhanobut.hawk.Hawk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class DealsRepositoryImpl @Inject constructor(
-    private val api: ServerApi,
-    private val discountApi: DiscountApi,
+    private val api: DealsApi,
+    private val discountApi: DiscountsApi,
 ) : DealsRepository {
 
     override suspend fun getDiscounts(): Result<AllDeals> = withContext(Dispatchers.IO) {
@@ -83,9 +82,11 @@ class DealsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateDealViewsClick(id: String) = withContext(Dispatchers.IO) {
-        api.updateViewsClick(id).also {
-            log("api.updateViewsClick($id)")
-        }
+        api.updateViewsClick(id)
+    }
+
+    override suspend fun activateDealClick(id: String) = withContext(Dispatchers.IO) {
+        api.activateDealClick(id)
     }
 
     override suspend fun getSimilarDealsByCategory(categoryName: String): Result<List<Deal>> =
@@ -121,6 +122,7 @@ class DealsRepositoryImpl @Inject constructor(
         categorySlug: String?,
         shopSlug: String?,
         taxonomy: String?,
+        pageUrl: String?,
     ): Result<List<Deal>> = withContext(Dispatchers.IO) {
         runCatching {
             DealsMapper().mapDeals(
@@ -130,7 +132,8 @@ class DealsRepositoryImpl @Inject constructor(
                     categorySlug = categorySlug,
                     shopSlug = shopSlug,
                     dealType = dealType?.type,
-                    taxonomy = taxonomy
+                    taxonomy = taxonomy,
+                    pageUrl = pageUrl
                 )
             )
         }

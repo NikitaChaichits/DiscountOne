@@ -4,11 +4,11 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
-import com.digeltech.discountone.R
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
-import java.util.*
+import java.util.Calendar
+import java.util.TimeZone
 
 fun showDatePickerDialog(context: Context, listener: DatePickerDialog.OnDateSetListener) {
     val calendar: Calendar = Calendar.getInstance()
@@ -28,7 +28,7 @@ fun showMaterialDatePickerDialog(textview: TextView, fragmentManager: FragmentMa
         .build()
 
     val builder = MaterialDatePicker.Builder.datePicker()
-        .setTheme(R.style.ThemeOverlay_MaterialComponents_MaterialCalendar)
+        .setTheme(com.google.android.material.R.style.ThemeOverlay_MaterialComponents_MaterialCalendar)
         .setCalendarConstraints(constraints)
 
     val picker = builder.build()
