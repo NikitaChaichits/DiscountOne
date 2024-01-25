@@ -123,8 +123,10 @@ class CouponsViewModel @Inject constructor(
         searchJob = viewModelScope.launch {
             delay(SEARCH_DELAY)
 
-            val deals = dealsRepository.searchDeals(searchText)
-            searchResult.value = deals.toParcelableList()
+            launchWithLoading {
+                val deals = dealsRepository.searchDeals(searchText)
+                searchResult.value = deals.toParcelableList()
+            }
         }
     }
 

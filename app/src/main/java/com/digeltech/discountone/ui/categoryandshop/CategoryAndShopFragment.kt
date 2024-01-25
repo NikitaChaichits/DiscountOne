@@ -12,9 +12,8 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.discountone.R
 import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentCategoryAndShopBinding
-import com.digeltech.discountone.domain.model.User
-import com.digeltech.discountone.ui.common.KEY_USER
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
+import com.digeltech.discountone.ui.common.loadProfileImage
 import com.digeltech.discountone.ui.common.model.Taxonomy
 import com.digeltech.discountone.util.isNotNullAndNotEmpty
 import com.digeltech.discountone.util.logSearch
@@ -26,10 +25,8 @@ import com.digeltech.discountone.util.view.invisible
 import com.digeltech.discountone.util.view.loadGif
 import com.digeltech.discountone.util.view.px
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
-import com.digeltech.discountone.util.view.setProfileImage
 import com.digeltech.discountone.util.view.visible
 import com.facebook.appevents.AppEventsLogger
-import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -48,6 +45,8 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
     private lateinit var dealAdapter: GridDealAdapter
     private lateinit var searchAdapter: GridDealAdapter
 
+    private var searchText: String? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -60,10 +59,11 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
 
         viewModel.initScreenData(args.slug, args.id.toString())
 
-        loadProfileImage()
         initAdapters()
         initListeners()
         observeData()
+
+        loadProfileImage(binding.ivProfile)
         binding.ivLoading.loadGif()
     }
 
@@ -72,16 +72,15 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
     override fun onQueryTextChange(newText: String?): Boolean {
         if (newText.isNullOrEmpty()) {
             binding.tvTitle.visible()
-            binding.rvSearchDeals.invisible()
             binding.grFilters.visible()
-            if (binding.rvDeals.adapter?.itemCount == 0) {
-                binding.tvFilteringResultEmpty.visible()
-            } else {
-                binding.rvDeals.visible()
-            }
+            binding.rvDeals.visible()
+            binding.rvSearchDeals.gone()
             binding.tvSearchResultEmpty.invisible()
+            searchText = null
         } else {
+            if (newText == searchText) return false
             logSearch(newText.toString(), logger)
+            searchText = newText
             viewModel.searchDeals(newText.toString())
         }
         return true
@@ -131,7 +130,6 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
             onClickListener = {
                 viewModel.updateDealViewsClick(it.id.toString())
                 navigateToDealFragment(it)
-                binding.searchView.setQuery("", false)
             },
             onBookmarkClickListener = {
                 viewModel.updateBookmark(it.toString())
@@ -292,7 +290,7 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
             }
             searchAdapter.submitList(it)
             binding.rvSearchDeals.visible()
-            binding.rvDeals.invisible()
+            binding.rvDeals.gone()
             binding.grFilters.gone()
             binding.tvFilteringResultEmpty.invisible()
         }
@@ -300,14 +298,6 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
             if (it.isNotNullAndNotEmpty()) {
                 binding.tvFilteringResultEmpty.visible()
                 binding.rvDeals.invisible()
-            }
-        }
-    }
-
-    private fun loadProfileImage() {
-        Hawk.get<User>(KEY_USER)?.let {
-            it.avatarUrl?.let { url ->
-                binding.ivProfile.setProfileImage(url)
             }
         }
     }

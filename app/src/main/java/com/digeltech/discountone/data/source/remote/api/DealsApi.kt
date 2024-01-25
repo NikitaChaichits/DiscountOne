@@ -94,6 +94,6 @@ interface DealsApi {
     @GET("/wp-json/theme/v1/views")
     suspend fun updateViewsClick(@Query("id") id: String)
 
-    @GET("/wp-json/theme/v1/total_get_deal")
+    @POST("/wp-json/theme/v1/total_get_deal")
     suspend fun activateDealClick(@Query("id") id: String)
 }

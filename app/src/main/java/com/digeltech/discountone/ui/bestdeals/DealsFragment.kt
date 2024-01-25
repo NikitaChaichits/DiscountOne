@@ -11,23 +11,21 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.discountone.R
 import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentBestDealsBinding
-import com.digeltech.discountone.domain.model.User
-import com.digeltech.discountone.ui.common.KEY_USER
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
+import com.digeltech.discountone.ui.common.loadProfileImage
 import com.digeltech.discountone.ui.common.model.Taxonomy
 import com.digeltech.discountone.util.isNotNullAndNotEmpty
 import com.digeltech.discountone.util.logSearch
 import com.digeltech.discountone.util.view.categoriesStyledAdapter
 import com.digeltech.discountone.util.view.getNamesWithFirstAllString
 import com.digeltech.discountone.util.view.getString
+import com.digeltech.discountone.util.view.gone
 import com.digeltech.discountone.util.view.invisible
 import com.digeltech.discountone.util.view.loadGif
 import com.digeltech.discountone.util.view.px
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
-import com.digeltech.discountone.util.view.setProfileImage
 import com.digeltech.discountone.util.view.visible
 import com.facebook.appevents.AppEventsLogger
-import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -43,14 +41,16 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
     private lateinit var dealAdapter: GridDealAdapter
     private lateinit var searchAdapter: GridDealAdapter
 
+    private var searchText: String? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         initAdapters()
         initListeners()
-        loadProfileImage()
         observeData()
 
+        loadProfileImage(binding.ivProfile)
         binding.ivLoading.loadGif()
     }
 
@@ -58,12 +58,15 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
 
     override fun onQueryTextChange(newText: String?): Boolean {
         if (newText.isNullOrEmpty()) {
-            binding.rvSearchDeals.invisible()
-            binding.tvSearchResultEmpty.invisible()
             binding.tvTitle.visible()
             binding.grContent.visible()
+            binding.rvSearchDeals.gone()
+            binding.tvSearchResultEmpty.invisible()
+            searchText = null
         } else {
+            if (newText == searchText) return false
             logSearch(newText.toString(), logger)
+            searchText = newText
             viewModel.searchDeals(newText.toString())
         }
         return true
@@ -79,14 +82,6 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
         viewModel.currentShopSpinnerPosition.let {
             if (it > 0) {
                 binding.spinnerShops.setSelection(it)
-            }
-        }
-    }
-
-    private fun loadProfileImage() {
-        Hawk.get<User>(KEY_USER)?.let {
-            it.avatarUrl?.let { url ->
-                binding.ivProfile.setProfileImage(url)
             }
         }
     }
@@ -129,7 +124,6 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
             onClickListener = {
                 viewModel.updateDealViewsClick(it.id.toString())
                 navigateToDealFragment(it)
-                binding.searchView.setQuery("", false)
             },
             onBookmarkClickListener = {
                 viewModel.updateBookmark(it.toString())
@@ -278,7 +272,7 @@ class DealsFragment : BaseFragment(R.layout.fragment_best_deals), SearchView.OnQ
             }
             searchAdapter.submitList(it)
             binding.rvSearchDeals.visible()
-            binding.grContent.invisible()
+            binding.grContent.gone()
         }
         viewModel.filteringError.observe(viewLifecycleOwner) {
             if (it.isNotNullAndNotEmpty()) {

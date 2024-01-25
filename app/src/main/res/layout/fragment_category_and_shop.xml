@@ -189,7 +189,7 @@
                 android:id="@+id/grFilters"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:constraint_referenced_ids="tvSortingType, spinnerSortingType, tvSortingCatOrShop, spinnerSortingCatOrShop, tvSortingPrice" />
+                app:constraint_referenced_ids="tvDealType, spinnerDealType, tvSortingType, spinnerSortingType, tvSortingCatOrShop, spinnerCategories" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

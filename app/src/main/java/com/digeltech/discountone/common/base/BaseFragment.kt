@@ -120,7 +120,7 @@ abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
     fun checkPermission(permission: String) = requireContext().checkPermission(permission)
 
     /* Other */
-    private fun hideKeyboard() {
+    fun hideKeyboard() {
         view?.let { activity?.hideKeyboard(it) }
     }
 }

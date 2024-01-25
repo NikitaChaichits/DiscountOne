@@ -7,7 +7,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 @Px
 fun LinearLayoutManager.getChildBottom(childIndex: Int, defaultValue: Int): Int {
@@ -23,7 +28,6 @@ class AutoScrollHelper(private val recyclerView: RecyclerView) {
     private var job: Job? = null
     private var shopsJob: Job? = null
     private var currentPosition: Int = 0
-    private var currentShopPosition: Int = 0
 
     fun startAutoScroll() {
         currentPosition = 0

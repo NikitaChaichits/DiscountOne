@@ -15,9 +15,7 @@ const val CURRENT_PAGE_ON_START = 3
 
 open class BaseFilteringViewModel : BaseViewModel() {
 
-
     val filteringError = MutableLiveData<String?>()
-
     val deals = MutableLiveData<List<DealParcelable>>()
     val filteringCategories = MutableLiveData<List<Item>>()
     val filteringShops = MutableLiveData<List<Item>>()

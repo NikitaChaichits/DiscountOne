@@ -9,10 +9,9 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.discountone.R
 import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentHomeBinding
-import com.digeltech.discountone.domain.model.User
-import com.digeltech.discountone.ui.common.KEY_USER
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
 import com.digeltech.discountone.ui.common.adapter.LinearDealAdapter
+import com.digeltech.discountone.ui.common.loadProfileImage
 import com.digeltech.discountone.ui.common.model.DealType
 import com.digeltech.discountone.ui.home.adapter.BannerAdapter
 import com.digeltech.discountone.ui.home.adapter.CategoriesAdapter
@@ -26,10 +25,8 @@ import com.digeltech.discountone.util.view.px
 import com.digeltech.discountone.util.view.recycler.AutoScrollHelper
 import com.digeltech.discountone.util.view.recycler.CyclicScrollHelper
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
-import com.digeltech.discountone.util.view.setProfileImage
 import com.digeltech.discountone.util.view.visible
 import com.facebook.appevents.AppEventsLogger
-import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -42,9 +39,12 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
     @Inject
     lateinit var logger: AppEventsLogger
 
+    private var searchText: String? = null
+
     private lateinit var bannerAdapter: BannerAdapter
-    private lateinit var couponsLinearAdapter: LinearDealAdapter
     private lateinit var discountsLinearAdapter: LinearDealAdapter
+    private lateinit var couponsLinearAdapter: LinearDealAdapter
+    private lateinit var financeLinearAdapter: LinearDealAdapter
     private lateinit var categoriesAdapter: CategoriesAdapter
     private lateinit var shopsAdapter: HomeShopsAdapter
 
@@ -58,12 +58,12 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.getHomepageData()
-        loadProfileImage()
 
         initAdapters()
         initListeners()
         observeData()
 
+        loadProfileImage(binding.ivProfile)
         binding.ivLoading.loadGif()
     }
 
@@ -73,9 +73,12 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         if (newText.isNullOrEmpty()) {
             binding.mainContentGroup.visible()
             binding.tvSearchResultEmpty.invisible()
-            binding.rvSearchDeals.invisible()
+            binding.rvSearchDeals.gone()
+            searchText = null
         } else {
+            if (newText == searchText) return false
             logSearch(newText.toString(), logger)
+            searchText = newText
             viewModel.searchDeals(newText.toString())
         }
         return true
@@ -142,9 +145,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
                 viewModel.updateDealViewsClick(it.id.toString())
                 navigateToDealFragment(it)
             },
-            onBookmarkClickListener = {
-                viewModel.updateBookmark(it.toString())
-            },
+            onBookmarkClickListener = { viewModel.updateBookmark(it.toString()) },
             fragmentManager = requireActivity().supportFragmentManager,
             logger = logger,
         )
@@ -156,13 +157,23 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
                 viewModel.updateDealViewsClick(it.id.toString())
                 navigateToDealFragment(it)
             },
-            onBookmarkClickListener = {
-                viewModel.updateBookmark(it.toString())
-            },
+            onBookmarkClickListener = { viewModel.updateBookmark(it.toString()) },
             fragmentManager = requireActivity().supportFragmentManager,
             logger = logger,
         )
         binding.rvCoupons.adapter = couponsLinearAdapter
+
+        // Linear horizontal RV for finance category
+        financeLinearAdapter = LinearDealAdapter(
+            onClickListener = {
+                viewModel.updateDealViewsClick(it.id.toString())
+                navigateToDealFragment(it)
+            },
+            onBookmarkClickListener = { viewModel.updateBookmark(it.toString()) },
+            fragmentManager = requireActivity().supportFragmentManager,
+            logger = logger,
+        )
+        binding.rvFinance.adapter = financeLinearAdapter
 
         // Linear horizontal RV for shops
         shopsAdapter = HomeShopsAdapter(
@@ -184,9 +195,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
                 viewModel.updateDealViewsClick(it.id.toString())
                 navigateToDealFragment(it)
             },
-            onBookmarkClickListener = {
-                viewModel.updateBookmark(it.toString())
-            },
+            onBookmarkClickListener = { viewModel.updateBookmark(it.toString()) },
             fragmentManager = requireActivity().supportFragmentManager,
             logger = logger,
         )
@@ -201,9 +210,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
                 viewModel.updateDealViewsClick(it.id.toString())
                 navigateToDealFragment(it)
             },
-            onBookmarkClickListener = {
-                viewModel.updateBookmark(it.toString())
-            },
+            onBookmarkClickListener = { viewModel.updateBookmark(it.toString()) },
             fragmentManager = requireActivity().supportFragmentManager,
             logger = logger,
         )
@@ -217,37 +224,27 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         binding.rvSearchDeals.adapter = searchDealAdapter
     }
 
-    private fun loadProfileImage() {
-        Hawk.get<User>(KEY_USER)?.let {
-            it.avatarUrl?.let { url ->
-                binding.ivProfile.setProfileImage(url)
-            }
-        }
-    }
-
     private fun observeData() {
         viewModel.loadingGifVisibility.observe(viewLifecycleOwner) {
-            if (it)
-                binding.ivLoading.visible()
-            else
-                binding.ivLoading.invisible()
+            if (it) binding.ivLoading.visible()
+            else binding.ivLoading.invisible()
         }
         viewModel.banners.observe(viewLifecycleOwner, bannerAdapter::submitList)
         viewModel.discounts.observe(viewLifecycleOwner, discountsLinearAdapter::submitList)
         viewModel.coupons.observe(viewLifecycleOwner, couponsLinearAdapter::submitList)
-        viewModel.shops.observe(viewLifecycleOwner) {
-            shopsAdapter.submitList(it)
-        }
+        viewModel.finance.observe(viewLifecycleOwner, financeLinearAdapter::submitList)
+        viewModel.shops.observe(viewLifecycleOwner, shopsAdapter::submitList)
         viewModel.categories.observe(viewLifecycleOwner) {
             categoriesAdapter.submitList(it)
-            binding.mainContentGroup.visible()
+            if (searchText.isNullOrEmpty())
+                binding.mainContentGroup.visible()
         }
         viewModel.searchResult.observe(viewLifecycleOwner) {
-            if (binding.searchView.query.isNullOrEmpty()) {
+            if (searchText.isNullOrEmpty()) {
                 binding.mainContentGroup.visible()
                 binding.tvSearchResultEmpty.invisible()
                 binding.rvSearchDeals.invisible()
-            } else if (it.isEmpty() && !binding.searchView.query.isNullOrEmpty()) {
+            } else if (it.isEmpty() && !searchText.isNullOrEmpty()) {
                 binding.tvSearchResultEmpty.visible()
                 binding.mainContentGroup.invisible()
                 binding.rvSearchDeals.invisible()

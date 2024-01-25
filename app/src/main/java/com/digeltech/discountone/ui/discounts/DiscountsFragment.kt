@@ -12,9 +12,8 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.discountone.R
 import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentDiscountsBinding
-import com.digeltech.discountone.domain.model.User
-import com.digeltech.discountone.ui.common.KEY_USER
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
+import com.digeltech.discountone.ui.common.loadProfileImage
 import com.digeltech.discountone.util.isNotNullAndNotEmpty
 import com.digeltech.discountone.util.logSearch
 import com.digeltech.discountone.util.view.categoriesStyledAdapter
@@ -25,10 +24,8 @@ import com.digeltech.discountone.util.view.invisible
 import com.digeltech.discountone.util.view.loadGif
 import com.digeltech.discountone.util.view.px
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
-import com.digeltech.discountone.util.view.setProfileImage
 import com.digeltech.discountone.util.view.visible
 import com.facebook.appevents.AppEventsLogger
-import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -47,6 +44,8 @@ class DiscountsFragment : BaseFragment(R.layout.fragment_discounts), SearchView.
     private lateinit var dealAdapter: GridDealAdapter
     private lateinit var searchAdapter: GridDealAdapter
 
+    private var searchText: String? = null
+
     /**
     if args.slug.isEmpty -> dealsRepository.getDiscounts()
     if not -> dealsRepository.getDiscounts() for list of shop and categories,
@@ -59,10 +58,11 @@ class DiscountsFragment : BaseFragment(R.layout.fragment_discounts), SearchView.
 
         viewModel.initDeals(args.slug)
 
-        loadProfileImage()
         initAdapters()
         initListeners()
         observeData()
+
+        loadProfileImage(binding.ivProfile)
         binding.ivLoading.loadGif()
     }
 
@@ -71,16 +71,15 @@ class DiscountsFragment : BaseFragment(R.layout.fragment_discounts), SearchView.
     override fun onQueryTextChange(newText: String?): Boolean {
         if (newText.isNullOrEmpty()) {
             binding.tvTitle.visible()
-            binding.rvSearchDeals.invisible()
             binding.grFilters.visible()
-            if (binding.rvDeals.adapter?.itemCount == 0) {
-                binding.tvFilteringResultEmpty.visible()
-            } else {
-                binding.rvDeals.visible()
-            }
+            binding.rvDeals.visible()
+            binding.rvSearchDeals.gone()
             binding.tvSearchResultEmpty.invisible()
+            searchText = null
         } else {
+            if (newText == searchText) return false
             logSearch(newText.toString(), logger)
+            searchText = newText
             viewModel.searchDeals(newText.toString())
         }
         return true
@@ -130,7 +129,6 @@ class DiscountsFragment : BaseFragment(R.layout.fragment_discounts), SearchView.
             onClickListener = {
                 viewModel.updateDealViewsClick(it.id.toString())
                 navigateToDealFragment(it)
-                binding.searchView.setQuery("", false)
             },
             onBookmarkClickListener = {
                 viewModel.updateBookmark(it.toString())
@@ -218,20 +216,6 @@ class DiscountsFragment : BaseFragment(R.layout.fragment_discounts), SearchView.
             else
                 binding.ivLoading.invisible()
         }
-        viewModel.searchResult.observe(viewLifecycleOwner) {
-            if (it.isEmpty() && !binding.searchView.query.isNullOrEmpty()) {
-                binding.tvSearchResultEmpty.visible()
-                binding.tvTitle.invisible()
-            } else {
-                binding.tvSearchResultEmpty.invisible()
-                binding.tvTitle.visible()
-            }
-            searchAdapter.submitList(it)
-            binding.rvSearchDeals.visible()
-            binding.rvDeals.invisible()
-            binding.grFilters.gone()
-            binding.tvFilteringResultEmpty.invisible()
-        }
         viewModel.deals.observe(viewLifecycleOwner) {
             dealAdapter.submitList(null)
             if (it.isNotEmpty()) {
@@ -245,6 +229,20 @@ class DiscountsFragment : BaseFragment(R.layout.fragment_discounts), SearchView.
                 binding.rvDeals.invisible()
             }
         }
+        viewModel.searchResult.observe(viewLifecycleOwner) {
+            if (it.isEmpty() && !binding.searchView.query.isNullOrEmpty()) {
+                binding.tvSearchResultEmpty.visible()
+                binding.tvTitle.invisible()
+            } else {
+                binding.tvSearchResultEmpty.invisible()
+                binding.tvTitle.visible()
+            }
+            searchAdapter.submitList(it)
+            binding.rvSearchDeals.visible()
+            binding.rvDeals.gone()
+            binding.grFilters.gone()
+            binding.tvFilteringResultEmpty.invisible()
+        }
         viewModel.filteringShops.observe(viewLifecycleOwner) {
             val adapterShops = ArrayAdapter(requireContext(), R.layout.spinner_item, getNamesWithFirstAllString(it))
             adapterShops.setDropDownViewResource(R.layout.spinner_item_dropdown)
@@ -254,7 +252,6 @@ class DiscountsFragment : BaseFragment(R.layout.fragment_discounts), SearchView.
             val adapterCategories = categoriesStyledAdapter(requireContext(), it)
             adapterCategories.setDropDownViewResource(R.layout.spinner_item_dropdown)
             binding.spinnerCategories.adapter = adapterCategories
-            binding.grFilters.visible()
 
             if (args.title.isNotEmpty())
                 it.forEachIndexed { index, item ->
@@ -266,14 +263,6 @@ class DiscountsFragment : BaseFragment(R.layout.fragment_discounts), SearchView.
             if (it.isNotNullAndNotEmpty()) {
                 binding.tvFilteringResultEmpty.visible()
                 binding.rvDeals.invisible()
-            }
-        }
-    }
-
-    private fun loadProfileImage() {
-        Hawk.get<User>(KEY_USER)?.let {
-            it.avatarUrl?.let { url ->
-                binding.ivProfile.setProfileImage(url)
             }
         }
     }

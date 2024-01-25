@@ -12,21 +12,19 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.discountone.R
 import com.digeltech.discountone.common.base.BaseFragment
 import com.digeltech.discountone.databinding.FragmentCouponsBinding
-import com.digeltech.discountone.domain.model.User
-import com.digeltech.discountone.ui.common.KEY_USER
 import com.digeltech.discountone.ui.common.adapter.GridDealAdapter
+import com.digeltech.discountone.ui.common.loadProfileImage
 import com.digeltech.discountone.util.isNotNullAndNotEmpty
 import com.digeltech.discountone.util.logSearch
 import com.digeltech.discountone.util.view.getNamesWithFirstAllString
 import com.digeltech.discountone.util.view.getString
+import com.digeltech.discountone.util.view.gone
 import com.digeltech.discountone.util.view.invisible
 import com.digeltech.discountone.util.view.loadGif
 import com.digeltech.discountone.util.view.px
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
-import com.digeltech.discountone.util.view.setProfileImage
 import com.digeltech.discountone.util.view.visible
 import com.facebook.appevents.AppEventsLogger
-import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -44,6 +42,8 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
     private lateinit var couponAdapter: GridDealAdapter
     private lateinit var searchAdapter: GridDealAdapter
 
+    private var searchText: String? = null
+
     /**
     if args.slug.isEmpty -> dealsRepository.getDiscounts()
     if not -> dealsRepository.getDiscounts() for list of shop and categories,
@@ -56,10 +56,11 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
 
         viewModel.initDeals(args.slug)
 
-        loadProfileImage()
         initAdapters()
         initListeners()
         observeData()
+
+        loadProfileImage(binding.ivProfile)
         binding.ivLoading.loadGif()
     }
 
@@ -67,12 +68,16 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
 
     override fun onQueryTextChange(newText: String?): Boolean {
         if (newText.isNullOrEmpty()) {
-            binding.rvSearchDeals.invisible()
-            binding.rvDeals.visible()
-            binding.tvSearchResultEmpty.invisible()
             binding.tvTitle.visible()
+            binding.grFilters.visible()
+            binding.rvDeals.visible()
+            binding.rvSearchDeals.gone()
+            binding.tvSearchResultEmpty.invisible()
+            searchText = null
         } else {
+            if (newText == searchText) return false
             logSearch(newText.toString(), logger)
+            searchText = newText
             viewModel.searchDeals(newText.toString())
         }
         return true
@@ -127,7 +132,6 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
             onClickListener = {
                 viewModel.updateDealViewsClick(it.id.toString())
                 navigateToDealFragment(it)
-                binding.searchView.setQuery("", false)
             },
             onBookmarkClickListener = {
                 viewModel.updateBookmark(it.toString())
@@ -210,18 +214,6 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
                 binding.ivLoading.invisible()
             }
         }
-        viewModel.searchResult.observe(viewLifecycleOwner) {
-            if (it.isEmpty() && !binding.searchView.query.isNullOrEmpty()) {
-                binding.tvSearchResultEmpty.visible()
-                binding.tvTitle.invisible()
-            } else {
-                binding.tvSearchResultEmpty.invisible()
-                binding.tvTitle.visible()
-            }
-            searchAdapter.submitList(it)
-            binding.rvSearchDeals.visible()
-            binding.rvDeals.invisible()
-        }
         viewModel.deals.observe(viewLifecycleOwner) {
             couponAdapter.submitList(null)
             if (it.isNotEmpty()) {
@@ -235,6 +227,19 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
                 binding.rvDeals.invisible()
             }
         }
+        viewModel.searchResult.observe(viewLifecycleOwner) {
+            if (it.isEmpty() && !binding.searchView.query.isNullOrEmpty()) {
+                binding.tvSearchResultEmpty.visible()
+                binding.tvTitle.invisible()
+            } else {
+                binding.tvSearchResultEmpty.invisible()
+                binding.tvTitle.visible()
+            }
+            searchAdapter.submitList(it)
+            binding.rvSearchDeals.visible()
+            binding.rvDeals.gone()
+            binding.grFilters.invisible()
+        }
         viewModel.filteringShops.observe(viewLifecycleOwner) {
             val adapterShops = ArrayAdapter(requireContext(), R.layout.spinner_item, getNamesWithFirstAllString(it))
             adapterShops.setDropDownViewResource(R.layout.spinner_item_dropdown)
@@ -245,7 +250,6 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
                 ArrayAdapter(requireContext(), R.layout.spinner_item, getNamesWithFirstAllString(it))
             adapterCategories.setDropDownViewResource(R.layout.spinner_item_dropdown)
             binding.spinnerCategories.adapter = adapterCategories
-            binding.grFilters.visible()
 
             if (args.title.isNotEmpty())
                 it.forEachIndexed { index, item ->
@@ -257,14 +261,6 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
             if (it.isNotNullAndNotEmpty()) {
                 binding.tvFilteringResultEmpty.visible()
                 binding.rvDeals.invisible()
-            }
-        }
-    }
-
-    private fun loadProfileImage() {
-        Hawk.get<User>(KEY_USER)?.let {
-            it.avatarUrl?.let { url ->
-                binding.ivProfile.setProfileImage(url)
             }
         }
     }

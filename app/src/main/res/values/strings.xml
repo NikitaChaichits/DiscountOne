@@ -125,6 +125,7 @@
     <!-- Fragment Home-->
     <string name="fr_home_discounts">Discounts</string>
     <string name="fr_home_coupons">Coupons</string>
+    <string name="fr_home_finance">Finance</string>
     <string name="fr_home_stores">Stores</string>
 
     <!-- Fragment Discounts-->

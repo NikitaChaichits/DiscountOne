@@ -14,6 +14,7 @@ import com.digeltech.discountone.ui.common.model.DealType
 import com.digeltech.discountone.ui.common.model.SortBy
 import com.digeltech.discountone.ui.common.model.Taxonomy
 import com.digeltech.discountone.ui.home.KEY_HOMEPAGE_DATA
+import com.digeltech.discountone.util.log
 import com.orhanobut.hawk.Hawk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -82,11 +83,15 @@ class DealsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateDealViewsClick(id: String) = withContext(Dispatchers.IO) {
-        api.updateViewsClick(id)
+        api.updateViewsClick(id).also {
+            log("updateViewsClick $id")
+        }
     }
 
     override suspend fun activateDealClick(id: String) = withContext(Dispatchers.IO) {
-        api.activateDealClick(id)
+        api.activateDealClick(id).also {
+            log("activateDealClick $id")
+        }
     }
 
     override suspend fun getSimilarDealsByCategory(categoryName: String): Result<List<Deal>> =

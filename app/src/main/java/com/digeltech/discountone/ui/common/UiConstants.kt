@@ -2,7 +2,7 @@ package com.digeltech.discountone.ui.common
 
 const val DEALS_PAGE_SIZE = 6
 
-const val SEARCH_DELAY = 2000L
+const val SEARCH_DELAY = 1500L
 
 const val INIT_DELAY = 500L
 

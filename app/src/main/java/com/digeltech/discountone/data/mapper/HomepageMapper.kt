@@ -1,12 +1,14 @@
 package com.digeltech.discountone.data.mapper
 
-import com.digeltech.discountone.data.model.*
+import com.digeltech.discountone.data.model.CategoryWithItemsDto
+import com.digeltech.discountone.data.model.DealDto
+import com.digeltech.discountone.data.model.HomeShopDto
+import com.digeltech.discountone.data.model.HomepageDto
 import com.digeltech.discountone.domain.model.CategoryWithDeals
 import com.digeltech.discountone.domain.model.Deal
 import com.digeltech.discountone.domain.model.HomeShop
 import com.digeltech.discountone.domain.model.Homepage
 import com.digeltech.discountone.ui.common.model.DealType
-import com.digeltech.discountone.ui.home.adapter.Banner
 
 class HomepageMapper {
 
@@ -14,14 +16,9 @@ class HomepageMapper {
         listOfBanners = DealsMapper().mapDeals(data.listOfBanners),
         discounts = data.discounts.first().mapCategories(),
         coupons = data.coupons.first().mapCategories(),
+        finance = data.finance.first().mapCategories(),
         shops = data.shops.map { it.mapToHomeShop() },
         categories = data.categories.map { it.mapCategories() }
-    )
-
-    private fun BannerDto.mapBanner() = Banner(
-        urlImage = urlImage,
-        dealId = dealId,
-        categoryId = categoryId
     )
 
     private fun CategoryWithItemsDto.mapCategories() = CategoryWithDeals(
