@@ -37,9 +37,6 @@ class HomeViewModel @Inject constructor(
     private val _coupons: MutableLiveData<List<DealParcelable>?> = MutableLiveData()
     val coupons: LiveData<List<DealParcelable>?> = _coupons
 
-    private val _finance: MutableLiveData<List<DealParcelable>?> = MutableLiveData()
-    val finance: LiveData<List<DealParcelable>?> = _finance
-
     private val _shops: MutableLiveData<List<HomeShop>?> = MutableLiveData()
     val shops: LiveData<List<HomeShop>?> = _shops
 
@@ -63,7 +60,6 @@ class HomeViewModel @Inject constructor(
                     _banners.value = it.listOfBanners
                     _discounts.value = it.discounts.items.toParcelableList()
                     _coupons.value = it.coupons.items.toParcelableList()
-                    _finance.value = it.finance.items.toParcelableList()
                     _shops.value = it.shops.filter { shop -> shop.icon != null }
                     _categories.value = it.categories
                 }.onFailure {

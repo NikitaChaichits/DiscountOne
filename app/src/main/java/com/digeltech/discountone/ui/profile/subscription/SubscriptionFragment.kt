@@ -3,6 +3,7 @@ package com.digeltech.discountone.ui.profile.subscription
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.digeltech.discountone.R
 import com.digeltech.discountone.common.base.BaseFragment
@@ -12,8 +13,6 @@ import com.digeltech.discountone.util.view.px
 import com.digeltech.discountone.util.view.recycler.GridOffsetDecoration
 import com.digeltech.discountone.util.view.visible
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -70,8 +69,8 @@ class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription) {
     private fun observeData() {
         viewModel.success.observe(viewLifecycleOwner) {
             if (it) {
-                toast("Successfully saved")
-                CoroutineScope(Dispatchers.Main).launch {
+                toast(getString(R.string.fr_subscription_successfully_saved))
+                lifecycleScope.launch {
                     delay(1000)
                     navigateBack()
                 }

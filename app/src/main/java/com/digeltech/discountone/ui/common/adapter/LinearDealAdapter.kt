@@ -52,6 +52,7 @@ class LinearDealAdapter(
             with(binding) {
                 root.setOnClickListener { onClickListener(item) }
                 btnGetDeal.setOnClickListener { onClickListener(item) }
+                item.imageUrl.let(ivDealImage::setImageWithRadius)
 
                 if (item.dealType == DealType.DISCOUNTS) discountDataSetting(item)
                 else couponDataSetting(item)
@@ -94,7 +95,6 @@ class LinearDealAdapter(
 
             btnGetDeal.backgroundTintList = ColorStateList.valueOf(btnGetDeal.getColorValue(R.color.colorPrimary))
 
-            item.imageUrl.let(ivDealImage::setImageWithRadius)
             tvTitle.text = item.title
             tvPrice.setStrikethrough(item.priceCurrency + item.oldPrice)
             tvPriceWithDiscount.text = getDiscountText(
@@ -115,7 +115,6 @@ class LinearDealAdapter(
 
             btnGetDeal.backgroundTintList = ColorStateList.valueOf(btnGetDeal.getColorValue(R.color.green))
 
-            item.imageUrl.let(ivCouponImage::setImageWithRadius)
             tvCouponTitle.text = item.title
             if (item.price != 0) {
                 tvCouponPrice.backgroundTintList =
@@ -138,15 +137,13 @@ class LinearDealAdapter(
                 }
                 tvCouponPrice.text = item.couponsTypeName
             }
-            item.shopImageUrl?.let(ivCouponShopImage::setImageWithRadius)
-            tvCouponCategoryName.text = item.couponsCategory
+//            item.shopImageUrl?.let(ivCouponShopImage::setImageWithRadius)
+//            tvCouponCategoryName.text = item.couponsCategory
             tvPublishedDate.text = item.expirationDate
         }
 
         fun unbind() {
             binding.ivDealImage.setImageDrawable(null)
-            binding.ivCouponImage.setImageDrawable(null)
-            binding.ivCouponShopImage.setImageDrawable(null)
             binding.ivShopLogo.setImageDrawable(null)
         }
     }

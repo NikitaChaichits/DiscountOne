@@ -113,9 +113,7 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
                 viewModel.updateDealViewsClick(it.id.toString())
                 navigateToDealFragment(it)
             },
-            onBookmarkClickListener = {
-                viewModel.updateBookmark(it.toString())
-            },
+            onBookmarkClickListener = { viewModel.updateBookmark(it.toString()) },
             fragmentManager = requireActivity().supportFragmentManager,
             logger = logger,
         )
@@ -133,9 +131,7 @@ class CouponsFragment : BaseFragment(R.layout.fragment_coupons), SearchView.OnQu
                 viewModel.updateDealViewsClick(it.id.toString())
                 navigateToDealFragment(it)
             },
-            onBookmarkClickListener = {
-                viewModel.updateBookmark(it.toString())
-            },
+            onBookmarkClickListener = { viewModel.updateBookmark(it.toString()) },
             fragmentManager = requireActivity().supportFragmentManager,
             logger = logger,
         )

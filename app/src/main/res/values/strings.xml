@@ -202,5 +202,6 @@
     <string name="fr_subscription_description">Please choose categories you are interested in to receive only useful newsletters from us</string>
     <string name="fr_subscription_email_notification_title">E-mail notifications settings</string>
     <string name="fr_subscription_email_notification">Receive useful newsletters about new discounts and deals</string>
+    <string name="fr_subscription_successfully_saved">Successfully saved</string>
 
 </resources>

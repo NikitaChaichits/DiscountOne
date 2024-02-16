@@ -18,7 +18,11 @@ import com.digeltech.discountone.domain.model.Gender
 import com.digeltech.discountone.domain.model.User
 import com.digeltech.discountone.ui.common.KEY_USER
 import com.digeltech.discountone.util.imagepicker.ImagePicker
-import com.digeltech.discountone.util.view.*
+import com.digeltech.discountone.util.view.getImageDrawable
+import com.digeltech.discountone.util.view.invisible
+import com.digeltech.discountone.util.view.setCircleImage
+import com.digeltech.discountone.util.view.setProfileImage
+import com.digeltech.discountone.util.view.showMaterialDatePickerDialog
 import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -104,7 +108,6 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
                 .start(binding.loaderProfileImage)
         }
         binding.tvDateOfBirth.setOnClickListener {
-//            showDatePickerDialog(requireContext(), this)
             showMaterialDatePickerDialog(binding.tvDateOfBirth, parentFragmentManager) {}
         }
         binding.btnSave.setOnClickListener {
@@ -125,7 +128,6 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
     }
 
     private fun updateProfile() {
-//        val city = binding.etCity.text.toString().trim()
         val dateOfBirth = binding.tvDateOfBirth.text.toString()
         val login = binding.etProfileName.text.toString()
         var userAvatarPart: MultipartBody.Part? = null
@@ -156,9 +158,7 @@ class ProfileDataFragment : BaseFragment(R.layout.fragment_profile_data), DatePi
 
     private fun observeData() {
         viewModel.success.observe(viewLifecycleOwner) {
-            if (it) {
-                navigateBack()
-            }
+            if (it) navigateBack()
         }
     }
 

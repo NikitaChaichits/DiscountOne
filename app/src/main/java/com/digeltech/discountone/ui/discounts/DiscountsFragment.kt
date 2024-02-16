@@ -110,9 +110,7 @@ class DiscountsFragment : BaseFragment(R.layout.fragment_discounts), SearchView.
                 viewModel.updateDealViewsClick(it.id.toString())
                 navigateToDealFragment(it)
             },
-            onBookmarkClickListener = {
-                viewModel.updateBookmark(it.toString())
-            },
+            onBookmarkClickListener = { viewModel.updateBookmark(it.toString()) },
             fragmentManager = requireActivity().supportFragmentManager,
             logger = logger,
         )
@@ -130,9 +128,7 @@ class DiscountsFragment : BaseFragment(R.layout.fragment_discounts), SearchView.
                 viewModel.updateDealViewsClick(it.id.toString())
                 navigateToDealFragment(it)
             },
-            onBookmarkClickListener = {
-                viewModel.updateBookmark(it.toString())
-            },
+            onBookmarkClickListener = { viewModel.updateBookmark(it.toString()) },
             fragmentManager = requireActivity().supportFragmentManager,
             logger = logger,
         )

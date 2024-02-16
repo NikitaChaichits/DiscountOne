@@ -163,18 +163,6 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         )
         binding.rvCoupons.adapter = couponsLinearAdapter
 
-        // Linear horizontal RV for finance category
-        financeLinearAdapter = LinearDealAdapter(
-            onClickListener = {
-                viewModel.updateDealViewsClick(it.id.toString())
-                navigateToDealFragment(it)
-            },
-            onBookmarkClickListener = { viewModel.updateBookmark(it.toString()) },
-            fragmentManager = requireActivity().supportFragmentManager,
-            logger = logger,
-        )
-        binding.rvFinance.adapter = financeLinearAdapter
-
         // Linear horizontal RV for shops
         shopsAdapter = HomeShopsAdapter(
             onClickListener = {
@@ -232,7 +220,6 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SearchView.OnQueryTex
         viewModel.banners.observe(viewLifecycleOwner, bannerAdapter::submitList)
         viewModel.discounts.observe(viewLifecycleOwner, discountsLinearAdapter::submitList)
         viewModel.coupons.observe(viewLifecycleOwner, couponsLinearAdapter::submitList)
-        viewModel.finance.observe(viewLifecycleOwner, financeLinearAdapter::submitList)
         viewModel.shops.observe(viewLifecycleOwner, shopsAdapter::submitList)
         viewModel.categories.observe(viewLifecycleOwner) {
             categoriesAdapter.submitList(it)

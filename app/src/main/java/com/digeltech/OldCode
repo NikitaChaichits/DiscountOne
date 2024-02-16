@@ -30,3 +30,31 @@
             ivRateArrow.setImageDrawable(ivRateArrow.getImageDrawable(R.drawable.ic_arrow_down))
         }
         tvRate.text = item.rating.toString()
+
+    <TextView
+        android:id="@+id/tvCouponCategoryName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_offset_4dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:paddingHorizontal="@dimen/common_offset_4dp"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:textSize="@dimen/common_textSize_12sp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="@id/ivDealImage"
+        app:layout_constraintStart_toStartOf="@id/ivDealImage"
+        app:layout_constraintTop_toBottomOf="@id/ivBookmark"
+        tools:text="Fashion" />
+
+    <ImageView
+        android:id="@+id/ivCouponShopImage"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginBottom="@dimen/common_offset_8dp"
+        app:layout_constraintBottom_toBottomOf="@id/ivDealImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:src="@drawable/ic_avatar" />

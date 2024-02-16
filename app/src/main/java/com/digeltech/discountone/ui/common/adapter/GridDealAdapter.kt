@@ -146,14 +146,13 @@ class GridDealAdapter(
                 }
                 tvCouponPrice.text = item.couponsTypeName
             }
-            item.shopImageUrl?.let(ivCouponShopImage::setImageWithRadius)
-            tvCouponCategoryName.text = item.couponsCategory
+//            item.shopImageUrl?.let(ivCouponShopImage::setImageWithRadius)
+//            tvCouponCategoryName.text = item.couponsCategory
             tvPublishedDate.text = item.expirationDate
         }
 
         fun unbind() {
             binding.ivDealImage.setImageDrawable(null)
-            binding.ivCouponShopImage.setImageDrawable(null)
             binding.ivShopLogo.setImageDrawable(null)
         }
     }

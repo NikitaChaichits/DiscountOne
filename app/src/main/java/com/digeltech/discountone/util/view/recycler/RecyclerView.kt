@@ -68,7 +68,6 @@ class AutoScrollHelper(private val recyclerView: RecyclerView) {
         }
     }
 
-
     fun stopAutoScroll() {
         job?.cancel()
         job = null

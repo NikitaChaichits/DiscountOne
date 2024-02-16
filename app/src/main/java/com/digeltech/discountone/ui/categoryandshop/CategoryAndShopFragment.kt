@@ -111,9 +111,7 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
                 viewModel.updateDealViewsClick(it.id.toString())
                 navigateToDealFragment(it)
             },
-            onBookmarkClickListener = {
-                viewModel.updateBookmark(it.toString())
-            },
+            onBookmarkClickListener = { viewModel.updateBookmark(it.toString()) },
             fragmentManager = requireActivity().supportFragmentManager,
             logger = logger,
         )
@@ -131,9 +129,7 @@ class CategoryAndShopFragment : BaseFragment(R.layout.fragment_category_and_shop
                 viewModel.updateDealViewsClick(it.id.toString())
                 navigateToDealFragment(it)
             },
-            onBookmarkClickListener = {
-                viewModel.updateBookmark(it.toString())
-            },
+            onBookmarkClickListener = { viewModel.updateBookmark(it.toString()) },
             fragmentManager = requireActivity().supportFragmentManager,
             logger = logger,
         )

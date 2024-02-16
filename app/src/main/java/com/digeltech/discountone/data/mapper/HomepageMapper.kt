@@ -16,7 +16,6 @@ class HomepageMapper {
         listOfBanners = DealsMapper().mapDeals(data.listOfBanners),
         discounts = data.discounts.first().mapCategories(),
         coupons = data.coupons.first().mapCategories(),
-        finance = data.finance.first().mapCategories(),
         shops = data.shops.map { it.mapToHomeShop() },
         categories = data.categories.map { it.mapCategories() }
     )

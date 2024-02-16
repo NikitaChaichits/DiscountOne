@@ -56,4 +56,10 @@ class ShopsViewModel @Inject constructor(
             }
         }
     }
+
+    fun updateDealViewsClick(id: String) {
+        viewModelScope.launch {
+            interactor.updateDealViewsClick(id)
+        }
+    }
 }

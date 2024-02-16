@@ -137,9 +137,6 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
             if (deal.dealType == DealType.COUPONS) {
                 viewModel.getSimilarCouponsByCategory(deal.id)
 
-                deal.shopImageUrl?.let(ivCouponShopImage::setImageWithRadius)
-                tvCouponCategoryName.text = deal.couponsCategory
-
                 tvPrice.gone()
                 tvPriceWithDiscount.gone()
                 tvCouponPrice.visible()

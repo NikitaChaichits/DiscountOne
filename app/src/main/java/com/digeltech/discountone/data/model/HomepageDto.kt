@@ -9,8 +9,6 @@ data class HomepageDto(
     val discounts: List<CategoryWithItemsDto>,
     @SerializedName("coupons")
     val coupons: List<CategoryWithItemsDto>,
-    @SerializedName("finance")
-    val finance: List<CategoryWithItemsDto>,
     @SerializedName("shops")
     val shops: List<HomeShopDto>,
     @SerializedName("cat_with_posts")

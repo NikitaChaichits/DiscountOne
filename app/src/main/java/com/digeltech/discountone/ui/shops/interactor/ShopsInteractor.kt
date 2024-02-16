@@ -10,4 +10,6 @@ interface ShopsInteractor {
     suspend fun searchDeals(searchText: String): List<Deal>
 
     suspend fun updateBookmark(userId: String, dealId: String)
+
+    suspend fun updateDealViewsClick(id: String)
 }

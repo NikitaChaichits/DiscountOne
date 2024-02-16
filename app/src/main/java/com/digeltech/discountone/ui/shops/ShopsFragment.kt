@@ -85,14 +85,10 @@ class ShopsFragment : BaseFragment(R.layout.fragment_shops), SearchView.OnQueryT
 
         searchDealAdapter = GridDealAdapter(
             onClickListener = {
-                val bundle = Bundle().apply {
-                    putParcelable("deal", it)
-                }
-                navigate(R.id.dealFragment, bundle)
+                viewModel.updateDealViewsClick(it.id.toString())
+                navigateToDealFragment(it)
             },
-            onBookmarkClickListener = {
-                viewModel.updateBookmark(it.toString())
-            },
+            onBookmarkClickListener = { viewModel.updateBookmark(it.toString()) },
             fragmentManager = requireActivity().supportFragmentManager,
             logger = logger,
         )

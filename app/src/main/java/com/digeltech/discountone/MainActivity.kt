@@ -177,10 +177,10 @@ class MainActivity : AppCompatActivity() {
 
         appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
+                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
             ) {
                 appUpdateManager.registerListener(listener)
-                val appUpdateOptions = AppUpdateOptions.newBuilder(AppUpdateType.FLEXIBLE)
+                val appUpdateOptions = AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE)
                     .build()
                 appUpdateManager.startUpdateFlowForResult(
                     appUpdateInfo,
