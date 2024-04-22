@@ -31,4 +31,6 @@
     <color name="couponDiscountColor">#E404B3</color>
     <color name="couponFreeGiftColor">#04BFCE</color>
     <color name="couponFreeTrialColor">#0428E4</color>
+
+    <color name="gradientStart">#fff</color>
 </resources>

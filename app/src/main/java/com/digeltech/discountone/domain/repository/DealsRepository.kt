@@ -3,6 +3,7 @@ package com.digeltech.discountone.domain.repository
 import com.digeltech.discountone.domain.model.AllDeals
 import com.digeltech.discountone.domain.model.Deal
 import com.digeltech.discountone.domain.model.Homepage
+import com.digeltech.discountone.domain.model.Price
 import com.digeltech.discountone.ui.common.model.DealType
 import com.digeltech.discountone.ui.common.model.SortBy
 import com.digeltech.discountone.ui.common.model.Taxonomy
@@ -52,4 +53,6 @@ interface DealsRepository {
     suspend fun getBookmarksDeals(userId: String): Result<List<Deal>>
 
     suspend fun updateBookmark(userId: String, dealId: String)
+
+    suspend fun getPriceChanges(parsId: String): Result<List<Price>>
 }

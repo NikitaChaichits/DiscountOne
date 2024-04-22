@@ -31,6 +31,7 @@ class HomepageMapper {
         return Deal(
             id = id ?: 0,
             categoryId = categoryId,
+            parsId = parsId?.toInt() ?: 0,
             title = title.toString(),
             description = description.toString(),
             imageUrl = imageUrl.toString(),

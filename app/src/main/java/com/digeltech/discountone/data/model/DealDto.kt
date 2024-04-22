@@ -7,6 +7,8 @@ data class DealDto(
     val id: Int?,
     @SerializedName("category_id")
     val categoryId: Int?,
+    @SerializedName("pars_id")
+    val parsId: String?,
     @SerializedName("post_title")
     val title: String?,
     @SerializedName("post_content")
@@ -56,6 +58,5 @@ data class DealDto(
     @SerializedName("coupons_type_name")
     val couponsTypeName: String?,
     @SerializedName("categories")
-    val couponsCategory: String?,
-
-    )
+    val couponsCategory: String?
+)

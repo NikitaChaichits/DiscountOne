@@ -14,7 +14,9 @@ import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 /** used for non-locale specific formatters */
 val fallbackLocale: Locale = Locale.US
@@ -91,4 +93,10 @@ fun formatDate(inputDateTime: String): String {
         e.printStackTrace()
     }
     return inputDateTime
+}
+
+fun convertUnixToDate(unixTimestamp: Long): String {
+    val sdf = SimpleDateFormat("d MMMM", Locale.getDefault())
+    val date = Date(unixTimestamp * 1000) // Convert seconds to milliseconds
+    return sdf.format(date)
 }

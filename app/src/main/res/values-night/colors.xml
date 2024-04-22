@@ -25,4 +25,6 @@
     <color name="bgCategories">#282B30</color>
     <color name="bgSubcategories">#45454A</color>
     <color name="bgBookmark">#141619</color>
+
+    <color name="gradientStart">#7E7E7E</color>
 </resources>

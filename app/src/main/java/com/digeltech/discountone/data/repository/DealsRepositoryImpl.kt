@@ -2,11 +2,14 @@ package com.digeltech.discountone.data.repository
 
 import com.digeltech.discountone.data.mapper.DealsMapper
 import com.digeltech.discountone.data.mapper.HomepageMapper
+import com.digeltech.discountone.data.mapper.ParserMapper
 import com.digeltech.discountone.data.source.remote.api.DealsApi
 import com.digeltech.discountone.data.source.remote.api.DiscountsApi
+import com.digeltech.discountone.data.source.remote.api.ParserApi
 import com.digeltech.discountone.domain.model.AllDeals
 import com.digeltech.discountone.domain.model.Deal
 import com.digeltech.discountone.domain.model.Homepage
+import com.digeltech.discountone.domain.model.Price
 import com.digeltech.discountone.domain.model.Shop
 import com.digeltech.discountone.domain.repository.DealsRepository
 import com.digeltech.discountone.ui.common.KEY_SHOPS
@@ -23,6 +26,7 @@ import javax.inject.Inject
 class DealsRepositoryImpl @Inject constructor(
     private val api: DealsApi,
     private val discountApi: DiscountsApi,
+    private val parserApi: ParserApi,
 ) : DealsRepository {
 
     override suspend fun getDiscounts(): Result<AllDeals> = withContext(Dispatchers.IO) {
@@ -160,6 +164,12 @@ class DealsRepositoryImpl @Inject constructor(
     override suspend fun updateBookmark(userId: String, dealId: String): Unit = withContext(Dispatchers.IO) {
         runCatching {
             api.saveOrDeleteBookmark(userId = userId, dealId = dealId)
+        }
+    }
+
+    override suspend fun getPriceChanges(parsId: String): Result<List<Price>> = withContext(Dispatchers.IO) {
+        runCatching {
+            ParserMapper().mapPrices(parserApi.getPriceChangeOfDeal(parsId))
         }
     }
 

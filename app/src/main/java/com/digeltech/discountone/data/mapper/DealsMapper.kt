@@ -1,6 +1,10 @@
 package com.digeltech.discountone.data.mapper
 
-import com.digeltech.discountone.data.model.*
+import com.digeltech.discountone.data.model.AllDealsDto
+import com.digeltech.discountone.data.model.DealDto
+import com.digeltech.discountone.data.model.ItemDto
+import com.digeltech.discountone.data.model.ItemWithChildDto
+import com.digeltech.discountone.data.model.OtherDealsDto
 import com.digeltech.discountone.domain.model.AllDeals
 import com.digeltech.discountone.domain.model.Deal
 import com.digeltech.discountone.domain.model.Item
@@ -23,6 +27,7 @@ class DealsMapper {
         return Deal(
             id = data.id ?: 0,
             categoryId = data.categoryId ?: 0,
+            parsId = data.parsId?.toInt() ?: 0,
             title = data.title.toString(),
             description = data.description.toString(),
             imageUrl = data.imageUrl.toString(),
@@ -63,6 +68,7 @@ class DealsMapper {
         return Deal(
             id = data.id ?: 0,
             categoryId = data.categoryId ?: 0,
+            parsId = data.parsId?.toInt() ?: 0,
             title = data.title.toString(),
             description = data.description.toString(),
             imageUrl = data.imageUrl.toString(),

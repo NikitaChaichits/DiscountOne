@@ -31,6 +31,7 @@ import com.digeltech.discountone.util.getDiscountText
 import com.digeltech.discountone.util.isNotNullAndNotEmpty
 import com.digeltech.discountone.util.logOpenDeal
 import com.digeltech.discountone.util.logShopNow
+import com.digeltech.discountone.util.view.drawCharts
 import com.digeltech.discountone.util.view.getColorValue
 import com.digeltech.discountone.util.view.getImageDrawable
 import com.digeltech.discountone.util.view.getString
@@ -68,7 +69,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
         observeData()
 
         if (args.deal != null) {
-            initCoupon(args.deal!!)
+            initDeal(args.deal!!)
         } else {
             viewModel.getDeal(args.dealId)
         }
@@ -93,7 +94,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
     private fun initAdapters() {
         categoryDealsAdapter = LinearDealAdapter(
             onClickListener = {
-                initCoupon(it)
+                initDeal(it)
                 binding.scrollView.scrollTo(0, 0)
             },
             onBookmarkClickListener = {
@@ -106,7 +107,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
 
         shopDealsAdapter = LinearDealAdapter(
             onClickListener = {
-                initCoupon(it)
+                initDeal(it)
                 binding.scrollView.scrollTo(0, 0)
             },
             onBookmarkClickListener = {
@@ -118,7 +119,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
         binding.rvSimilarShopDeals.adapter = shopDealsAdapter
     }
 
-    private fun initCoupon(deal: DealParcelable) {
+    private fun initDeal(deal: DealParcelable) {
         with(binding) {
             logOpenDeal(
                 name = deal.title,
@@ -165,17 +166,20 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
                 }
             } else {
                 viewModel.getSimilarDealsByCategory(deal.id, getCategorySlugById(deal.categoryId))
+                if (deal.parsId != 0) viewModel.getPriceChanges(deal.parsId)
 
                 tvUpdatedDate.text = "Updated: ${deal.lastUpdateDate}"
                 tvUpdatedDate.visible()
             }
 
-            if (!deal.imagesUrl.isNullOrEmpty()) {
+            if (!deal.imagesUrl.isNullOrEmpty() && (deal.imagesUrl?.size ?: 0) > 1) {
                 val listOfDealImages = mutableListOf<String>()
                 listOfDealImages.addAll(deal.imagesUrl!!)
 
                 val adapter = ImageSliderAdapter(requireContext(), listOfDealImages)
                 vpImages.adapter = adapter
+                vpImages.visible()
+                ivDealImage.invisible()
                 if (listOfDealImages.size > 1)
                     dots.setupWithViewPager(vpImages)
                 else dots.invisible()
@@ -325,13 +329,6 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
         viewModel.similarCategoryDeals.observe(viewLifecycleOwner) {
             categoryDealsAdapter.submitList(it)
             binding.grSimilarCategoryDeals.visible()
-//            binding.tvMoreCategoryDeals.setOnClickListener {
-//                navigate(
-//                    DealFragmentDirections.toCategoryFragment(
-//                        id = args.deal.categoryId, title = categoryName, isFromCategory = true
-//                    )
-//                )
-//            }
         }
         viewModel.similarShopDeals.observe(viewLifecycleOwner) {
             shopDealsAdapter.submitList(it)
@@ -349,7 +346,7 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
                 )
             }
         }
-        viewModel.deal.observe(viewLifecycleOwner, ::initCoupon)
+        viewModel.deal.observe(viewLifecycleOwner, ::initDeal)
         viewModel.loadingDealError.observe(viewLifecycleOwner) {
             MaterialDialog(requireContext())
                 .lifecycleOwner(viewLifecycleOwner)
@@ -358,6 +355,16 @@ class DealFragment : BaseFragment(R.layout.fragment_deal) {
                 .cancelOnTouchOutside(cancelable = true)
                 .onDismiss { navigate(R.id.homeFragment) }
                 .show()
+        }
+        viewModel.prices.observe(viewLifecycleOwner) { list ->
+            if (list.size > 1) {
+                binding.grChart.visible()
+                drawCharts(
+                    list,
+                    binding.chart,
+                    binding.chartMarker
+                )
+            }
         }
     }
 }

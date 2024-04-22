@@ -139,6 +139,9 @@ dependencies {
     implementation 'com.orhanobut:hawk:2.0.1'
 
     implementation 'com.facebook.android:facebook-android-sdk:15.2.0'
+
+    // Charts
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }
 
 android.applicationVariants.all { variant ->

@@ -1,0 +1,21 @@
+<!-- white_with_shadow_background.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background shape with rounded corners and white color -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="8dp" />
+            <solid android:color="#000" />
+        </shape>
+    </item>
+    <!-- Shadow shape with slightly larger dimensions and semi-transparent black color -->
+    <item
+        android:left="5dp"
+        android:top="5dp"
+        android:right="5dp"
+        android:bottom="5dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="9dp" />
+            <solid android:color="#fff" />
+        </shape>
+    </item>
+</layer-list>

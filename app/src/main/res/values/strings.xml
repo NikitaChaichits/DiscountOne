@@ -179,6 +179,7 @@
     <string name="fr_deal_published">Updated: %s</string>
     <string name="fr_deal_more_about_discount">Product Information</string>
     <string name="fr_deal_disclosure">Disclosure: If you follow a link or buy an item from a post, Discount One may receive a commission from the store, but this does not affect what discounts are posted on the site. \n<u>Affiliate Disclosure</u></string>
+    <string name="fr_deal_price_chart">Price Change Chart</string>
     <string name="fr_deal_similar_deals">Other deals from</string>
     <string name="fr_deal_daily_top">Daily Top</string>
     <string name="fr_deal_similar_more_deals">More deals</string>

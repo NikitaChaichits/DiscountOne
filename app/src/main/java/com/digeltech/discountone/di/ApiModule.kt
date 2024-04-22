@@ -1,10 +1,12 @@
 package com.digeltech.discountone.di
 
 import com.digeltech.discountone.data.constants.RemoteConstants.BASE_URL
+import com.digeltech.discountone.data.constants.RemoteConstants.PARSER_URL
 import com.digeltech.discountone.data.source.remote.api.AuthApi
 import com.digeltech.discountone.data.source.remote.api.CouponsApi
 import com.digeltech.discountone.data.source.remote.api.DealsApi
 import com.digeltech.discountone.data.source.remote.api.DiscountsApi
+import com.digeltech.discountone.data.source.remote.api.ParserApi
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -58,4 +60,23 @@ object ApiModule {
     @Singleton
     fun provideCouponApi(retrofit: Retrofit): CouponsApi =
         retrofit.create(CouponsApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideParserApi(): ParserApi {
+        val httpClient = OkHttpClient.Builder()
+            .connectTimeout(5, TimeUnit.SECONDS) // connection timeout to 5 seconds
+            .readTimeout(25, TimeUnit.SECONDS) // read timeout to 20 seconds
+            .build()
+        val gson = GsonBuilder()
+            .setLenient()
+            .create()
+        val retrofit = Retrofit.Builder()
+            .baseUrl(PARSER_URL)
+            .client(httpClient)
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+        return retrofit.create(ParserApi::class.java)
+    }
 }

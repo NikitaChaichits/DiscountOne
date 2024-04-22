@@ -5,6 +5,7 @@ import com.digeltech.discountone.data.source.remote.api.AuthApi
 import com.digeltech.discountone.data.source.remote.api.CouponsApi
 import com.digeltech.discountone.data.source.remote.api.DealsApi
 import com.digeltech.discountone.data.source.remote.api.DiscountsApi
+import com.digeltech.discountone.data.source.remote.api.ParserApi
 import com.digeltech.discountone.domain.repository.*
 import dagger.Module
 import dagger.Provides
@@ -16,8 +17,8 @@ import dagger.hilt.components.SingletonComponent
 object RepositoryModule {
 
     @Provides
-    fun provideDealRepository(serverApi: DealsApi, discountApi: DiscountsApi): DealsRepository =
-        DealsRepositoryImpl(serverApi, discountApi)
+    fun provideDealRepository(serverApi: DealsApi, discountApi: DiscountsApi, parserApi: ParserApi): DealsRepository =
+        DealsRepositoryImpl(serverApi, discountApi, parserApi)
 
     @Provides
     fun provideCategoriesRepository(serverApi: DealsApi): CategoriesRepository =

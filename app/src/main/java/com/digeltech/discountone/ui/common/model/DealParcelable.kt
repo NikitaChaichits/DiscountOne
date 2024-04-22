@@ -2,12 +2,13 @@ package com.digeltech.discountone.ui.common.model
 
 import android.os.Parcelable
 import com.digeltech.discountone.domain.model.Deal
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class DealParcelable(
     val id: Int,
     val categoryId: Int,
+    val parsId: Int,
     val title: String,
     val description: String,
     var imageUrl: String,
@@ -43,6 +44,7 @@ fun Deal.toParcelable(): DealParcelable {
     return DealParcelable(
         id = id,
         categoryId = categoryId,
+        parsId = parsId,
         title = title,
         description = description,
         imageUrl = imageUrl,

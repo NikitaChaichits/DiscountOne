@@ -5,6 +5,7 @@ import com.digeltech.discountone.ui.common.model.DealType
 data class Deal(
     val id: Int,
     val categoryId: Int,
+    val parsId: Int,
     val title: String,
     val description: String,
     val imageUrl: String,

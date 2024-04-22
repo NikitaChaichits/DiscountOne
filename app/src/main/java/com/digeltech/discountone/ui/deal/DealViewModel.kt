@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.digeltech.discountone.common.base.BaseViewModel
+import com.digeltech.discountone.domain.model.Price
 import com.digeltech.discountone.domain.repository.DealsRepository
 import com.digeltech.discountone.ui.common.getUserId
 import com.digeltech.discountone.ui.common.model.DealParcelable
@@ -29,6 +30,9 @@ class DealViewModel @Inject constructor(
     private val _deal: MutableLiveData<DealParcelable> = MutableLiveData()
     val deal: LiveData<DealParcelable> = _deal
 
+    private val _prices: MutableLiveData<List<Price>> = MutableLiveData()
+    val prices: LiveData<List<Price>> = _prices
+
     val loadingDealError = MutableLiveData<String>()
 
     fun getSimilarDealsByCategory(dealId: Int, categorySlug: String) {
@@ -38,9 +42,7 @@ class DealViewModel @Inject constructor(
                     list.toMutableList().removeIf { it.id == dealId }
                     _similarCategoryDeals.postValue(list.toParcelableList())
                 }
-                .onFailure {
-                    log(it)
-                }
+                .onFailure(::log)
         }
     }
 
@@ -51,9 +53,7 @@ class DealViewModel @Inject constructor(
                     list.toMutableList().removeIf { it.id == dealId }
                     _similarCategoryDeals.postValue(list.toParcelableList())
                 }
-                .onFailure {
-                    log(it)
-                }
+                .onFailure(::log)
         }
     }
 
@@ -99,6 +99,14 @@ class DealViewModel @Inject constructor(
             viewModelScope.launch {
                 dealsRepository.updateBookmark(userId, dealId)
             }
+        }
+    }
+
+    fun getPriceChanges(parsId: Int) {
+        viewModelScope.launch {
+            dealsRepository.getPriceChanges(parsId.toString())
+                .onSuccess(_prices::postValue)
+                .onFailure(::log)
         }
     }
 }
